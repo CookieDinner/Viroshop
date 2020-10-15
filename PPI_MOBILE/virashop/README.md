@@ -1,4 +1,4 @@
-# virashop
+# ViraShop
 
 Flutter app project
 
