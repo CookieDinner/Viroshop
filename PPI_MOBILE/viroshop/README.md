@@ -1,4 +1,4 @@
-# viroshop
+# ViroShop
 
 Thesis flutter application
 
