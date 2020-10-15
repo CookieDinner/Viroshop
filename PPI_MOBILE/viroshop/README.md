@@ -1,6 +1,6 @@
-# ViraShop
+# viroshop
 
-Flutter app project
+Thesis flutter application
 
 ## Getting Started
 
