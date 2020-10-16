@@ -181,11 +181,14 @@ class Spinner extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     Future(()=>fun());
-    return SpinKitFadingCube(
-      color: Constants.accent,
-      size: size,
-      controller: AnimationController(
-        vsync: provider, duration: const Duration(milliseconds: 2000)
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.06,
+      child: SpinKitFadingCube(
+        color: Constants.accent,
+        size: MediaQuery.of(context).size.height * 0.04,
+        controller: AnimationController(
+          vsync: provider, duration: const Duration(milliseconds: 1500)
+        ),
       ),
     );
   }
