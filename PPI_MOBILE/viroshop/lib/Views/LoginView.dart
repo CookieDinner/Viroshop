@@ -76,9 +76,9 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                   Padding(
                     padding: EdgeInsets.fromLTRB(
                         mediaSize.width * 0.26,
-                        mediaSize.width * 0.15,
+                        mediaSize.height * 0.05,
                         mediaSize.width * 0.26,
-                        mediaSize.width * 0.13,
+                        mediaSize.height * 0.05,
                     ),
                     child: Image.asset('assets/images/logo.png'),
                   ),
@@ -128,18 +128,23 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                             ],
                           ),
                           SizedBox(height: mediaSize.height * 0.05,),
-                          FlatButton(
-                            onPressed: (){},
-                            child: Text("Nie masz jeszcze konta? Zarejestruj się",
-                              style: TextStyle(
-                                  fontSize: mediaSize.width * Constants.accentFontSize,
-                                  fontWeight: FontWeight.w400,
-                                  color: Constants.accentText
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              FlatButton(
+                                onPressed: (){},
+                                child: Text("Nie masz jeszcze konta? Zarejestruj się",
+                                  style: TextStyle(
+                                      fontSize: mediaSize.width * Constants.accentFontSize,
+                                      fontWeight: FontWeight.w400,
+                                      color: Constants.accentText
+                                  ),
+                                ),
+                                padding: EdgeInsets.all(0),
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
                               ),
-                            ),
-                            padding: EdgeInsets.all(0),
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
+                            ],
                           ),
                         ],
                       ),
@@ -185,7 +190,7 @@ class Spinner extends StatelessWidget{
       height: MediaQuery.of(context).size.height * 0.06,
       child: SpinKitFadingCube(
         color: Constants.accent,
-        size: MediaQuery.of(context).size.height * 0.04,
+        size: MediaQuery.of(context).size.width * 0.09,
         controller: AnimationController(
           vsync: provider, duration: const Duration(milliseconds: 1500)
         ),

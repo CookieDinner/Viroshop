@@ -27,48 +27,51 @@ class CustomTextFormFieldState extends State<CustomTextFormField>{
   Widget build(BuildContext context) {
     final mediaSize = MediaQuery.of(context).size;
 
-    return TextFormField(
-      controller: widget.controller,
-      textInputAction: widget.textInputAction,
-      cursorColor: Constants.accentPlus,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: EdgeInsets.fromLTRB(
-            mediaSize.width * 0.03,
-            0,
-            mediaSize.width * 0.03,
-            mediaSize.height * 0.06 * 0.34),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        alignLabelWithHint: true,
-        labelText: widget.label, hintText: widget.label,
-        hintStyle: TextStyle(
-          color: Constants.labelText,
-          fontSize: mediaSize.width * Constants.labelFontSize,
+    return Container(
+      height: mediaSize.height * 0.06,
+      child: TextFormField(
+        controller: widget.controller,
+        textInputAction: widget.textInputAction,
+        cursorColor: Constants.accentPlus,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.fromLTRB(
+              mediaSize.width * 0.03,
+              0,
+              mediaSize.width * 0.03,
+              mediaSize.height * 0.06 * 0.3),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          alignLabelWithHint: true,
+          labelText: widget.label, hintText: widget.label,
+          hintStyle: TextStyle(
+            color: Constants.labelText,
+            fontSize: mediaSize.width * Constants.labelFontSize,
+          ),
+          labelStyle: TextStyle(
+            color: Constants.labelText,
+            fontSize: mediaSize.width * Constants.labelFontSize,
+            fontWeight: FontWeight.w400
+          ),
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Constants.accent,
+                width: 2,
+              )
+          ),
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Constants.accentPlus,
+                width: 2,
+              )
+          )
         ),
-        labelStyle: TextStyle(
-          color: Constants.labelText,
-          fontSize: mediaSize.width * Constants.labelFontSize,
-          fontWeight: FontWeight.w400
+        style: TextStyle(
+            color: Constants.standardText,
+            fontSize: mediaSize.height * 0.022
         ),
-        enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Constants.accent,
-              width: 2,
-            )
-        ),
-        focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Constants.accentPlus,
-              width: 2,
-            )
-        )
+        onFieldSubmitted: widget.confirmAction
       ),
-      style: TextStyle(
-          color: Constants.standardText,
-          fontSize: mediaSize.height * 0.022
-      ),
-      onFieldSubmitted: widget.confirmAction
     );
   }
 }
