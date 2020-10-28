@@ -8,6 +8,7 @@ import pl.put.poznan.viroshop.dao.UserRepo;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,11 +21,11 @@ public class UserManager {
         this.userRepo = userRepo;
     }
 
-    public Optional<UserEntity> findAllById(Long id){
+    public Optional<UserEntity> findAllById(Long id) {
         return userRepo.findById(id);
     }
 
-    public Iterable<UserEntity> findAll(){
+    public Iterable<UserEntity> findAll() {
         return userRepo.findAll();
     }
 
@@ -36,13 +37,17 @@ public class UserManager {
         userRepo.deleteById(id);
     }
 
+    public List<UserEntity> findByLogin(String login) {
+        return userRepo.findByLogin(login);
+    }
+
     /**
      * Add to database specific records.
      * EventListener activate this method when application starts (parameter of the adnotation)
      */
     @EventListener(ApplicationReadyEvent.class)
-    public void fillDataBase(){
-        save(new UserEntity( 1L,"lennon123", "lenon@lemon.pl", "ouiya11", LocalDate.of(1995,1,1)));
-        save(new UserEntity( 2L,"maQWE77", "jubikom@gmail.com", "Zazdro99", LocalDate.of(1990,2,22)));
+    public void fillDataBase() {
+        save(new UserEntity(1L, "lennon123", "lenon@lemon.pl", "ouiya11", LocalDate.of(1995, 1, 1)));
+        save(new UserEntity(2L, "maQWE77", "jubikom@gmail.com", "Zazdro99", LocalDate.of(1990, 2, 22)));
     }
 }

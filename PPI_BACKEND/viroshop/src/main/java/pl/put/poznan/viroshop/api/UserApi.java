@@ -1,14 +1,18 @@
 package pl.put.poznan.viroshop.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
 import pl.put.poznan.viroshop.manager.UserManager;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/users")
 public class UserApi {
 
     private UserManager userManager;
@@ -18,8 +22,21 @@ public class UserApi {
         this.userManager = userManager;
     }
 
-    @GetMapping
+    @GetMapping("/api/user")
     public Iterable<UserEntity> getAll() {
         return userManager.findAll();
     }
+
+    @PostMapping("/api/user/login")
+    public ResponseEntity login(@RequestBody UserEntity loginBody) {
+        List<UserEntity> foundUsers = userManager.findByLogin(loginBody.getLogin());
+        if (foundUsers.size() == 0) {
+            return new ResponseEntity("User not found", HttpStatus.BAD_REQUEST);
+        }
+        if (foundUsers.get(0).getPassword().equals(loginBody.getPassword())) {
+            return new ResponseEntity("Login successful", HttpStatus.OK);
+        }
+        return new ResponseEntity("Cannot login", HttpStatus.UNAUTHORIZED);
+    }
+
 }
