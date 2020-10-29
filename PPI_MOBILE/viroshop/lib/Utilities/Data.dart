@@ -8,6 +8,8 @@ class Data{
 
   String dbPath = "";
   String tempDbPath = "";
+  //Za pomocą loginKey będą autoryzowane wszystkie późniejsze requesty
+  String loginKey = "";
 
 
 }

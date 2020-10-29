@@ -1,9 +1,16 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/Utilities/Requests.dart';
+import 'package:viroshop/Views/ForgotPasswordView.dart';
+import 'package:viroshop/Views/RegistrationView.dart';
+import 'package:viroshop/Views/SyncView.dart';
+import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 
 
 class LoginView extends StatefulWidget {
@@ -22,12 +29,45 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
   bool loginButton = false;
 
   void updateButton(){
-      setState(() {
-        loginButton = !loginButton;
-      });
+    FocusScope.of(context).unfocus();
+    setState(() {
+      loginButton = !loginButton;
+    });
   }
   Future<void> sendRequest() async{
-    await Requests.PostLogin(loginController.text, passwordController.text);
+    await Requests.PostLogin(loginController.text, passwordController.text).then(
+            (String message) {
+              switch(message){
+                case "usernotfound":
+                  CustomAlerts.showAlertDialog(context, "Błąd", "Podany użytkownik nie istnieje");
+                  break;
+                case "cannotlogin":
+                  CustomAlerts.showAlertDialog(context, "Błąd", "Błędne hasło");
+                  break;
+                case "unknown":
+                  CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił nieoczekiwany błąd");
+                  break;
+                case "connfailed":
+                  CustomAlerts.showAlertDialog(context, "Błąd", "Połączenie nieudane");
+                  break;
+                case "conntimeout":
+                  CustomAlerts.showAlertDialog(context, "Błąd", "Przekroczono limit czasu połączenia");
+                  break;
+                case "httpexception":
+                  CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
+                  break;
+                default:
+                  //TODO: Wrzucanie klucza autoryzacji do singletona
+                  Navigator.of(context).push(
+                      CustomPageTransition(
+                        SyncView(),
+                        x: 0.0,
+                        y: 0.4,
+                      )
+                  );
+                  break;
+              }
+    });
     //await Future.delayed(Duration(seconds: 1));
     updateButton();
   }
@@ -104,16 +144,26 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                             'Hasło',
                             TextInputAction.done,
                                   (_) => passwordFocusNode.unfocus(),
-                            passwordFocusNode
+                            passwordFocusNode,
+                            shouldObfuscate: true,
                           ),
                           SizedBox(height: mediaSize.height * 0.035,),
-                          loginButton ? Spinner(mediaSize.height, this, sendRequest) : Button(updateButton),
+                          loginButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zaloguj", updateButton),
                           SizedBox(height: mediaSize.height * 0.01,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               FlatButton(
-                                onPressed: (){},
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  Navigator.of(context).push(
+                                    CustomPageTransition(
+                                      ForgotPasswordView(),
+                                      x: 0.4,
+                                      y: 0.55,
+                                    )
+                                  );
+                                },
                                 child: Text("Nie pamiętasz hasła?",
                                   style: TextStyle(
                                     fontSize: mediaSize.width * Constants.accentFontSize,
@@ -132,7 +182,16 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               FlatButton(
-                                onPressed: (){},
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  Navigator.of(context).push(
+                                      CustomPageTransition(
+                                        RegistrationView(),
+                                        x: 0.1,
+                                        y: 0.77,
+                                      )
+                                  );
+                                },
                                 child: Text("Nie masz jeszcze konta? Zarejestruj się",
                                   style: TextStyle(
                                       fontSize: mediaSize.width * Constants.accentFontSize,
@@ -155,46 +214,6 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
             ),
           ),
         )
-    );
-  }
-}
-
-class Button extends StatelessWidget{
-  final Function fun;
-  Button(this.fun);
-  @override
-  Widget build(BuildContext context) {
-    final mediaSize = MediaQuery.of(context).size;
-
-    return Container(
-      width: double.infinity,
-      height: mediaSize.height * 0.06,
-      color: Constants.accent,
-      child: FlatButton(
-          onPressed: () => fun(),
-          child: Text("Zaloguj",style: TextStyle(fontSize: mediaSize.height * 0.026, color: Colors.white, fontWeight: FontWeight.w400),),
-      ),
-    );
-  }
-}
-
-class Spinner extends StatelessWidget{
-  final TickerProvider provider;
-  final size;
-  final Function fun;
-  Spinner(this.size, this.provider, this.fun);
-  @override
-  Widget build(BuildContext context) {
-    Future(()=>fun());
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.06,
-      child: SpinKitFadingCube(
-        color: Constants.accent,
-        size: MediaQuery.of(context).size.width * 0.09,
-        controller: AnimationController(
-          vsync: provider, duration: const Duration(milliseconds: 1500)
-        ),
-      ),
     );
   }
 }
