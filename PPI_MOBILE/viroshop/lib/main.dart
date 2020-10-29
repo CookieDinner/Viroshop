@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:viroshop/Utilities/Data.dart';
@@ -23,6 +24,13 @@ class App extends StatelessWidget{
     ));
 
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('pl'),
+        const Locale('en')
+      ],
       routes: {
         '/loginView' : (context) => LoginView(),
       },

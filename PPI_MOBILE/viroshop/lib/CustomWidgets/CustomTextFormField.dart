@@ -7,8 +7,10 @@ class CustomTextFormField extends StatefulWidget {
   final Function confirmAction;
   final TextInputAction textInputAction;
   final FocusNode focusNode;
+  final bool shouldObfuscate;
 
-  CustomTextFormField(this.controller, this.label, this.textInputAction, this.confirmAction, this.focusNode);
+  CustomTextFormField(this.controller, this.label, this.textInputAction,
+      this.confirmAction, this.focusNode, {this.shouldObfuscate = false});
 
   @override
   CustomTextFormFieldState createState() => CustomTextFormFieldState();
@@ -29,10 +31,12 @@ class CustomTextFormFieldState extends State<CustomTextFormField>{
 
     return Container(
       height: mediaSize.height * 0.06,
+      width: mediaSize.width * 0.8,
       child: TextFormField(
         controller: widget.controller,
         textInputAction: widget.textInputAction,
         cursorColor: Constants.accentPlus,
+        obscureText: widget.shouldObfuscate,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
@@ -68,7 +72,8 @@ class CustomTextFormFieldState extends State<CustomTextFormField>{
         ),
         style: TextStyle(
             color: Constants.standardText,
-            fontSize: mediaSize.height * 0.022
+            fontSize: mediaSize.height * 0.022,
+            fontWeight: FontWeight.w400,
         ),
         onFieldSubmitted: widget.confirmAction
       ),

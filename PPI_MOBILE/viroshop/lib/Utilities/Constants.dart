@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Constants{
-  static const String api = "http://192.168.0.94:8080";
-  static const String shops = "$api/shops";
-  static const String test = "$api/test";
+  static const String api = "http://10.0.2.2:8080/api";
+  static const String apiUser = "$api/user";
 
   //Kolory prosiłbym w tej formie, bo IDE podświetla i przejrzyściej jest
   //Google => 'color picker'
@@ -19,6 +18,8 @@ class Constants{
 
   static const double labelFontSize = 0.04;
   static const double accentFontSize = 0.037;
+  static const double alertLabelFontSize = 0.03;
 
   static int timeOutTime = 7;
+
 }
