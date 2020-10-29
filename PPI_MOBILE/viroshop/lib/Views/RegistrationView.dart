@@ -22,6 +22,7 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
   var repeatPasswordController = TextEditingController(); var repeatPasswordFocusNode = FocusNode();
   String dateString = "Data urodzenia";
 
+  bool generalAlertVisibility = false;
   bool loginAlertVisibility = false;
   bool passwordAlertVisibility = false;
   bool emailAlertVisibility = false;
@@ -33,8 +34,51 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
   @override
   void initState() {
     super.initState();
+    loginController.addListener(loginCheck);
+    passwordController.addListener(passwordCheck);
+    repeatPasswordController.addListener(passwordCheck);
+    emailController.addListener(emailCheck);
   }
 
+  void loginCheck(){
+    if(loginController.text.isEmpty) {
+      //flag = true;
+      loginAlertVisibility = true;
+    }
+    else
+      loginAlertVisibility = false;
+    setState(() {});
+  }
+  void emailCheck(){
+    RegExp emailReg = RegExp(r'[a-zA-Z]+.*@[a-zA-z]+[a-zA-Z0-9]*\.[a-zA-z]+');
+    if(emailReg.stringMatch(emailController.text) != emailController.text) {
+      //flag = true;
+      emailAlertVisibility = true;
+    }
+    else
+      emailAlertVisibility = false;
+    setState(() {});
+  }
+  void passwordCheck(){
+    if(passwordController.text != repeatPasswordController.text ||
+        passwordController.text.isEmpty ||
+        repeatPasswordController.text.isEmpty) {
+      //flag = true;
+      passwordAlertVisibility = true;
+    }
+    else
+      passwordAlertVisibility = false;
+    setState(() {});
+  }
+  void dateCheck(){
+    if(dateString == "Data urodzenia") {
+      //flag = true;
+      dateAlertVisibility = true;
+    }
+    else
+      dateAlertVisibility = false;
+    setState(() {});
+  }
   @override
   void dispose() {
     loginController?.dispose(); loginFocusNode?.dispose();
@@ -44,36 +88,48 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
     super.dispose();
   }
 
-
   void updateButton(){
     FocusScope.of(context).unfocus();
     setState(() {
       registerButton = !registerButton;
     });
   }
+
   Future<void> sendRequest() async{
-    RegExp emailReg = RegExp(r'[a-zA-Z]+.*@.+\..+');
     bool flag = false;
-    if(loginController.text.isEmpty)
-      {flag = true;loginAlertVisibility = true;}
+    if(loginController.text.isEmpty) {
+      flag = true;
+      loginAlertVisibility = true;
+    }
     else
-      {loginAlertVisibility = false;}
-    if(passwordController.text != repeatPasswordController.text || passwordController.text.isEmpty || repeatPasswordController.text.isEmpty)
-      {flag = true;passwordAlertVisibility = true;}
+      loginAlertVisibility = false;
+    RegExp emailReg = RegExp(r'[a-zA-Z]+.*@[a-zA-z]+[a-zA-Z0-9]*\.[a-zA-z]+');
+    if(emailReg.stringMatch(emailController.text) != emailController.text) {
+      flag = true;
+      emailAlertVisibility = true;
+    }
     else
-      {passwordAlertVisibility = false;}
-    if(emailReg.stringMatch(emailController.text) != emailController.text)
-      {flag = true;emailAlertVisibility = true;}
+      emailAlertVisibility = false;
+    if(passwordController.text != repeatPasswordController.text ||
+        passwordController.text.isEmpty ||
+        repeatPasswordController.text.isEmpty) {
+      flag = true;
+      passwordAlertVisibility = true;
+    }
     else
-      {emailAlertVisibility = false;}
-    if(dateString == "Data urodzenia")
-      {flag = true;dateAlertVisibility = true;}
+      passwordAlertVisibility = false;
+    if(dateString == "Data urodzenia") {
+      flag = true;
+      dateAlertVisibility = true;
+    }
     else
-      {dateAlertVisibility = false;}
+      dateAlertVisibility = false;
+
     if(!flag) {
+      generalAlertVisibility = false;
       await Requests.PostRegister(
         loginController.text, emailController.text, passwordController.text,
-        "1998-01-01").then(
+        dateString).then(
             (String message) {
           switch (message) {
             case "userexists":
@@ -101,11 +157,11 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                   context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
               break;
             default:
-            //TODO ALERT O UDANEJ REJESTRACJI
               break;
           }
       });
-    }
+    }else
+      generalAlertVisibility = true;
     setState(() {});
     updateButton();
   }
@@ -120,11 +176,12 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
       locale: Locale('pl', 'PL'),
       helpText: '',
     );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        dateString = DateFormat('yyyy-MM-dd').format(selectedDate);
-      });
+    if (picked != null && picked != selectedDate) {
+      selectedDate = picked;
+      dateString = DateFormat('yyyy-MM-dd').format(selectedDate);
+      setState((){});
+      dateCheck();
+    }
   }
 
 
@@ -167,7 +224,9 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                 loginController,
                                 'Nazwa użytkownika',
                                 TextInputAction.next,
-                                    (_) => emailFocusNode.requestFocus(),
+                                (_) {
+                                  emailFocusNode.requestFocus();
+                                },
                                 loginFocusNode
                             ),
                             SizedBox(height: mediaSize.height * 0.01,),
@@ -236,52 +295,62 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text("Podane hasła nie zgadzają się ze sobą",
+                                  Text("Wpisz zgodne ze sobą hasła",
                                     style: TextStyle(color: Colors.redAccent, fontSize: mediaSize.width * Constants.alertLabelFontSize),),
                                 ],
                               ),
                             ),
-                            //TODO Date of birth
                             SizedBox(height: mediaSize.height * 0.01,),
-                            FlatButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () => selectDate(context),
-                              child: Container(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      mediaSize.width * 0.03,
-                                      0,
-                                      mediaSize.width * 0.03,
-                                      0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(dateString,
-                                        style: dateString == "Data urodzenia" ? TextStyle(
-                                            color: Constants.labelText,
-                                            fontSize: mediaSize.width * Constants.labelFontSize,
-                                            fontWeight: FontWeight.w400
-                                        ) : TextStyle(
-                                            color: Constants.standardText,
-                                            fontSize: mediaSize.height * 0.022,
-                                            fontWeight: FontWeight.w400
+                            Theme(
+                              data: ThemeData(
+                                primaryColor: Constants.accentPlus,
+                                colorScheme: ColorScheme.light(
+                                  primary: Constants.appBarTheme
+                                ),
+                              ),
+                              child: Builder(
+                                builder: (context) =>
+                                  FlatButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () => selectDate(context),
+                                    child: Container(
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                            mediaSize.width * 0.03,
+                                            0,
+                                            mediaSize.width * 0.03,
+                                            0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(dateString,
+                                              style: dateString == "Data urodzenia" ? TextStyle(
+                                                  color: Constants.labelText,
+                                                  fontSize: mediaSize.width * Constants.labelFontSize,
+                                                  fontWeight: FontWeight.w400
+                                              ) : TextStyle(
+                                                  color: Constants.standardText,
+                                                  fontSize: mediaSize.height * 0.022,
+                                                  fontWeight: FontWeight.w400
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border(
-                                      bottom: BorderSide(
-                                        color: Constants.accent,
-                                        width: 2,
-                                      )
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border(
+                                            bottom: BorderSide(
+                                              color: Constants.accent,
+                                              width: 2,
+                                            )
+                                        )
+                                      ),
+                                      height: mediaSize.height * 0.06,
+                                      width: mediaSize.width * 0.8,
+                                    )
                                   )
-                                ),
-                                height: mediaSize.height * 0.06,
-                                width: mediaSize.width * 0.8,
-                              )
+                              ),
                             ),
                             SizedBox(height: mediaSize.height * 0.01,),
                             Visibility(
@@ -300,6 +369,20 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                             SizedBox(height: mediaSize.height * 0.02,),
                             //Button
                             registerButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zarejestruj", updateButton),
+                            SizedBox(height: mediaSize.height * 0.01,),
+                            Visibility(
+                              maintainSize: true,
+                              maintainAnimation: true,
+                              maintainState: true,
+                              visible: generalAlertVisibility,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text("Przed rejestracją wypełnij poprawnie formularz",
+                                    style: TextStyle(color: Colors.redAccent, fontSize: mediaSize.width * Constants.alertLabelFontSize),),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
