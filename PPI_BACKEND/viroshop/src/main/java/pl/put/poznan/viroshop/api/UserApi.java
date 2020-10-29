@@ -39,4 +39,16 @@ public class UserApi {
         return new ResponseEntity("Cannot login", HttpStatus.UNAUTHORIZED);
     }
 
+    @PostMapping("/api/user/register")
+    public ResponseEntity register(@RequestBody UserEntity registerBody) {
+        List<UserEntity> foundUsers = userManager.findByLogin(registerBody.getLogin());
+
+        if (foundUsers.size() != 0) {
+            return new ResponseEntity("User exists", HttpStatus.BAD_REQUEST);
+        }
+
+        userManager.save(registerBody);
+        return new ResponseEntity("Registered", HttpStatus.OK);
+    }
+
 }
