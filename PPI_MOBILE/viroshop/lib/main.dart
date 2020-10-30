@@ -7,6 +7,7 @@ import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Views/LoginView.dart';
 
 void main() async{
+  Paint.enableDithering = true;
   WidgetsFlutterBinding.ensureInitialized();
   final dbPath = await getApplicationDocumentsDirectory();
   final tempDbPath = await getApplicationDocumentsDirectory();

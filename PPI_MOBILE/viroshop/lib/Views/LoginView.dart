@@ -1,17 +1,15 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Views/ForgotPasswordView.dart';
 import 'package:viroshop/Views/RegistrationView.dart';
 import 'package:viroshop/Views/SyncView.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
-
+import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -98,122 +96,121 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
             backgroundColor: Constants.appBarTheme,
           ),
           backgroundColor: Constants.background,
-          body: Container(
-            height: mediaSize.height,
-            width: mediaSize.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/tempbg.png"),
-                fit: BoxFit.cover
-              )
-            ),
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  //Logo
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        mediaSize.width * 0.26,
-                        mediaSize.height * 0.05,
-                        mediaSize.width * 0.26,
-                        mediaSize.height * 0.05,
-                    ),
-                    child: Image.asset('assets/images/logo.png'),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: mediaSize.width * 0.14,
-                    ),
-                    child: Form(
-                      child: Column(
-                        children: <Widget>[
-                          //Login
-                          CustomTextFormField(
-                            loginController,
-                            'Nazwa użytkownika',
-                            TextInputAction.next,
-                                  (_) => passwordFocusNode.requestFocus(),
-                            loginFocusNode
-                          ),
-                          SizedBox(height: mediaSize.height * 0.03,),
-                          //Password
-                          CustomTextFormField(
-                            passwordController,
-                            'Hasło',
-                            TextInputAction.done,
-                                  (_) => passwordFocusNode.unfocus(),
-                            passwordFocusNode,
-                            shouldObfuscate: true,
-                          ),
-                          SizedBox(height: mediaSize.height * 0.035,),
-                          loginButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zaloguj", updateButton),
-                          SizedBox(height: mediaSize.height * 0.01,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FlatButton(
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  Navigator.of(context).push(
-                                    CustomPageTransition(
-                                      ForgotPasswordView(),
-                                      x: 0.4,
-                                      y: 0.55,
-                                    )
-                                  );
-                                },
-                                child: Text("Nie pamiętasz hasła?",
-                                  style: TextStyle(
-                                    fontSize: mediaSize.width * Constants.accentFontSize,
-                                    fontWeight: FontWeight.w400,
-                                    color: Constants.accentText
-                                  ),
-                                ),
-                                padding: EdgeInsets.all(0),
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
+          body: Stack(
+            children : <Widget> [
+              BackgroundAnimation(),
+              Container(
+                height: mediaSize.height,
+                width: mediaSize.width,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      //Logo
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            mediaSize.width * 0.26,
+                            mediaSize.height * 0.05,
+                            mediaSize.width * 0.26,
+                            mediaSize.height * 0.05,
+                        ),
+                        child: Image.asset('assets/images/logo.png'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: mediaSize.width * 0.14,
+                        ),
+                        child: Form(
+                          child: Column(
+                            children: <Widget>[
+                              //Login
+                              CustomTextFormField(
+                                loginController,
+                                'Nazwa użytkownika',
+                                TextInputAction.next,
+                                      (_) => passwordFocusNode.requestFocus(),
+                                loginFocusNode
                               ),
-                            ],
-                          ),
-                          SizedBox(height: mediaSize.height * 0.05,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FlatButton(
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  Navigator.of(context).push(
-                                      CustomPageTransition(
-                                        RegistrationView(),
-                                        x: 0.1,
-                                        y: 0.77,
-                                      )
-                                  );
-                                },
-                                child: Text("Nie masz jeszcze konta? Zarejestruj się",
-                                  style: TextStyle(
-                                      fontSize: mediaSize.width * Constants.accentFontSize,
-                                      fontWeight: FontWeight.w400,
-                                      color: Constants.accentText
-                                  ),
-                                ),
-                                padding: EdgeInsets.all(0),
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
+                              SizedBox(height: mediaSize.height * 0.03,),
+                              //Password
+                              CustomTextFormField(
+                                passwordController,
+                                'Hasło',
+                                TextInputAction.done,
+                                      (_) => passwordFocusNode.unfocus(),
+                                passwordFocusNode,
+                                shouldObfuscate: true,
                               ),
-                            ],
-                          ),
-                        ],
+                              SizedBox(height: mediaSize.height * 0.035,),
+                              loginButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zaloguj", updateButton),
+                              SizedBox(height: mediaSize.height * 0.01,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  FlatButton(
+                                    onPressed: () {
+                                      FocusScope.of(context).unfocus();
+                                      Navigator.of(context).push(
+                                        CustomPageTransition(
+                                          ForgotPasswordView(),
+                                          x: 0.4,
+                                          y: 0.55,
+                                        )
+                                      );
+                                    },
+                                    child: Text("Nie pamiętasz hasła?",
+                                      style: TextStyle(
+                                        fontSize: mediaSize.width * Constants.accentFontSize,
+                                        fontWeight: FontWeight.w400,
+                                        color: Constants.accentText
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(0),
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: mediaSize.height * 0.05,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  FlatButton(
+                                    onPressed: () {
+                                      FocusScope.of(context).unfocus();
+                                      Navigator.of(context).push(
+                                          CustomPageTransition(
+                                            RegistrationView(),
+                                            x: 0.1,
+                                            y: 0.77,
+                                          )
+                                      );
+                                    },
+                                    child: Text("Nie masz jeszcze konta? Zarejestruj się",
+                                      style: TextStyle(
+                                          fontSize: mediaSize.width * Constants.accentFontSize,
+                                          fontWeight: FontWeight.w400,
+                                          color: Constants.accentText
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(0),
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        )
+          ]
+        ),
+      )
     );
   }
 }
