@@ -41,5 +41,8 @@ public class ProductManager {
      */
     @EventListener(ApplicationReadyEvent.class)
     public void fillDataBase() {
+        for (ProductEntity product : DatabaseFill.productsEntities) {
+            save(product);
+        }
     }
 }

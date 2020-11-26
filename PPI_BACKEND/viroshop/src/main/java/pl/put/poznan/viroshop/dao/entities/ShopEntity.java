@@ -16,13 +16,8 @@ public class ShopEntity {
     private Integer number;
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "shops_products",
-            joinColumns = @JoinColumn(name = "shop_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<ProductEntity> productEntities;
+    @OneToMany(mappedBy = "shopEntity")
+    private Set<StoreEntity> storeEntities;
 
     public ShopEntity() {
     }

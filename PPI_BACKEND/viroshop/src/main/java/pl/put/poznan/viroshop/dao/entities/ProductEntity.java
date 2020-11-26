@@ -1,5 +1,7 @@
 package pl.put.poznan.viroshop.dao.entities;
 
+import pl.put.poznan.viroshop.dao.Unit;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -13,20 +15,20 @@ public class ProductEntity {
     private String barcode;
     private String name;
     private String description;
-    private Float price;
+    private Unit unit;
 
-    @ManyToMany(mappedBy = "productEntities")
-    private Set<ShopEntity> shopEntities;
+    @OneToMany(mappedBy = "productEntity")
+    private Set<StoreEntity> storeEntities;
 
     public ProductEntity() {
     }
 
-    public ProductEntity(Long id, String barcode, String name, String description, Float price) {
+    public ProductEntity(Long id, String barcode, String name, String description, Unit unit) {
         this.id = id;
         this.barcode = barcode;
         this.name = name;
         this.description = description;
-        this.price = price;
+        this.unit = unit;
     }
 
     public Long getId() {
@@ -61,11 +63,12 @@ public class ProductEntity {
         this.description = description;
     }
 
-    public Float getPrice() {
-        return price;
+    public Unit getUnit() {
+        return unit;
     }
 
-    public void setPrice(Float price) {
-        this.price = price;
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
+
 }

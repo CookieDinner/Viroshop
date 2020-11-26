@@ -5,18 +5,14 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.put.poznan.viroshop.dao.entities.ShopEntity;
-import pl.put.poznan.viroshop.dao.entities.UserEntity;
 import pl.put.poznan.viroshop.dao.repositories.ShopRepo;
-import pl.put.poznan.viroshop.dao.repositories.UserRepo;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ShopManager {
 
-    private ShopRepo shopRepo;
+    private final ShopRepo shopRepo;
 
     @Autowired
     public ShopManager(ShopRepo shopRepo) {
@@ -45,5 +41,8 @@ public class ShopManager {
      */
     @EventListener(ApplicationReadyEvent.class)
     public void fillDataBase() {
+        for (ShopEntity shop : DatabaseFill.shopEntities) {
+            save(shop);
+        }
     }
 }
