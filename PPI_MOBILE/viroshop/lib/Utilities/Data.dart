@@ -1,4 +1,4 @@
-//Singleton we flutterze
+
 class Data{
   static final Data data = Data._internal();
   factory Data(){
