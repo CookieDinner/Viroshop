@@ -4,10 +4,10 @@ class Constants{
   static const String api = "http://10.0.2.2:8080/api";
   static const String apiUser = "$api/user";
 
-  static const Color background = Color.fromRGBO(244, 249, 255, 1);
-  static const Color backgroundWave1 = Color.fromRGBO(215, 210, 252, 1);
-  static const Color backgroundWave2 = Color.fromRGBO(186, 231, 255, 1);
-  static const Color backgroundWave3 = Color.fromRGBO(209, 239, 255, 1);
+  static const Color background = Color.fromRGBO(234, 239, 245, 1);
+  static const Color backgroundWave1 = Color.fromRGBO(185, 180, 222, 1);
+  static const Color backgroundWave2 = Color.fromRGBO(156, 201, 225, 1);
+  static const Color backgroundWave3 = Color.fromRGBO(179, 209, 225, 1);
   static const Color waveBottom = Color.fromRGBO(244, 249, 255, 1);
   static const Color appBarTheme = Color.fromRGBO(1, 106, 213, 1);
   static const Color accent = Color.fromRGBO(63, 147, 232, 1);

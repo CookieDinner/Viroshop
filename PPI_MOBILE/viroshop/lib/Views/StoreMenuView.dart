@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/StoreMenuItem.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/Views/StoreNavigationView.dart';
 
 class StoreMenuView extends StatefulWidget {
   final storeName;
@@ -14,6 +16,17 @@ class StoreMenuView extends StatefulWidget {
 }
 
 class _StoreMenuViewState extends State<StoreMenuView> {
+
+  void pushChosenTab(int index){
+    Navigator.of(context).push(
+        CustomPageTransition(
+          StoreNavigationView(index),
+          x: 0.1,
+          y: -0.85
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
@@ -30,11 +43,11 @@ class _StoreMenuViewState extends State<StoreMenuView> {
                   child: Column(
                     children: [
                       SizedBox(height: mediaSize.height * 0.1,),
-                      StoreMenuItem("Lista produktów", (){print(1);}),
-                      StoreMenuItem("Kategorie", (){print(2);}),
-                      StoreMenuItem("Koszyk", (){print(3);}),
-                      StoreMenuItem("Wejdź do\nsklepu / Pozostały czas", (){print(4);}),
-                      StoreMenuItem("Mapa sklepu / alejek", (){print(5);}),
+                      StoreMenuItem("Lista produktów", () => pushChosenTab(0)),
+                      StoreMenuItem("Kategorie", () => pushChosenTab(1)),
+                      StoreMenuItem("Koszyk", () => pushChosenTab(2)),
+                      StoreMenuItem("Wejdź do\nsklepu / Pozostały czas", () => pushChosenTab(3)),
+                      StoreMenuItem("Mapa sklepu / alejek", () => pushChosenTab(4)),
                     ],
                   ),
                 ),

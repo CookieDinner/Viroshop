@@ -6,8 +6,11 @@ import 'package:viroshop/Utilities/Util.dart';
 class CustomAppBar extends StatelessWidget{
   final String title;
   final bool withBackButton;
+  final bool withOptionButton;
+  final Widget optionButtonWidget;
+  final Function optionButtonAction;
 
-  CustomAppBar(this.title, {this.withBackButton = true});
+  CustomAppBar(this.title, {this.withBackButton = true, this.withOptionButton = false, this.optionButtonAction, this.optionButtonWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +34,24 @@ class CustomAppBar extends StatelessWidget{
             ),
           ) : Container(height: buttonSize,width: mediaSize.width * 0.04,),
           withBackButton ? SizedBox(width: mediaSize.width * 0.01,) :
-            SizedBox(width: 0,),
+            SizedBox(),
           Text(
             title,
             style: TextStyle(
               fontSize: mediaSize.width * Constants.appBarFontSize,
               color: CustomTheme().appBarTheme,
             ),
-          )
+          ),
+          withOptionButton ? SizedBox(width: mediaSize.width * 0.45,) : SizedBox(),
+          withOptionButton ? Container(
+            height: buttonSize,
+            width: buttonSize * 1.6,
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () => optionButtonAction(),
+              child: optionButtonWidget,
+            ),
+          ) : SizedBox()
         ],
       ),
     );

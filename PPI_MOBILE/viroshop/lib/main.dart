@@ -14,7 +14,7 @@ void main() async{
   final tempDbPath = await getApplicationDocumentsDirectory();
   Data().dbPath = path.join(dbPath.path, 'local_db.sqlite');
   Data().tempDbPath = tempDbPath.path;
-  CustomTheme().setTheme(false);
+  CustomTheme().setTheme(true);
   runApp(App());
 }
 
