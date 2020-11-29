@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
+import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
+import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
+import 'package:viroshop/Utilities/Util.dart';
 
 class RegistrationView extends StatefulWidget {
   @override
@@ -187,27 +190,22 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    var mediaSize = MediaQuery.of(context).size;
+    final mediaSize = Util.getDimensions(context);
     return SafeArea(
         child: Scaffold(
-            appBar: AppBar(
-              title: const Text("Rejestracja", style: TextStyle(fontWeight: FontWeight.w400),),
-              titleSpacing: mediaSize.width * 0.04,
-              backgroundColor: Constants.appBarTheme,
-            ),
-            backgroundColor: Constants.background,
-            body: Stack(
-              children: [
-                BackgroundAnimation(),
-                Container(
-                  height: mediaSize.height,
-                  width: mediaSize.width,
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Column(
+            backgroundColor: CustomTheme().background,
+            body: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Container(
+                width: mediaSize.width,
+                height: mediaSize.height,
+                child: Stack(
+                  children: [
+                    BackgroundAnimation(),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        SizedBox(height: mediaSize.height * 0.13,),
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: mediaSize.width * 0.14,
@@ -239,7 +237,7 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: mediaSize.height * 0.01,),
+                                SizedBox(height: mediaSize.height * 0.02,),
                                 //Email
                                 CustomTextFormField(
                                     emailController,
@@ -262,7 +260,7 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: mediaSize.height * 0.01,),
+                                SizedBox(height: mediaSize.height * 0.02,),
                                 //Password
                                 CustomTextFormField(
                                   passwordController,
@@ -272,7 +270,7 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                   passwordFocusNode,
                                   shouldObfuscate: true,
                                 ),
-                                SizedBox(height: mediaSize.height * 0.03,),
+                                SizedBox(height: mediaSize.height * 0.04,),
                                 //Repeat Password
                                 CustomTextFormField(
                                   repeatPasswordController,
@@ -296,13 +294,16 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: mediaSize.height * 0.01,),
+                                SizedBox(height: mediaSize.height * 0.02,),
                                 Theme(
                                   data: ThemeData(
-                                    primaryColor: Constants.accentPlus,
-                                    colorScheme: ColorScheme.light(
-                                      primary: Constants.appBarTheme
-                                    ),
+                                    primaryColor: CustomTheme().accentPlus,
+                                    colorScheme: CustomTheme().isDark ? ColorScheme.dark(
+                                      primary: CustomTheme().appBarTheme,
+                                      surface: CustomTheme().accent
+                                    ) : ColorScheme.light(
+                                        primary: CustomTheme().appBarTheme,
+                                    )
                                   ),
                                   child: Builder(
                                     builder: (context) =>
@@ -321,11 +322,11 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                               children: [
                                                 Text(dateString,
                                                   style: dateString == "Data urodzenia" ? TextStyle(
-                                                      color: Constants.labelText,
+                                                      color: CustomTheme().labelText,
                                                       fontSize: mediaSize.width * Constants.labelFontSize,
                                                       fontWeight: FontWeight.w400
                                                   ) : TextStyle(
-                                                      color: Constants.standardText,
+                                                      color: CustomTheme().standardText,
                                                       fontSize: mediaSize.height * 0.022,
                                                       fontWeight: FontWeight.w400
                                                   ),
@@ -334,10 +335,10 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                             ),
                                           ),
                                           decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: CustomTheme().textBackground,
                                             border: Border(
                                                 bottom: BorderSide(
-                                                  color: Constants.accent,
+                                                  color: CustomTheme().accent,
                                                   width: 2,
                                                 )
                                             )
@@ -362,7 +363,7 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: mediaSize.height * 0.02,),
+                                SizedBox(height: mediaSize.height * 0.03,),
                                 //Button
                                 registerButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zarejestruj", updateButton),
                                 SizedBox(height: mediaSize.height * 0.01,),
@@ -385,9 +386,10 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                         ),
                       ],
                     ),
-                  ),
+                    CustomAppBar("Rejestracja")
+                  ],
                 ),
-              ],
+              ),
             )
         )
     );

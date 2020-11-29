@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Constants.dart';
+import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/Views/MainMenuView.dart';
 
 class SyncView extends StatefulWidget {
   @override
@@ -9,30 +14,53 @@ class SyncView extends StatefulWidget {
 }
 
 class _SyncViewState extends State<SyncView> {
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              Future.delayed(Duration(seconds: 2), (){
+                Navigator.of(context).pushReplacement(
+                    CustomPageTransition(
+                      MainMenuView(),
+                      x: 0.0,
+                      y: 0.0,
+                    )
+                );
+              });
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var mediaSize = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Synchronizacja", style: TextStyle(fontWeight: FontWeight.w400),),
-            titleSpacing: mediaSize.width * 0.04,
-            backgroundColor: Constants.appBarTheme,
-          ),
-          backgroundColor: Constants.background,
-          body: Stack(
-            children: [
-              BackgroundAnimation(),
-              Container(
-                height: mediaSize.height,
+    var mediaSize = Util.getDimensions(context);
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+            backgroundColor: CustomTheme().background,
+            body: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Container(
                 width: mediaSize.width,
-                child: Center(
-                  child: Text("WIP"),
+                height: mediaSize.height,
+                child: Stack(
+                  children: [
+                    BackgroundAnimation(),
+                    Container(
+                      height: mediaSize.height,
+                      width: mediaSize.width,
+                      child: Center(
+                        child: Text("Tutaj będzie ładowanie SQLów",
+                          style: TextStyle(color: CustomTheme().standardText),),
+                      ),
+                    ),
+                    CustomAppBar("Synchronizacja", withBackButton: false)
+                  ],
                 ),
               ),
-            ],
-          )
-      )
+            )
+        )
+      ),
     );
   }
 }
