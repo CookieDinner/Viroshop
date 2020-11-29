@@ -32,7 +32,7 @@ class Constants{
   static const Color darkAccentText = Color.fromRGBO(31, 142, 255, 1);
   static const Color darkLabelText = Color.fromRGBO(235, 235, 235, 1);
   static const Color darkTextBackground = Color.fromRGBO(143, 141, 136, 1);
-  static const Color darkPopupBackground = Color.fromRGBO(155, 155, 155, 1);
+  static const Color darkPopupBackground = Color.fromRGBO(100, 100, 100, 1);
   static const Color darkButtonColor = Color.fromRGBO(1, 106, 213, 1);
   static const Color darkCardColor = Color.fromRGBO(50, 152, 255, 0.18);
 

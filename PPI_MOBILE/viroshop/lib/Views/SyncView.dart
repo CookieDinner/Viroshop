@@ -15,19 +15,66 @@ class SyncView extends StatefulWidget {
 
 class _SyncViewState extends State<SyncView> {
 
+  List<String> downloadElements = [
+    "Sklepów", "Produktów", "Stanów magazynowych", "Alejek sklepowych",
+    "Czegoś tam jeszcze"
+  ];
+  var currentElement = "";
+  var progressPercentage = 0.0;
+
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              Future.delayed(Duration(seconds: 2), (){
-                Navigator.of(context).pushReplacement(
-                    CustomPageTransition(
-                      MainMenuView(),
-                      x: 0.0,
-                      y: 0.0,
-                    )
-                );
-              });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      await commenceDownload();
+        Navigator.of(context).pushReplacement(
+            CustomPageTransition(
+              MainMenuView(),
+              x: 0.0,
+              y: 0.0,
+            )
+        );
       });
+  }
+
+  Future<bool> commenceDownload() async{
+    setState(() {
+      currentElement = downloadElements[0];
+    });
+
+    for (var i = 0; i < downloadElements.length; i++){
+      await Future.delayed(Duration(milliseconds: 50), (){});
+      for (var j = 0; j < 10; j++) {
+        setState(() {
+          progressPercentage+= 1 / (downloadElements.length*20);
+        });
+        if (j < 9)
+          await Future.delayed(Duration(milliseconds: 30), (){});
+      }
+      setState(() {
+        if (i + 1 < downloadElements.length)
+          currentElement = downloadElements[i+1];
+      });
+    }
+
+    setState(() {
+      currentElement = downloadElements[0];
+    });
+
+    for (var i = downloadElements.length; i < downloadElements.length * 2; i++){
+      await Future.delayed(Duration(milliseconds: 50), (){});
+      for (var j = 0; j < 10; j++) {
+        setState(() {
+          progressPercentage += 1 / (downloadElements.length*20);
+        });
+        if (j < 9)
+          await Future.delayed(Duration(milliseconds: 30), (){});
+      }
+      setState(() {
+        if (i + 1 - downloadElements.length < downloadElements.length)
+          currentElement = downloadElements[i+1-downloadElements.length];
+      });
+    }
+    return true;
   }
 
   @override
@@ -49,9 +96,36 @@ class _SyncViewState extends State<SyncView> {
                     Container(
                       height: mediaSize.height,
                       width: mediaSize.width,
-                      child: Center(
-                        child: Text("Tutaj będzie ładowanie SQLów",
-                          style: TextStyle(color: CustomTheme().standardText),),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            progressPercentage < 0.5 ?
+                            "Trwa \"pobieranie\":" :
+                            "Trwa \"scalanie\":",
+                            style: TextStyle(
+                              color: CustomTheme().accentText,
+                              fontSize: mediaSize.width * Constants.appBarFontSize
+                            ),
+                          ),
+                          Text(
+                            currentElement,
+                            style: TextStyle(
+                              color: CustomTheme().accentText,
+                              fontSize: mediaSize.width * Constants.appBarFontSize
+                            ),
+                          ),
+                          SizedBox(height: mediaSize.height * 0.03,),
+                          Container(
+                            width: mediaSize.width * 0.7,
+                            child: LinearProgressIndicator(
+                              value: progressPercentage,
+                              valueColor: AlwaysStoppedAnimation<Color>(CustomTheme().buttonColor),
+                              backgroundColor: CustomTheme().cardColor,
+                              minHeight: mediaSize.height * 0.04,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     CustomAppBar("Synchronizacja", withBackButton: false)
