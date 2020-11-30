@@ -24,11 +24,11 @@ public class DatabaseFill {
     };
 
     static StoreEntity[] storeEntities = new StoreEntity[]{
-            new StoreEntity(1L, 50.0f, 23.20f, shopEntities[0], productsEntities[1]),
-            new StoreEntity(2L, 5.0f, 15.99f, shopEntities[1], productsEntities[2]),
-            new StoreEntity(3L, 1.0f, 2.50f, shopEntities[1], productsEntities[3]),
-            new StoreEntity(5L, 20.0f, 3.00f, shopEntities[0], productsEntities[2]),
-            new StoreEntity(4L, 12.0f, 5.00f, shopEntities[1], productsEntities[4]),
+            new StoreEntity(1L, true, 23.20f, shopEntities[0], productsEntities[1]),
+            new StoreEntity(2L, true, 15.99f, shopEntities[1], productsEntities[2]),
+            new StoreEntity(3L, true, 2.50f, shopEntities[1], productsEntities[3]),
+            new StoreEntity(5L, true, 3.00f, shopEntities[0], productsEntities[2]),
+            new StoreEntity(4L, true, 5.00f, shopEntities[1], productsEntities[4]),
     };
 
     static UserEntity[] userEntities = new UserEntity[]{

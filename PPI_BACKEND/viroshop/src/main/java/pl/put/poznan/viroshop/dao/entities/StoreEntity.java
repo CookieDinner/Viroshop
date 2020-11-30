@@ -10,7 +10,7 @@ public class StoreEntity {
     @Id
     private Long id;
 
-    private Float quantity;
+    private boolean isAvailable;
     private Float price;
 
     @ManyToOne
@@ -22,9 +22,9 @@ public class StoreEntity {
     public StoreEntity() {
     }
 
-    public StoreEntity(Long id, Float quantity, Float price, ShopEntity shopEntity, ProductEntity productEntity) {
+    public StoreEntity(Long id, boolean isAvailable, Float price, ShopEntity shopEntity, ProductEntity productEntity) {
         this.id = id;
-        this.quantity = quantity;
+        this.isAvailable = isAvailable;
         this.price = price;
         this.shopEntity = shopEntity;
         this.productEntity = productEntity;
@@ -38,12 +38,12 @@ public class StoreEntity {
         this.id = id;
     }
 
-    public Float getQuantity() {
-        return quantity;
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
-    public void setQuantity(Float quantity) {
-        this.quantity = quantity;
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 
     public Float getPrice() {
@@ -52,5 +52,21 @@ public class StoreEntity {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public ShopEntity getShopEntity() {
+        return shopEntity;
+    }
+
+    public void setShopEntity(ShopEntity shopEntity) {
+        this.shopEntity = shopEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 }
