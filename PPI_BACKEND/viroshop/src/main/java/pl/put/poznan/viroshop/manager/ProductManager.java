@@ -11,9 +11,7 @@ import pl.put.poznan.viroshop.dao.repositories.ProductRepo;
 import pl.put.poznan.viroshop.dao.repositories.StoreRepo;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
