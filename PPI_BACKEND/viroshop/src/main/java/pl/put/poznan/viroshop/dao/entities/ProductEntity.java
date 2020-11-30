@@ -1,5 +1,6 @@
 package pl.put.poznan.viroshop.dao.entities;
 
+import pl.put.poznan.viroshop.dao.Category;
 import pl.put.poznan.viroshop.dao.Unit;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ public class ProductEntity {
 
     private String barcode;
     private String name;
+    private Category category;
     private String description;
     private Unit unit;
 
@@ -23,10 +25,11 @@ public class ProductEntity {
     public ProductEntity() {
     }
 
-    public ProductEntity(Long id, String barcode, String name, String description, Unit unit) {
+    public ProductEntity(Long id, String barcode, String name, Category category, String description, Unit unit) {
         this.id = id;
         this.barcode = barcode;
         this.name = name;
+        this.category = category;
         this.description = description;
         this.unit = unit;
     }
@@ -71,4 +74,11 @@ public class ProductEntity {
         this.unit = unit;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
