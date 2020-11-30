@@ -12,6 +12,8 @@ class Requests{
 
   static Future<String> PostLogin(String login, String password) async {
     try{
+      //TODO UNCOMMENT WHEN TESTING WITH THE SERVER
+      return "loginsuccessful";
       http.Response response = await http.post(
           "${Constants.apiUser}/login",
           headers: <String, String>{

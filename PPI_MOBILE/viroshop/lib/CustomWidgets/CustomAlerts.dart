@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Util.dart';
 import '../Utilities/Constants.dart';
 import 'dart:async';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomAlerts{
 
-  static const accentColor = Constants.accentPlus;
 
   static void showAlertDialog(BuildContext context, String title, String body, {bool dismissible = true}) async {
+    final mediaSize = Util.getDimensions(context);
     AlertDialog alert = AlertDialog(
-      backgroundColor: Constants.background,
+      backgroundColor: CustomTheme().popupBackground,
       title: Center(
-          child: Text(title, style: TextStyle(color: accentColor),)),
+          child: Text(title, style: TextStyle(color: CustomTheme().accentText),)),
       content: SizedBox(
-          height: 75,
-          child: Center(child: Text(body, textAlign: TextAlign.center,))
+          height: mediaSize.height * 0.1,
+          child: Center(
+              child: Text(
+                body,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: CustomTheme().standardText
+                ),
+              )
+          )
       ),
       actions: [
       ],
       elevation: 25,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
 
     Timer timer;
@@ -37,9 +47,9 @@ class CustomAlerts{
   }
   static showChoiceDialog(BuildContext context, String title, String body, String confirmString, Function function, {List<dynamic> functionArgs}) async{
     AlertDialog alert = AlertDialog(
-      backgroundColor: Constants.background,
+      backgroundColor: CustomTheme().background,
       title: Center(
-          child: Text(title, style: TextStyle(color: accentColor),)),
+          child: Text(title, style: TextStyle(color: CustomTheme().accent),)),
       content: Container(
           height: MediaQuery.of(context).size.height * 0.15,
           child: Column(
@@ -105,7 +115,7 @@ class CustomAlerts{
               child: Center(
                   child: Container(
                       child: SpinKitFadingCircle(
-                        color: accentColor,
+                        color: CustomTheme().accent,
                         size: 70,
                       )
                   )

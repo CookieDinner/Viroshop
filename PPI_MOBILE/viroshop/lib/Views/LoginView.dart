@@ -4,7 +4,9 @@ import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
+import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Requests.dart';
+import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ForgotPasswordView.dart';
 import 'package:viroshop/Views/RegistrationView.dart';
 import 'package:viroshop/Views/SyncView.dart';
@@ -86,36 +88,30 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    final mediaSize = MediaQuery.of(context).size;
-
+    final mediaSize = Util.getDimensions(context);
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text("ViroShop", style: TextStyle(fontWeight: FontWeight.w400),),
-            titleSpacing: mediaSize.width * 0.04,
-            backgroundColor: Constants.appBarTheme,
-          ),
-          backgroundColor: Constants.background,
-          body: Stack(
-            children : <Widget> [
-              BackgroundAnimation(),
-              Container(
-                height: mediaSize.height,
-                width: mediaSize.width,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Column(
+          backgroundColor: CustomTheme().background,
+          body: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Container(
+              height: mediaSize.height,
+              width: mediaSize.width,
+              child: Stack(
+                children : <Widget> [
+                  BackgroundAnimation(),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      //Logo
                       Padding(
                         padding: EdgeInsets.fromLTRB(
-                            mediaSize.width * 0.26,
-                            mediaSize.height * 0.05,
-                            mediaSize.width * 0.26,
-                            mediaSize.height * 0.05,
+                            mediaSize.width * 0.24,
+                            0,
+                            mediaSize.width * 0.24,
+                            mediaSize.height * 0.03,
                         ),
-                        child: Image.asset('assets/images/logo.png'),
+                        child: Image.asset('assets/images/viroshop_logo.png'),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -144,7 +140,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                               ),
                               SizedBox(height: mediaSize.height * 0.035,),
                               loginButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zaloguj", updateButton),
-                              SizedBox(height: mediaSize.height * 0.01,),
+                              SizedBox(height: mediaSize.height * 0.02,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -163,7 +159,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                                       style: TextStyle(
                                         fontSize: mediaSize.width * Constants.accentFontSize,
                                         fontWeight: FontWeight.w400,
-                                        color: Constants.accentText
+                                        color: CustomTheme().accentText
                                       ),
                                     ),
                                     padding: EdgeInsets.all(0),
@@ -172,7 +168,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                                   ),
                                 ],
                               ),
-                              SizedBox(height: mediaSize.height * 0.05,),
+                              SizedBox(height: mediaSize.height * 0.02,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -191,7 +187,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                                       style: TextStyle(
                                           fontSize: mediaSize.width * Constants.accentFontSize,
                                           fontWeight: FontWeight.w400,
-                                          color: Constants.accentText
+                                          color: CustomTheme().accentText
                                       ),
                                     ),
                                     padding: EdgeInsets.all(0),
@@ -205,11 +201,11 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ]
+                  ),
+              ]
         ),
+            ),
+          ),
       )
     );
   }

@@ -11,5 +11,4 @@ class Data{
   //Za pomocą loginKey będą autoryzowane wszystkie późniejsze requesty
   String loginKey = "";
 
-
 }

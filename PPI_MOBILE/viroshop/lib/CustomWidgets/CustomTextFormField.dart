@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Constants.dart';
+import 'package:viroshop/Utilities/CustomTheme.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
@@ -35,11 +36,14 @@ class CustomTextFormFieldState extends State<CustomTextFormField>{
       child: TextFormField(
         controller: widget.controller,
         textInputAction: widget.textInputAction,
-        cursorColor: Constants.accentPlus,
+        cursorColor: CustomTheme().accentPlus,
         obscureText: widget.shouldObfuscate,
         decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(0.0))
+          ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: CustomTheme().textBackground,
           contentPadding: EdgeInsets.fromLTRB(
               mediaSize.width * 0.03,
               0,
@@ -49,29 +53,29 @@ class CustomTextFormFieldState extends State<CustomTextFormField>{
           alignLabelWithHint: true,
           labelText: widget.label, hintText: widget.label,
           hintStyle: TextStyle(
-            color: Constants.labelText,
+            color: CustomTheme().labelText,
             fontSize: mediaSize.width * Constants.labelFontSize,
           ),
           labelStyle: TextStyle(
-            color: Constants.labelText,
+            color: CustomTheme().labelText,
             fontSize: mediaSize.width * Constants.labelFontSize,
             fontWeight: FontWeight.w400
           ),
           enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: Constants.accent,
+                color: CustomTheme().accent,
                 width: 2,
               )
           ),
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: Constants.accentPlus,
+                color: CustomTheme().accentPlus,
                 width: 2,
               )
           )
         ),
         style: TextStyle(
-            color: Constants.standardText,
+            color: CustomTheme().standardText,
             fontSize: mediaSize.height * 0.022,
             fontWeight: FontWeight.w400,
         ),

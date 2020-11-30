@@ -3,41 +3,45 @@ import 'package:simple_animations/simple_animations.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'dart:math';
 
+import 'package:viroshop/Utilities/CustomTheme.dart';
+
 class BackgroundAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children : <Widget>[
-          AnimatedWave(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 1.3,
-            speed: 0.6,
-            offset: pi,
-            color: Constants.backgroundWave3,
-            a: 1,
-            b: 1,
-            c: 1,
-          ),
-          AnimatedWave(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 2.2,
-            speed: 0.5,
-            offset: pi / 2,
-            color: Constants.backgroundWave2,
-            a: 1,
-            b: 1,
-            c: 1,
-          ),
-          AnimatedWave(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            speed: 0.4,
-            color: Constants.backgroundWave1,
-            a: 1,
-            b: 1,
-            c: 1,
-          ),
-        ]
+    return Container(
+      child: Stack(
+          children : <Widget>[
+            AnimatedWave(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 1.3,
+              speed: 0.6,
+              offset: pi,
+              color: CustomTheme().backgroundWave3,
+              a: 1,
+              b: 1,
+              c: 1,
+            ),
+            AnimatedWave(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 2.2,
+              speed: 0.5,
+              offset: pi / 2,
+              color: CustomTheme().backgroundWave2,
+              a: 1,
+              b: 1,
+              c: 1,
+            ),
+            AnimatedWave(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 4,
+              speed: 0.4,
+              color: CustomTheme().backgroundWave1,
+              a: 1,
+              b: 1,
+              c: 1,
+            ),
+          ]
+      ),
     );
   }
 }
@@ -99,11 +103,11 @@ class CurvePainter extends CustomPainter {
       end: Alignment.bottomCenter,
       colors: [
         waveColor,
-        Constants.weirdWhite,
+        CustomTheme().waveBottom,
       ],
     ).createShader(Rect.fromCircle(
-      center: Offset(0.0, 0.0),
-      radius: height / 1.5,
+      center: Offset(0, 1),
+      radius: 1000,
     ));
     final path = Path();
 

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Views/LoginView.dart';
 
@@ -13,6 +14,7 @@ void main() async{
   final tempDbPath = await getApplicationDocumentsDirectory();
   Data().dbPath = path.join(dbPath.path, 'local_db.sqlite');
   Data().tempDbPath = tempDbPath.path;
+  CustomTheme().setTheme(false);
   runApp(App());
 }
 
@@ -25,6 +27,7 @@ class App extends StatelessWidget{
     ));
 
     return MaterialApp(
+      theme: ThemeData(highlightColor: Colors.blueAccent),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate
       ],

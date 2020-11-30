@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/Utilities/Constants.dart';
+import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Util.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   @override
@@ -11,26 +14,29 @@ class ForgotPasswordView extends StatefulWidget {
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
-    var mediaSize = MediaQuery.of(context).size;
+    final mediaSize = Util.getDimensions(context);
     return SafeArea(
         child: Scaffold(
-            appBar: AppBar(
-              title: const Text("Przypomnij hasło", style: TextStyle(fontWeight: FontWeight.w400),),
-              titleSpacing: mediaSize.width * 0.04,
-              backgroundColor: Constants.appBarTheme,
-            ),
-            backgroundColor: Constants.background,
-            body: Stack(
-              children: [
-                BackgroundAnimation(),
-                Container(
-                  height: mediaSize.height,
-                  width: mediaSize.width,
-                  child: Center(
-                    child: Text("WIP"),
-                  ),
+            backgroundColor: CustomTheme().background,
+            body: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Container(
+                width: mediaSize.width,
+                height: mediaSize.height,
+                child: Stack(
+                  children: [
+                    BackgroundAnimation(),
+                    Container(
+                      height: mediaSize.height,
+                      width: mediaSize.width,
+                      child: Center(
+                        child: Text("WIP"),
+                      ),
+                    ),
+                    CustomAppBar("Przypomnij hasło")
+                  ],
                 ),
-              ],
+              ),
             )
         )
     );
