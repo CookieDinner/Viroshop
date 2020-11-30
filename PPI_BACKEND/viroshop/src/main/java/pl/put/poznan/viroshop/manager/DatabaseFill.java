@@ -28,8 +28,8 @@ public class DatabaseFill {
             new StoreEntity(1L, true, 23.20f, shopEntities[0], productsEntities[1]),
             new StoreEntity(2L, true, 15.99f, shopEntities[1], productsEntities[2]),
             new StoreEntity(3L, true, 2.50f, shopEntities[1], productsEntities[3]),
-            new StoreEntity(5L, true, 3.00f, shopEntities[0], productsEntities[2]),
             new StoreEntity(4L, true, 5.00f, shopEntities[1], productsEntities[4]),
+            new StoreEntity(5L, true, 3.00f, shopEntities[0], productsEntities[2]),
     };
 
     static UserEntity[] userEntities = new UserEntity[]{
