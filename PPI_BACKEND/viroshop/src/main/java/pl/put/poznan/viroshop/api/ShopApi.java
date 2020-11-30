@@ -16,7 +16,7 @@ public class ShopApi {
         this.shopManager = shopManager;
     }
 
-    @GetMapping("/api/shop")
+    @GetMapping("/api/shops")
     public Iterable<ShopEntity> getAll() {
         return shopManager.findAll();
     }

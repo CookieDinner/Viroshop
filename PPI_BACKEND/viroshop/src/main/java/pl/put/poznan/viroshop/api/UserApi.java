@@ -22,7 +22,7 @@ public class UserApi {
         this.userManager = userManager;
     }
 
-    @GetMapping("/api/user")
+    @GetMapping("/api/users")
     public Iterable<UserEntity> getAll() {
         return userManager.findAll();
     }
