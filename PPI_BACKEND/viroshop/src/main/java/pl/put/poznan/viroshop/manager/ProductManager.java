@@ -55,6 +55,10 @@ public class ProductManager {
         return basicProducts;
     }
 
+    public Optional<ProductEntity> findOneById(Long id) {
+        return productRepo.findById(id);
+    }
+
     public ProductEntity save(ProductEntity productEntity) {
         return productRepo.save(productEntity);
     }

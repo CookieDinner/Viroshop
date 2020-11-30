@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.put.poznan.viroshop.dao.entities.ProductEntity;
-import pl.put.poznan.viroshop.dao.entities.ShopEntity;
 import pl.put.poznan.viroshop.dao.entities.StoreEntity;
 import pl.put.poznan.viroshop.dao.models.BasicProductModel;
 import pl.put.poznan.viroshop.manager.ProductManager;
-import pl.put.poznan.viroshop.manager.StoreManager;
+
+import java.util.Optional;
 
 @RestController
 public class ProductApi {
@@ -34,5 +34,10 @@ public class ProductApi {
     @GetMapping("/api/data/products/basic")
     public Iterable<BasicProductModel> getAllBasicProducts(@RequestParam Long shopId) {
         return productManager.findAllBasicProducts(shopId);
+    }
+
+    @GetMapping("/api/data/product")
+    public Optional<ProductEntity> getOneProduct(@RequestParam Long id) {
+        return productManager.findOneById(id);
     }
 }
