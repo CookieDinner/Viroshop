@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
+import pl.put.poznan.viroshop.dao.models.ChangePasswordModel;
 import pl.put.poznan.viroshop.manager.UserManager;
 
 import java.util.List;
@@ -49,6 +50,15 @@ public class UserApi {
 
         userManager.save(registerBody);
         return new ResponseEntity("Registered", HttpStatus.OK);
+    }
+
+    @PostMapping("/api/user/password/change")
+    public ResponseEntity changePassword(@RequestBody ChangePasswordModel model) {
+        boolean result = userManager.changePassword(model);
+        if (!result) {
+            return new ResponseEntity("Error while changing password", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("Password was changed", HttpStatus.OK);
     }
 
 }
