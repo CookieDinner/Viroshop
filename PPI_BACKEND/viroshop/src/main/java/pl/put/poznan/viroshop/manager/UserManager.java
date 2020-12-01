@@ -5,6 +5,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
+import pl.put.poznan.viroshop.dao.models.ChangePasswordModel;
 import pl.put.poznan.viroshop.dao.repositories.UserRepo;
 
 import java.util.List;
@@ -38,6 +39,24 @@ public class UserManager {
 
     public List<UserEntity> findByLogin(String login) {
         return userRepo.findByLogin(login);
+    }
+
+    public boolean changePassword(ChangePasswordModel model) {
+        List<UserEntity> foundUsers = this.findByLogin(model.getLogin());
+        if (foundUsers.size() == 0) {
+            return false;
+        }
+        if (foundUsers.size() > 1) {
+            // Realy bad problem if repo can find 2 users with the same login.
+            return false;
+        }
+        UserEntity user = foundUsers.get(0);
+        if (!user.getPassword().equals(model.getOldPassword())) {
+            return false;
+        }
+        user.setPassword(model.getNewPassword());
+        userRepo.save(user);
+        return true;
     }
 
     /**
