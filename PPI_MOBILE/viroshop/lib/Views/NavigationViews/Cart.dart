@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
 import 'package:viroshop/Views/StoreNavigationView.dart';
 
+import '../ZbikPaymentView.dart';
+
 // ignore: must_be_immutable
-class Cart extends StatefulWidget implements NavigationViewTemplate{
+class Cart extends StatefulWidget implements NavigationViewTemplate {
   final StoreNavigationView parent;
+
   Cart(this.parent);
 
   _CartState state = _CartState();
+
   @override
   _CartState createState() => state;
 
@@ -24,10 +29,14 @@ class Cart extends StatefulWidget implements NavigationViewTemplate{
 }
 
 class _CartState extends State<Cart> {
-
-  void openPaymentScreen(){
-    //TODO ZBIK
-    print("ZBIK");
+  void openPaymentScreen() {
+    Navigator.of(context).push(
+        CustomPageTransition(
+          ZbikPaymentView(),
+          x: 0.0,
+          y: 0.5,
+        )
+    );
   }
 
   @override
@@ -42,12 +51,14 @@ class _CartState extends State<Cart> {
           Container(
             child: Column(
               children: [
-                CustomAppBar("Koszyk",
+                CustomAppBar(
+                  "Koszyk",
                   withOptionButton: true,
                   optionButtonWidget: Text(
                     "Zamów",
                     style: TextStyle(
-                      fontSize: mediaSize.width * Constants.appBarFontSize * 0.9,
+                      fontSize:
+                          mediaSize.width * Constants.appBarFontSize * 0.9,
                       fontWeight: FontWeight.w400,
                       color: CustomTheme().appBarTheme,
                     ),
