@@ -10,17 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
 import pl.put.poznan.viroshop.dao.models.ChangePasswordModel;
 import pl.put.poznan.viroshop.manager.UserManager;
+import pl.put.poznan.viroshop.service.MailService;
 
 import java.util.List;
 
 @RestController
 public class UserApi {
 
-    private UserManager userManager;
+    private final UserManager userManager;
+    private final MailService mailService;
 
     @Autowired
-    public UserApi(UserManager userManager) {
+    public UserApi(UserManager userManager, MailService mailService) {
         this.userManager = userManager;
+        this.mailService = mailService;
     }
 
     @GetMapping("/api/users")
@@ -49,6 +52,7 @@ public class UserApi {
         }
 
         userManager.save(registerBody);
+        this.mailService.sendRegistrationWelcome(registerBody.getEmail());
         return new ResponseEntity("Registered", HttpStatus.OK);
     }
 
@@ -59,6 +63,16 @@ public class UserApi {
             return new ResponseEntity("Error while changing password", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity("Password was changed", HttpStatus.OK);
+    }
+
+    @PostMapping("/api/user/password/forgot")
+    public ResponseEntity forgotPassword(@RequestBody String userLogin) {
+        List<UserEntity> foundUsers = userManager.findByLogin(userLogin);
+        if (foundUsers.size() == 0) {
+            return new ResponseEntity("User not found", HttpStatus.BAD_REQUEST);
+        }
+        mailService.sendForgotPasswordMail(foundUsers.get(0).getEmail());
+        return new ResponseEntity("Check your email, we send you temporary password", HttpStatus.OK);
     }
 
 }
