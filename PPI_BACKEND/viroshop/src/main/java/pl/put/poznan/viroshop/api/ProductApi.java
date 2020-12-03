@@ -21,22 +21,22 @@ public class ProductApi {
         this.productManager = productManager;
     }
 
-    @GetMapping("/api/data/stores")
+    @GetMapping(value = "/api/data/stores", produces = "application/json; charset=UTF-8")
     public Iterable<StoreEntity> getAllStores() {
         return productManager.findAllStores();
     }
 
-    @GetMapping("/api/data/products/full")
+    @GetMapping(value = "/api/data/products/full", produces = "application/json; charset=UTF-8")
     public Iterable<ProductEntity> getAllProducts() {
         return productManager.findAll();
     }
 
-    @GetMapping("/api/data/products/basic")
+    @GetMapping(value = "/api/data/products/basic", produces = "application/json; charset=UTF-8")
     public Iterable<BasicProductModel> getAllBasicProducts(@RequestParam Long shopId) {
         return productManager.findAllBasicProducts(shopId);
     }
 
-    @GetMapping("/api/data/product")
+    @GetMapping(value = "/api/data/product", produces = "application/json; charset=UTF-8")
     public Optional<ProductEntity> getOneProduct(@RequestParam Long id) {
         return productManager.findOneById(id);
     }

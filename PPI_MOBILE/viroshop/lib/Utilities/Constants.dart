@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Constants{
-  static const String api = "http://10.0.2.2:8080/api";
+  static const String api = "http://192.168.0.94:8080/api";
   static const String apiUser = "$api/user";
+  static const String apiShopList = "$api/shops";
+  static const String apiProductsInShop = "$api/data/products/basic";
 
   static const Color background = Color.fromRGBO(234, 239, 245, 1);
   static const Color backgroundWave1 = Color.fromRGBO(185, 180, 222, 1);

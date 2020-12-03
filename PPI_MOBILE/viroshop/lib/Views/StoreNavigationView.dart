@@ -23,12 +23,14 @@ class _StoreNavigationViewState extends State<StoreNavigationView> {
 
   @override
   void initState() {
+
     currentTab = widget.chosenTab;
     navigationViews.add(Products(widget));
     navigationViews.add(Categories(widget));
     navigationViews.add(Cart(widget));
     navigationViews.add(EnterStore(widget));
     navigationViews.add(StoreMap(widget));
+    navigationViews[currentTab].update();
     super.initState();
   }
   @override
@@ -91,7 +93,7 @@ class _StoreNavigationViewState extends State<StoreNavigationView> {
                     color: CustomTheme().accent),
                 activeIcon: Icon(Icons.timer_sharp,
                     color: CustomTheme().accentPlus),
-                label: "Wejdź/Czas",
+                label: "Wejdź",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.map_outlined,

@@ -1,17 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
+import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/CustomWidgets/StoreMenuItem.dart';
 import 'package:viroshop/CustomWidgets/StoreTemplate.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/StoreMenuView.dart';
 import 'package:viroshop/Views/StoreNavigationView.dart';
-import 'package:viroshop/World/Store.dart';
+import 'package:viroshop/World/Shop.dart';
 
 class MainMenuView extends StatefulWidget {
+  final String shops;
+  MainMenuView(this.shops);
   @override
   _MainMenuViewState createState() => _MainMenuViewState();
 }
@@ -19,16 +26,40 @@ class MainMenuView extends StatefulWidget {
 class _MainMenuViewState extends State<MainMenuView> {
   final ScrollController scrollController = ScrollController();
 
-  List<Store> filteredStores = [Store("Biedronka"), Store("Żabka"),Store("dasd"), Store("nanana"),Store("sklepik"), Store("a")];
+  String shops;
+  List<Shop> filteredStores = [];
+  TextEditingController searchController = TextEditingController();
 
-  void pushChosenStore(String name){
+  @override
+  void initState() {
+    shops = widget.shops;
+    List<dynamic> list = jsonDecode(shops);
+    list.forEach((element) {
+      filteredStores.add(Shop.fromJson(element));
+    });
+    super.initState();
+  }
+  void pushChosenStore(Shop chosenStore) async{
+    Data().currentShop = chosenStore;
+    FocusScope.of(context).unfocus();
     Navigator.of(context).push(
         CustomPageTransition(
-          StoreMenuView(name),
+          StoreMenuView(chosenStore.id, chosenStore.name),
           x: 0.0,
           y: 0.0,
         )
     );
+  }
+
+  void refreshShops() async{
+    filteredStores.clear();
+    String response = await Requests.GetShops();
+    List<dynamic> list = jsonDecode(response);
+    list.forEach((element) {
+      filteredStores.add(Shop.fromJson(element));
+    });
+    setState(() {});
+
   }
   @override
   Widget build(BuildContext context) {
@@ -41,11 +72,13 @@ class _MainMenuViewState extends State<MainMenuView> {
             width: mediaSize.width,
             child: Stack(
               children: [
-                BackgroundAnimation(),
+                SingleChildScrollView(child: BackgroundAnimation()),
                 Container(
                   child: Column(
                     children: [
-                      SizedBox(height: mediaSize.height * 0.1,),
+                      SizedBox(height: mediaSize.height * 0.08,),
+                      CustomTextFormField(searchController, "Nazwa/Miasto", TextInputAction.done, (_){}, null),
+                      SizedBox(height: mediaSize.height * 0.02,),
                       Expanded(
                         child: Scrollbar(
                           radius: Radius.circular(20),
@@ -67,6 +100,15 @@ class _MainMenuViewState extends State<MainMenuView> {
                   ),
                 ),
                 CustomAppBar("Sklepy"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FlatButton(
+                      onPressed: () => refreshShops(),
+                      child: Text("Odśwież", style: TextStyle(color: Colors.white),),
+                    ),
+                  ],
+                )
               ],
             ),
           )
