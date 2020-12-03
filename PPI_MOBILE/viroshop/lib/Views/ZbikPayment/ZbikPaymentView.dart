@@ -44,6 +44,17 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
               child: Center(
                 child: Column(
                   children: [
+                    Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
+                      child: Text(
+                          "Wybierz sposób płatności",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontStyle: FontStyle.italic,
+                            decoration: TextDecoration.none,
+                          )
+                    ),),
                     Row(
                       children: [
                         ZbikButton(text: "BLIK"),
