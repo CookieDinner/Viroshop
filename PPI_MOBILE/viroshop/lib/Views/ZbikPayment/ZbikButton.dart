@@ -15,7 +15,7 @@ class ZbikButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return Container(
-        width: 100,
+        width: 140,
         margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
         child: FlatButton(
           onPressed: consolelog,
@@ -27,7 +27,6 @@ class ZbikButton extends StatelessWidget {
             )
           ),
           color: Colors.lightGreenAccent,
-          minWidth: 100,
           height: 100,
         ));
   }

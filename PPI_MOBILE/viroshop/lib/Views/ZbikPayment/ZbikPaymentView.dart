@@ -40,7 +40,7 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
                     )),
               )),
           Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              padding: EdgeInsets.fromLTRB(25, 10, 0, 0),
               child: Center(
                 child: Column(
                   children: [
