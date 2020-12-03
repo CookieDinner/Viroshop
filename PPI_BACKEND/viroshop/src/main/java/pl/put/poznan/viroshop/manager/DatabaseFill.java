@@ -74,7 +74,8 @@ public class DatabaseFill {
 
     static UserEntity[] userEntities = new UserEntity[]{
             new UserEntity(1L, "lennon123", "lenon@lemon.pl", "ouiya11", LocalDate.of(1995, 1, 1)),
-            new UserEntity(2L, "maQWE77", "jubikom@gmail.com", "Zazdro99", LocalDate.of(1990, 2, 22))
+            new UserEntity(2L, "maQWE77", "jubikom@gmail.com", "Zazdro99", LocalDate.of(1990, 2, 22)),
+            new UserEntity(3L, "qwerty", "linki@gmail.com", "12345", LocalDate.of(2005, 2, 24))
     };
 
 
