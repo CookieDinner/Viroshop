@@ -10,7 +10,8 @@ import 'package:viroshop/Views/StoreNavigationView.dart';
 
 class StoreMenuView extends StatefulWidget {
   final storeName;
-  StoreMenuView(this.storeName);
+  final storeId;
+  StoreMenuView(this.storeId, this.storeName);
   @override
   _StoreMenuViewState createState() => _StoreMenuViewState();
 }

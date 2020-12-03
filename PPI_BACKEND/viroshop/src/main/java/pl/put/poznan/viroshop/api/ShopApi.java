@@ -19,17 +19,17 @@ public class ShopApi {
         this.shopManager = shopManager;
     }
 
-    @GetMapping("/api/shops")
+    @GetMapping(value = "/api/shops", produces = "application/json; charset=UTF-8")
     public Iterable<ShopEntity> getAll() {
         return shopManager.findAll();
     }
 
-    @GetMapping("/api/shop")
+    @GetMapping(value = "/api/shop", produces = "application/json; charset=UTF-8")
     public Optional<ShopEntity> getOneShop(@RequestParam Long id) {
         return shopManager.findOneById(id);
     }
 
-    @GetMapping("/api/shops/area")
+    @GetMapping(value = "/api/shops/area", produces = "application/json; charset=UTF-8")
     public Iterable<ShopEntity> getSurroundingShops(@RequestParam String city) {
         return shopManager.findAllFromCity(city);
     }
