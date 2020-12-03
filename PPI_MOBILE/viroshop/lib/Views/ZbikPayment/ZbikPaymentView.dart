@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/Views/ZbikPayment/ZbikButton.dart';
 
 class ZbikPaymentView extends StatefulWidget {
   @override
@@ -26,12 +27,7 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
             child: Image.asset('assets/images/zbiklogo.png'),
           ),
           Padding(
-              padding: EdgeInsets.fromLTRB(
-                0,
-                0,
-                0,
-                0,
-              ),
+              padding: EdgeInsets.fromLTRB(0,0,0,0),
               child: Center(
                 child: Text("System płatności ŻBIK",
                     textAlign: TextAlign.center,
@@ -42,6 +38,26 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.none,
                     )),
+              )),
+          Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Center(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        ZbikButton(text: "BLIK"),
+                        ZbikButton(text: "Portfel ŻBIK"),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        ZbikButton(text: "Karta płatnicza"),
+                        ZbikButton(text: "Szybki przelew"),
+                      ],
+                    ),
+                  ],
+                ),
               ))
         ]));
   }

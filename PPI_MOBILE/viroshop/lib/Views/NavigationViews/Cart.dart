@@ -8,7 +8,7 @@ import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
 import 'package:viroshop/Views/StoreNavigationView.dart';
 
-import '../ZbikPaymentView.dart';
+import '../ZbikPayment/ZbikPaymentView.dart';
 
 // ignore: must_be_immutable
 class Cart extends StatefulWidget implements NavigationViewTemplate {
