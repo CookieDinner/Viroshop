@@ -40,7 +40,7 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
                     )),
               )),
           Padding(
-              padding: EdgeInsets.fromLTRB(25, 10, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Center(
                 child: Column(
                   children: [
@@ -56,12 +56,14 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
                           )
                     ),),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ZbikButton(text: "BLIK"),
                         ZbikButton(text: "Portfel ŻBIK"),
                       ],
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ZbikButton(text: "Karta płatnicza"),
                         ZbikButton(text: "Szybki przelew"),
