@@ -3,12 +3,14 @@ import 'package:viroshop/Utilities/Util.dart';
 
 class ZbikButton extends StatelessWidget {
   String text;
-  String text2;
+  Function onClick;
 
-  ZbikButton({this.text = "", this.text2 = "ALTERNATIVE"});
+  ZbikButton({this.text = "", this.onClick});
 
-  void consolelog() {
-    print('CLICK ' + text2);
+  void onButtonClick() {
+    if (onClick != null) {
+      this.onClick();
+    }
   }
 
   @override
@@ -18,7 +20,7 @@ class ZbikButton extends StatelessWidget {
         width: 140,
         margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
         child: FlatButton(
-          onPressed: consolelog,
+          onPressed: onButtonClick,
           child: Text(
             text,
             textAlign: TextAlign.center,
