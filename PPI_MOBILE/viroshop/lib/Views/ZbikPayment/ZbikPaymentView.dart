@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ZbikPayment/ZbikButton.dart';
+
+import 'ZbikFinalView.dart';
 
 class ZbikPaymentView extends StatefulWidget {
   @override
@@ -8,6 +11,17 @@ class ZbikPaymentView extends StatefulWidget {
 }
 
 class _ZbikPaymentViewState extends State<ZbikPaymentView> {
+
+  void goToPaymentResult() {
+    Navigator.of(context).push(
+        CustomPageTransition(
+          ZbikFinalView(),
+          x: 0.0,
+          y: 0.5,
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
@@ -58,15 +72,15 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ZbikButton(text: "BLIK"),
-                        ZbikButton(text: "Portfel ŻBIK"),
+                        ZbikButton(text: "BLIK", onClick: goToPaymentResult,),
+                        ZbikButton(text: "Portfel ŻBIK", onClick: goToPaymentResult),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ZbikButton(text: "Karta płatnicza"),
-                        ZbikButton(text: "Szybki przelew"),
+                        ZbikButton(text: "Karta płatnicza", onClick: goToPaymentResult),
+                        ZbikButton(text: "Szybki przelew", onClick: goToPaymentResult),
                       ],
                     ),
                   ],
