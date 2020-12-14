@@ -9,9 +9,10 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputAction textInputAction;
   final FocusNode focusNode;
   final bool shouldObfuscate;
+  final Icon trailingIcon;
 
   CustomTextFormField(this.controller, this.label, this.textInputAction,
-      this.confirmAction, this.focusNode, {this.shouldObfuscate = false});
+      this.confirmAction, this.focusNode, {this.shouldObfuscate = false, this.trailingIcon});
 
   @override
   CustomTextFormFieldState createState() => CustomTextFormFieldState();
@@ -42,6 +43,7 @@ class CustomTextFormFieldState extends State<CustomTextFormField>{
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(0.0))
           ),
+          prefixIcon: widget.trailingIcon,
           filled: true,
           fillColor: CustomTheme().textBackground,
           contentPadding: EdgeInsets.fromLTRB(

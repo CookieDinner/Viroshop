@@ -8,6 +8,7 @@ import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/CustomWidgets/ProductTemplate.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
@@ -39,11 +40,11 @@ class _ProductsState extends State<Products> {
   @override
   void initState(){
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      String response = await Requests.GetProductsInShop(Data().currentShop.id);
-      List<dynamic> list = jsonDecode(response);
-      list.forEach((element) {
-        filteredProducts.add(Product.fromJson(element));
-      });
+      filteredProducts = await DbHandler.getProducts();
+      // List<dynamic> list = jsonDecode(response);
+      // list.forEach((element) {
+      //   filteredProducts.add(Product.fromJson(element));
+      // });
       setState(() {
 
       });

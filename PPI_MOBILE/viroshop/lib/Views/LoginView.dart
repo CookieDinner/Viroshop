@@ -5,11 +5,12 @@ import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ForgotPasswordView.dart';
+import 'package:viroshop/Views/MainMenuView.dart';
 import 'package:viroshop/Views/RegistrationView.dart';
-import 'package:viroshop/Views/SyncView.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 
@@ -36,7 +37,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
   }
   Future<void> sendRequest() async{
     await Requests.PostLogin(loginController.text, passwordController.text).then(
-            (String message) {
+            (String message) async{
               switch(message){
                 case "usernotfound":
                   CustomAlerts.showAlertDialog(context, "Błąd", "Podany użytkownik nie istnieje");
@@ -58,9 +59,11 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                   break;
                 default:
                   //TODO: Wrzucanie klucza autoryzacji do singletona
+                  String response = await Requests.GetShops();
+                  await DbHandler.insertToShops(response);
                   Navigator.of(context).push(
                       CustomPageTransition(
-                        SyncView(),
+                        MainMenuView(),
                         x: 0.0,
                         y: 0.4,
                       )
@@ -74,6 +77,9 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      DbHandler.buildDatabase();
+    });
     super.initState();
   }
 
@@ -86,6 +92,9 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  void test(){
+    CustomAlerts.showLoading(context, sendRequest);
+  }
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);

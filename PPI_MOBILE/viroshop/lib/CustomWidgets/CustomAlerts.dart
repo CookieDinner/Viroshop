@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import '../Utilities/Constants.dart';
 import 'dart:async';
@@ -97,7 +98,7 @@ class CustomAlerts{
   static showLoading(BuildContext context, Function fun) async{
 
     await showGeneralDialog(
-      barrierColor: Colors.white.withOpacity(0.5),
+      barrierColor: CustomTheme().isDark ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.5),
       barrierDismissible: false,
       context: context,
       pageBuilder: (BuildContext context, animation, secondaryAnimation) {

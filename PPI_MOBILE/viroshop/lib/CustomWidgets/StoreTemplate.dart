@@ -30,7 +30,7 @@ class StoreTemplate extends StatelessWidget {
             color: CustomTheme().cardColor.withOpacity(0.17),
             child: Center(
                 child: Text(
-                  currentStore.name + ",\n" + currentStore.city,
+                  currentStore.name + ", ul. " + currentStore.street,
                   style: TextStyle(
                     color: CustomTheme().cardColor.withOpacity(1),
                     fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
