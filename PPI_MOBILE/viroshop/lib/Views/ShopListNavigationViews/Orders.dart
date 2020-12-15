@@ -11,16 +11,24 @@ class Orders extends StatefulWidget implements ShopListNavigationViewTemplate{
   final Function openDrawer;
   Orders(this.parent, this.openDrawer);
 
+  _OrdersState ordersState = _OrdersState();
   @override
-  _OrdersState createState() => _OrdersState();
+  _OrdersState createState() => ordersState;
 
   @override
   Future<void> update() {
+    ordersState.stateSet();
     return null;
   }
 }
 
 class _OrdersState extends State<Orders> {
+
+  void stateSet(){
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);

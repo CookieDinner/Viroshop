@@ -115,9 +115,9 @@ class CustomAlerts{
           child: SafeArea(
               child: Center(
                   child: Container(
-                      child: SpinKitFadingCircle(
-                        color: CustomTheme().accent,
-                        size: 70,
+                      child: SpinKitFadingCube(
+                        color: CustomTheme().buttonColor,
+                        size: MediaQuery.of(context).size.width * 0.1,
                       )
                   )
               )
