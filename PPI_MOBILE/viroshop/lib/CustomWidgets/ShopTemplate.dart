@@ -6,10 +6,25 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/World/Shop.dart';
 
-class ShopTemplate extends StatelessWidget {
+class ShopTemplate extends StatefulWidget {
   final Shop currentShop;
   final Function function;
   ShopTemplate(this.currentShop, this.function);
+
+  _ShopTemplateState shopTemplateState = _ShopTemplateState();
+  @override
+  _ShopTemplateState createState() => shopTemplateState;
+}
+
+class _ShopTemplateState extends State<ShopTemplate> {
+  bool isFavorite = false;
+
+  @override
+  void didUpdateWidget(ShopTemplate oldWidget) {
+    isFavorite = false;
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
@@ -22,7 +37,7 @@ class ShopTemplate extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => function(currentShop),
+          onTap: () => widget.function(widget.currentShop),
           splashColor: CustomTheme().accentPlus.withOpacity(0.4),
           highlightColor: CustomTheme().cardColor,
           child: Container(
@@ -39,15 +54,7 @@ class ShopTemplate extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      currentShop.name,
-                      style: TextStyle(
-                        color: CustomTheme().cardColor.withOpacity(1),
-                        fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
-                      ),
-                    ),
-                    SizedBox(height: mediaSize.height * 0.005,),
-                    Text(
-                      "ul. " + currentShop.street,
+                      widget.currentShop.name,
                       style: TextStyle(
                           color: CustomTheme().cardColor.withOpacity(1),
                           fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
@@ -55,7 +62,15 @@ class ShopTemplate extends StatelessWidget {
                     ),
                     SizedBox(height: mediaSize.height * 0.005,),
                     Text(
-                      currentShop.city,
+                      "ul. " + widget.currentShop.street,
+                      style: TextStyle(
+                          color: CustomTheme().cardColor.withOpacity(1),
+                          fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
+                      ),
+                    ),
+                    SizedBox(height: mediaSize.height * 0.005,),
+                    Text(
+                      widget.currentShop.city,
                       style: TextStyle(
                           color: CustomTheme().cardColor.withOpacity(1),
                           fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
@@ -63,6 +78,31 @@ class ShopTemplate extends StatelessWidget {
                     ),
                   ],
                 ),
+                Spacer(),
+                Container(
+                  width: mediaSize.height * 21 / mediaSize.width,
+                  child: FlatButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: (){
+                      isFavorite = !isFavorite;
+                      setState(() {
+
+                      });
+                    },
+                    child: isFavorite ?
+                    Icon(
+                      Icons.star,
+                      color: CustomTheme().accentText,
+                      size: mediaSize.height * 21 / mediaSize.width,
+                    ) :
+                    Icon(
+                      Icons.star_outline,
+                      color: CustomTheme().accentText,
+                      size: mediaSize.height * 21 / mediaSize.width,
+                    ),
+                  ),
+                ),
+                SizedBox(width: mediaSize.width * 0.06,)
               ],
             ),
           ),

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/Utilities/DbHandler.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 
 class CustomDrawer{
   Function stateSet;
   CustomDrawer(this.stateSet);
 
-  Widget loginDrawer(BuildContext context) {
+  Widget loginDrawer(BuildContext context, {bool isOnLoginScreen = false}) {
     var mediaSize = Util.getDimensions(context);
     bool theme = !CustomTheme().isDark;
     return Drawer(
@@ -131,39 +134,13 @@ class CustomDrawer{
                                 child: Text(value, style: TextStyle(color: CustomTheme().standardText),),
                               );
                             }).toList(),
-                            onChanged: (value) => changeCity(value),
+                            onChanged: (value) => changeCity(value, context, isOnLoginScreen),
                           ),
                         ),
                       ),
                     ),
                   ]
                 ),
-                // child: ListTile(
-                //   title: Row(
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     children: [
-                //       SizedBox(width: mediaSize.width * 0.02,),
-                //       Text("Miasto",
-                //         style: TextStyle(
-                //           color: CustomTheme().standardText,
-                //           fontWeight: FontWeight.w400
-                //         )
-                //       ),
-                //     ],
-                //   ),
-                //   subtitle: Row(
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     children: [
-                //       SizedBox(width: mediaSize.width * 0.02,),
-                //       Text(Data().city,
-                //           style: TextStyle(
-                //               color: CustomTheme().standardText.withOpacity(0.5)
-                //           )
-                //       ),
-                //     ],
-                //   ),
-                //   onTap: () => changeCity(),
-                // ),
               ),
             ),
             Container(
@@ -183,11 +160,31 @@ class CustomDrawer{
     stateSet();
   }
 
-  void changeCity(String city) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Data().city = city;
-    await prefs.setString('city', city);
-    stateSet();
+  void changeCity(String city, BuildContext context, bool isOnLoginScreen) async{
+    if (isOnLoginScreen){
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      Data().city = city;
+      await prefs.setString('city', city);
+      stateSet();
+    }else{
+      CustomAlerts.showLoading(context, () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        Data().city = city;
+        await prefs.setString('city', city);
+        await Requests.GetShopsInCity(city).then((String value) async{
+          switch(Constants.requestErrors.containsKey(value)){
+            case true:
+              Navigator.pop(context);
+              CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[value]);
+              break;
+            case false:
+              await DbHandler.insertToShops(value);
+              Navigator.pop(context);
+              break;
+          }
+        });
+        stateSet();
+      });
+    }
   }
-
 }

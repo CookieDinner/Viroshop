@@ -7,11 +7,11 @@ import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ForgotPasswordView.dart';
-import 'package:viroshop/Views/MainMenuView.dart';
 import 'package:viroshop/Views/RegistrationView.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
@@ -41,42 +41,30 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
     });
   }
   Future<void> sendRequest() async{
-    await Requests.PostLogin(loginController.text, passwordController.text).then(
-            (String message) async{
-              switch(message){
-                case "usernotfound":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Podany użytkownik nie istnieje");
-                  break;
-                case "cannotlogin":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Błędne hasło");
-                  break;
-                case "unknown":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił nieoczekiwany błąd");
-                  break;
-                case "connfailed":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Połączenie nieudane");
-                  break;
-                case "conntimeout":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Przekroczono limit czasu połączenia");
-                  break;
-                case "httpexception":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
-                  break;
-                default:
-                  //TODO: Wrzucanie klucza autoryzacji do singletona
-                  String response = await Requests.GetShops();
-                  await DbHandler.insertToShops(response);
-                  Navigator.of(context).push(
-                      CustomPageTransition(
-                        ShopListNavigationView(),
-                        x: 0.0,
-                        y: 0.4,
-                      )
-                  );
-                  break;
-              }
+    await Requests.PostLogin(loginController.text, passwordController.text).then((String message) async{
+      switch(Constants.requestErrors.containsKey(message)){
+        case true:
+          CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[message]);
+          break;
+        case false:
+          await Requests.GetShopsInCity(Data().city).then((String value) async{
+            switch(Constants.requestErrors.containsKey(value)) {
+              case true:
+                CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[value]);
+                break;
+              case false:
+                await DbHandler.insertToShops(value);
+                Navigator.of(context).push(
+                    CustomPageTransition(
+                      ShopListNavigationView(),
+                      x: 0.0,
+                      y: 0.4,
+                    )
+                );
+            }
+          });
+      }
     });
-    //await Future.delayed(Duration(seconds: 1));
     updateButton();
   }
 
@@ -114,11 +102,10 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
-    final buttonSize = mediaSize.height * 27 / mediaSize.width;
     return SafeArea(
         child: Scaffold(
           key: drawerKey,
-          endDrawer: CustomDrawer(stateSet).loginDrawer(context),
+          endDrawer: CustomDrawer(stateSet).loginDrawer(context, isOnLoginScreen: true),
           backgroundColor: CustomTheme().background,
           body: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -238,31 +225,12 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                       Icons.settings,
                       size: mediaSize.width * 0.07,
                       color: CustomTheme().accentPlus,
-                    ),),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     Container(
-                  //       width: buttonSize,
-                  //       height: buttonSize,
-                  //       child: FlatButton(
-                  //         highlightColor: Colors.transparent,
-                  //         splashColor: Colors.transparent,
-                  //         padding: EdgeInsets.zero,
-                  //         onPressed: () => drawerKey.currentState.openEndDrawer(),
-                  //         child: Icon(
-                  //           Icons.settings,
-                  //           size: mediaSize.width * 0.07,
-                  //           color: CustomTheme().accentPlus,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+                    ),
+                  ),
               ]
-        ),
             ),
           ),
+        ),
       )
     );
   }

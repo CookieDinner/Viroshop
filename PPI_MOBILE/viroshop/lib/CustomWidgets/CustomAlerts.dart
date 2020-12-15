@@ -98,7 +98,7 @@ class CustomAlerts{
   static showLoading(BuildContext context, Function fun) async{
 
     await showGeneralDialog(
-      barrierColor: CustomTheme().isDark ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.5),
+      barrierColor: !CustomTheme().isDark ? Colors.black.withOpacity(0.1) : Colors.white.withOpacity(0.2),
       barrierDismissible: false,
       context: context,
       pageBuilder: (BuildContext context, animation, secondaryAnimation) {

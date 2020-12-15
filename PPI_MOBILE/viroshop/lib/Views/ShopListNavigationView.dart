@@ -70,16 +70,16 @@ class _ShopListNavigationViewState extends State<ShopListNavigationView> {
             elevation: 0,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag_outlined,
+                icon: Icon(Icons.store_mall_directory_outlined,
                     color: CustomTheme().accent),
-                activeIcon: Icon(Icons.shopping_bag_sharp,
+                activeIcon: Icon(Icons.store_mall_directory_sharp,
                     color: CustomTheme().accentPlus),
                 label: "Sklepy",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.folder_special_outlined,
+                icon: Icon(Icons.star_outline,
                     color: CustomTheme().accent),
-                activeIcon: Icon(Icons.folder_special_sharp,
+                activeIcon: Icon(Icons.star,
                     color: CustomTheme().accentPlus),
                 label: "Ulubione sklepy",
               ),

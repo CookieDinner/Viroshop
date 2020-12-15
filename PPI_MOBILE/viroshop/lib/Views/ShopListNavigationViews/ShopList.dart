@@ -10,6 +10,7 @@ import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
 import 'package:viroshop/CustomWidgets/ShopTemplate.dart';
+import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
@@ -34,9 +35,16 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
   _ShopListState createState() => shopListState;
 
   @override
-  Future<void> update() {
+  Future<void> update() async{
+    await getShops();
     shopListState.stateSet();
     return null;
+  }
+
+  Future<void> getShops() async{
+    shopListState.shops = await DbHandler.getShops();
+    shopListState.filteredShops = List.from(shopListState.shops);
+    shopListState.stateSet();
   }
 
 }
@@ -56,9 +64,7 @@ class _ShopListState extends State<ShopList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      shops = await DbHandler.getShops();
-      filteredShops = List.from(shops);
-      setState(() {});
+      await widget.getShops();
     });
     super.initState();
   }
@@ -80,32 +86,26 @@ class _ShopListState extends State<ShopList> {
     FocusScope.of(context).unfocus();
     CustomAlerts.showLoading(context, (){});
     await sendRequest(chosenShop);
-
-    Navigator.of(context).push(
-        CustomPageTransition(
-          ShopMenuView(),
-          x: 0.0,
-          y: 0.0,
-        )
-    );
   }
 
   Future<void> sendRequest(Shop chosenShop) async{
     await Requests.GetProductsInShop(chosenShop.id).then(
             (String message) async{
-          Navigator.pop(context);
-          switch(message){
-            case "connfailed":
-              CustomAlerts.showAlertDialog(context, "Błąd", "Połączenie nieudane");
+          switch(Constants.requestErrors.containsKey(message)){
+            case true:
+              Navigator.pop(context);
+              CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[message]);
               break;
-            case "conntimeout":
-              CustomAlerts.showAlertDialog(context, "Błąd", "Przekroczono limit czasu połączenia");
-              break;
-            case "httpexception":
-              CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
-              break;
-            default:
+            case false:
               await DbHandler.insertToProducts(message);
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                  CustomPageTransition(
+                    ShopMenuView(),
+                    x: 0.0,
+                    y: 0.0,
+                  )
+              );
               break;
           }
         });

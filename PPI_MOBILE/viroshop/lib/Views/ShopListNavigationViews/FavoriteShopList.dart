@@ -7,4 +7,12 @@ class FavoriteShopList extends ShopList{
 
   @override
   final String title = "Ulubione sklepy";
+
+  @override
+  Future<void> update() {
+    shopListState.stateSet();
+    return null;
+  }
+
+
 }

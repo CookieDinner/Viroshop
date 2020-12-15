@@ -4,6 +4,7 @@ class Constants{
   static const String api = "http://10.0.2.2:8080/api";
   static const String apiUser = "$api/user";
   static const String apiShopList = "$api/shops";
+  static const String apiShopsInCity = "$apiShopList/area";
   static const String apiProductsInShop = "$api/data/products/basic";
 
   static const Color background = Color.fromRGBO(234, 239, 245, 1);
@@ -46,5 +47,32 @@ class Constants{
   static const List<String> cities = ["Gniezno", "Poznań", "Gdańsk", "Września"];
 
   static int timeOutTime = 7;
+
+  static const Map<String, String> requestErrors = {
+    "usernotfound": "Podany użytkownik nie istnieje",
+    "cannotlogin": "Błędne hasło",
+    "unknown" : "Wystąpił nieoczekiwany błąd",
+    "connfailed" : "Połączenie nieudane",
+    "conntimeout" : "Przekroczono limit czasu połączenia",
+    "httpexception" : "Wystąpił błąd kontaktu z serwerem"
+  };
+  // case "usernotfound":
+  // CustomAlerts.showAlertDialog(context, "Błąd", "Podany użytkownik nie istnieje");
+  // break;
+  // case "cannotlogin":
+  // CustomAlerts.showAlertDialog(context, "Błąd", "Błędne hasło");
+  // break;
+  // case "unknown":
+  // CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił nieoczekiwany błąd");
+  // break;
+  // case "connfailed":
+  // CustomAlerts.showAlertDialog(context, "Błąd", "Połączenie nieudane");
+  // break;
+  // case "conntimeout":
+  // CustomAlerts.showAlertDialog(context, "Błąd", "Przekroczono limit czasu połączenia");
+  // break;
+  // case "httpexception":
+  // CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
+  // break;
 
 }
