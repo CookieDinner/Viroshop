@@ -43,6 +43,8 @@ class Constants{
   static const double alertLabelFontSize = 0.03;
   static const double appBarFontSize = 0.055;
 
+  static const List<String> cities = ["Gniezno", "Poznań", "Gdańsk", "Września"];
+
   static int timeOutTime = 7;
 
 }

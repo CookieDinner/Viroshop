@@ -3,28 +3,28 @@ import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/StoreFront.dart';
-import 'package:viroshop/CustomWidgets/StoreMenuItem.dart';
+import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/StoreNavigationView.dart';
+import 'package:viroshop/Views/InsideShopNavigationView.dart';
 import 'package:viroshop/World/Shop.dart';
 
-class StoreMenuView extends StatefulWidget {
-  StoreMenuView();
+class ShopMenuView extends StatefulWidget {
+  ShopMenuView();
   @override
-  _StoreMenuViewState createState() => _StoreMenuViewState();
+  _ShopMenuViewState createState() => _ShopMenuViewState();
 }
 
-class _StoreMenuViewState extends State<StoreMenuView> {
+class _ShopMenuViewState extends State<ShopMenuView> {
 
   Shop currentShop = Data().currentShop;
 
   void pushChosenTab(int index){
     Navigator.of(context).push(
         CustomPageTransition(
-          StoreNavigationView(index),
+          InsideShopNavigationView(index),
           x: 0.1,
           y: -0.85
         )
@@ -48,9 +48,9 @@ class _StoreMenuViewState extends State<StoreMenuView> {
                     children: [
                       SizedBox(height: mediaSize.height * 0.1,),
                       StoreFront(currentShop),
-                      StoreMenuItem("Lista produktów", () => pushChosenTab(0)),
-                      StoreMenuItem("Kategorie", () => pushChosenTab(1)),
-                      StoreMenuItem("Koszyk", () => pushChosenTab(2)),
+                      ShopMenuItem("Lista produktów", () => pushChosenTab(0)),
+                      ShopMenuItem("Kategorie", () => pushChosenTab(1)),
+                      ShopMenuItem("Koszyk", () => pushChosenTab(2)),
                       // StoreMenuItem("Wejdź do\nsklepu / Pozostały czas", () => pushChosenTab(3)),
                       // StoreMenuItem("Mapa sklepu / alejek", () => pushChosenTab(4)),
                     ],

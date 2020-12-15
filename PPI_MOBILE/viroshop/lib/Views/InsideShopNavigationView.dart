@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/NavigationViews/Cart.dart';
-import 'package:viroshop/Views/NavigationViews/Categories.dart';
-import 'package:viroshop/Views/NavigationViews/EnterStore.dart';
-import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
-import 'package:viroshop/Views/NavigationViews/Products.dart';
-import 'package:viroshop/Views/NavigationViews/StoreMap.dart';
+import 'package:viroshop/Views/InsideShopNavigationViews/Cart.dart';
+import 'package:viroshop/Views/InsideShopNavigationViews/Categories.dart';
+import 'package:viroshop/Views/InsideShopNavigationViews/Products.dart';
+import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
 
-class StoreNavigationView extends StatefulWidget {
+class InsideShopNavigationView extends StatefulWidget {
   int chosenTab;
-  StoreNavigationView(this.chosenTab);
+  InsideShopNavigationView(this.chosenTab);
   @override
   _StoreNavigationViewState createState() => _StoreNavigationViewState();
 }
 
-class _StoreNavigationViewState extends State<StoreNavigationView> {
+class _StoreNavigationViewState extends State<InsideShopNavigationView> {
   int currentTab;
   bool updating = false;
-  List<NavigationViewTemplate> navigationViews = [];
+  List<InsideShopNavigationViewTemplate> navigationViews = [];
 
   @override
   void initState() {
@@ -28,9 +25,6 @@ class _StoreNavigationViewState extends State<StoreNavigationView> {
     navigationViews.add(Products(widget));
     navigationViews.add(Categories(widget));
     navigationViews.add(Cart(widget));
-    navigationViews.add(EnterStore(widget));
-    navigationViews.add(StoreMap(widget));
-    navigationViews[currentTab].update();
     super.initState();
   }
   @override
@@ -88,20 +82,6 @@ class _StoreNavigationViewState extends State<StoreNavigationView> {
                 ),
                 label: "Koszyk",
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.av_timer_sharp,
-              //       color: CustomTheme().accent),
-              //   activeIcon: Icon(Icons.timer_sharp,
-              //       color: CustomTheme().accentPlus),
-              //   label: "Wejdź",
-              // ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.map_outlined,
-              //       color: CustomTheme().accent),
-              //   activeIcon: Icon(Icons.map_sharp,
-              //       color: CustomTheme().accentPlus),
-              //   label: "Mapa",
-              // ),
             ],
           ),
         ),

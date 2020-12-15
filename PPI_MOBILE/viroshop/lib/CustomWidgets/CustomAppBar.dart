@@ -9,8 +9,9 @@ class CustomAppBar extends StatelessWidget{
   final bool withOptionButton;
   final Widget optionButtonWidget;
   final Function optionButtonAction;
+  final bool isTextOptionButton;
 
-  CustomAppBar(this.title, {this.withBackButton = true, this.withOptionButton = false, this.optionButtonAction, this.optionButtonWidget});
+  CustomAppBar(this.title, {this.withBackButton = true, this.withOptionButton = false, this.optionButtonAction, this.optionButtonWidget, this.isTextOptionButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,9 @@ class CustomAppBar extends StatelessWidget{
 
     return Container(
       width: mediaSize.width,
+      height: mediaSize.height * 0.07,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           withBackButton ? Container(
             height: buttonSize,
@@ -42,16 +45,20 @@ class CustomAppBar extends StatelessWidget{
               color: CustomTheme().appBarTheme,
             ),
           ),
-          withOptionButton ? SizedBox(width: mediaSize.width * 0.45,) : SizedBox(),
+          Spacer(),
+          //withOptionButton ? SizedBox(width: mediaSize.width * 0.45,) : SizedBox(),
           withOptionButton ? Container(
             height: buttonSize,
-            width: buttonSize * 1.6,
+            width: isTextOptionButton ? buttonSize * 1.6 : buttonSize,
             child: FlatButton(
               padding: EdgeInsets.all(0),
               onPressed: () => optionButtonAction(),
               child: optionButtonWidget,
             ),
-          ) : SizedBox()
+          ) : Container(
+            height: buttonSize,
+            width: buttonSize * 1.6,
+          )
         ],
       ),
     );

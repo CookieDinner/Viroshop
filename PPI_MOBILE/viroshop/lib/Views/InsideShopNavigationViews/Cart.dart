@@ -5,14 +5,14 @@ import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
-import 'package:viroshop/Views/StoreNavigationView.dart';
+import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
+import 'package:viroshop/Views/InsideShopNavigationView.dart';
 
 import '../ZbikPayment/ZbikPaymentView.dart';
 
 // ignore: must_be_immutable
-class Cart extends StatefulWidget implements NavigationViewTemplate {
-  final StoreNavigationView parent;
+class Cart extends StatefulWidget implements InsideShopNavigationViewTemplate {
+  final InsideShopNavigationView parent;
 
   Cart(this.parent);
 
@@ -64,6 +64,7 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                   optionButtonAction: openPaymentScreen,
+                  isTextOptionButton: true,
                 )
               ],
             ),

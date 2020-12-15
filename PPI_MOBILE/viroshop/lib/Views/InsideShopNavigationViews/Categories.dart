@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
-import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
-import 'package:viroshop/Views/StoreNavigationView.dart';
+import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
+import 'package:viroshop/Views/InsideShopNavigationView.dart';
 
 // ignore: must_be_immutable
-class EnterStore extends StatefulWidget implements NavigationViewTemplate{
-  final StoreNavigationView parent;
-  EnterStore(this.parent);
+class Categories extends StatefulWidget implements InsideShopNavigationViewTemplate{
+  final InsideShopNavigationView parent;
+  Categories(this.parent);
 
-  _EnterStoreState state = _EnterStoreState();
+  _CategoriesState state = _CategoriesState();
   @override
-  _EnterStoreState createState() => state;
+  _CategoriesState createState() => state;
 
   @override
   Future<void> update() {
-    print("updating EnterStore");
+    print("updating Categories");
     return null;
   }
 }
 
-class _EnterStoreState extends State<EnterStore> {
+class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,10 +29,11 @@ class _EnterStoreState extends State<EnterStore> {
       child: Stack(
         children: [
           BackgroundAnimation(),
+          //TODO Kategorie
           Container(
             child: Column(
               children: [
-                CustomAppBar("Wejście do sklepu")
+                CustomAppBar("Kategorie")
               ],
             ),
           )

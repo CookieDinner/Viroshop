@@ -11,13 +11,13 @@ import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
-import 'package:viroshop/Views/StoreNavigationView.dart';
+import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
+import 'package:viroshop/Views/InsideShopNavigationView.dart';
 import 'package:viroshop/World/Product.dart';
 
 // ignore: must_be_immutable
-class Products extends StatefulWidget implements NavigationViewTemplate{
-  final StoreNavigationView parent;
+class Products extends StatefulWidget implements InsideShopNavigationViewTemplate{
+  final InsideShopNavigationView parent;
   Products(this.parent);
   _ProductsState state = _ProductsState();
   @override

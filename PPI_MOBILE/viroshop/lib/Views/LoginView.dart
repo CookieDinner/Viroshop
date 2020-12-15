@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
+import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
@@ -13,6 +15,8 @@ import 'package:viroshop/Views/MainMenuView.dart';
 import 'package:viroshop/Views/RegistrationView.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:viroshop/Views/ShopListNavigationView.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -26,6 +30,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
   var loginFocusNode = FocusNode();
   var passwordController = TextEditingController();
   var passwordFocusNode = FocusNode();
+  bool theme = false;
 
   bool loginButton = false;
 
@@ -63,7 +68,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                   await DbHandler.insertToShops(response);
                   Navigator.of(context).push(
                       CustomPageTransition(
-                        MainMenuView(),
+                        ShopListNavigationView(),
                         x: 0.0,
                         y: 0.4,
                       )
@@ -77,8 +82,12 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      DbHandler.buildDatabase();
+    loginController.text = "test";
+    passwordController.text = "123";
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      theme = (await SharedPreferences.getInstance()).getBool('theme');
+      await DbHandler.buildDatabase();
+      setState((){});
     });
     super.initState();
   }
@@ -92,14 +101,24 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  void test(){
-    CustomAlerts.showLoading(context, sendRequest);
+  void stateSet() {
+    setState(() {});
   }
+
+  void openDrawer(){
+    drawerKey.currentState.openEndDrawer();
+  }
+
+  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
+    final buttonSize = mediaSize.height * 27 / mediaSize.width;
     return SafeArea(
         child: Scaffold(
+          key: drawerKey,
+          endDrawer: CustomDrawer(stateSet).loginDrawer(context),
           backgroundColor: CustomTheme().background,
           body: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -177,7 +196,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                                   ),
                                 ],
                               ),
-                              SizedBox(height: mediaSize.height * 0.02,),
+                              SizedBox(height: mediaSize.height * 0.01,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -211,6 +230,35 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                     ),
                   ],
                   ),
+                  CustomAppBar("",
+                    withBackButton: false,
+                    withOptionButton: true,
+                    optionButtonAction: openDrawer,
+                    optionButtonWidget: Icon(
+                      Icons.settings,
+                      size: mediaSize.width * 0.07,
+                      color: CustomTheme().accentPlus,
+                    ),),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     Container(
+                  //       width: buttonSize,
+                  //       height: buttonSize,
+                  //       child: FlatButton(
+                  //         highlightColor: Colors.transparent,
+                  //         splashColor: Colors.transparent,
+                  //         padding: EdgeInsets.zero,
+                  //         onPressed: () => drawerKey.currentState.openEndDrawer(),
+                  //         child: Icon(
+                  //           Icons.settings,
+                  //           size: mediaSize.width * 0.07,
+                  //           color: CustomTheme().accentPlus,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
               ]
         ),
             ),

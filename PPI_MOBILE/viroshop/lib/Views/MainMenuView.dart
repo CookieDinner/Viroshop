@@ -5,17 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
-import 'package:viroshop/CustomWidgets/StoreMenuItem.dart';
-import 'package:viroshop/CustomWidgets/StoreTemplate.dart';
+import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
+import 'package:viroshop/CustomWidgets/ShopTemplate.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/StoreMenuView.dart';
-import 'package:viroshop/Views/StoreNavigationView.dart';
+import 'package:viroshop/Views/ShopMenuView.dart';
+import 'package:viroshop/Views/InsideShopNavigationView.dart';
 import 'package:viroshop/World/Shop.dart';
 
 class MainMenuView extends StatefulWidget {
@@ -50,7 +51,7 @@ class _MainMenuViewState extends State<MainMenuView> {
 
     Navigator.of(context).push(
         CustomPageTransition(
-          StoreMenuView(),
+          ShopMenuView(),
           x: 0.0,
           y: 0.0,
         )
@@ -73,13 +74,6 @@ class _MainMenuViewState extends State<MainMenuView> {
               break;
             default:
               await DbHandler.insertToProducts(message);
-              Navigator.of(context).push(
-                  CustomPageTransition(
-                    MainMenuView(),
-                    x: 0.0,
-                    y: 0.4,
-                  )
-              );
               break;
           }
         });
@@ -94,15 +88,25 @@ class _MainMenuViewState extends State<MainMenuView> {
     // list.forEach((element) {
     //   filteredStores.add(Shop.fromJson(element));
     // });
-
     setState(() {});
-
   }
+
+  void openDrawer(){
+    drawerKey.currentState.openEndDrawer();
+  }
+  void stateSet() {
+    setState(() {});
+  }
+
+  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+  
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return SafeArea(
       child: Scaffold(
+          key: drawerKey,
+          endDrawer: CustomDrawer(stateSet).loginDrawer(context),
           backgroundColor: CustomTheme().background,
           body: Container(
             height: mediaSize.height,
@@ -128,7 +132,7 @@ class _MainMenuViewState extends State<MainMenuView> {
                               itemCount: filteredStores.length,
                               physics: const AlwaysScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
-                                return StoreTemplate(filteredStores[index], pushChosenStore);
+                                return ShopTemplate(filteredStores[index], pushChosenStore);
                               }
                           ),
                         ),
@@ -136,16 +140,24 @@ class _MainMenuViewState extends State<MainMenuView> {
                     ],
                   ),
                 ),
-                CustomAppBar("Sklepy"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FlatButton(
-                      onPressed: () => refreshShops(),
-                      child: Text("Odśwież", style: TextStyle(color: Colors.white),),
-                    ),
-                  ],
-                )
+                CustomAppBar("Sklepy", 
+                  withOptionButton: true, 
+                  optionButtonAction: openDrawer,
+                  optionButtonWidget: Icon(
+                      Icons.settings,
+                      size: mediaSize.width * 0.07,
+                      color: CustomTheme().accentPlus,
+                  ),
+                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     FlatButton(
+                //       onPressed: () => refreshShops(),
+                //       child: Text("Odśwież", style: TextStyle(color: Colors.white),),
+                //     ),
+                //   ],
+                // )
               ],
             ),
           )
