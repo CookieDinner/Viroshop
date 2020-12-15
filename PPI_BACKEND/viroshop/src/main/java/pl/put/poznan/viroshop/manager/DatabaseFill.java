@@ -2,10 +2,7 @@ package pl.put.poznan.viroshop.manager;
 
 import pl.put.poznan.viroshop.dao.Category;
 import pl.put.poznan.viroshop.dao.Unit;
-import pl.put.poznan.viroshop.dao.entities.ProductEntity;
-import pl.put.poznan.viroshop.dao.entities.ShopEntity;
-import pl.put.poznan.viroshop.dao.entities.StoreEntity;
-import pl.put.poznan.viroshop.dao.entities.UserEntity;
+import pl.put.poznan.viroshop.dao.entities.*;
 
 import java.time.LocalDate;
 
@@ -70,6 +67,10 @@ public class DatabaseFill {
             new StoreEntity(19L, true, 2.40f, shopEntities[4], productsEntities[15]),
             // For Shop 6L:
             new StoreEntity(20L, true, 1.99f, shopEntities[5], productsEntities[15]),
+    };
+
+    static AlleyEntity[] alleyEntities = new AlleyEntity[]{
+
     };
 
     static UserEntity[] userEntities = new UserEntity[]{

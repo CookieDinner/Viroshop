@@ -44,6 +44,7 @@ public class ShopManager {
         shopRepo.deleteById(id);
     }
 
+
     /**
      * Add to database specific records.
      * EventListener activate this method when application starts (parameter of the adnotation)
