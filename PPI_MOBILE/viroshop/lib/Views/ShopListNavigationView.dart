@@ -4,6 +4,7 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
 import 'package:viroshop/Views/ShopListNavigationViews/FavoriteShopList.dart';
+import 'package:viroshop/Views/ShopListNavigationViews/Orders.dart';
 import 'package:viroshop/Views/ShopListNavigationViews/ShopList.dart';
 
 class ShopListNavigationView extends StatefulWidget {
@@ -21,6 +22,7 @@ class _ShopListNavigationViewState extends State<ShopListNavigationView> {
     currentTab = 0;
     navigationViews.add(ShopList(widget, openDrawer));
     navigationViews.add(FavoriteShopList(widget, openDrawer));
+    navigationViews.add(Orders(widget, openDrawer));
     super.initState();
   }
   @override
@@ -82,6 +84,13 @@ class _ShopListNavigationViewState extends State<ShopListNavigationView> {
                 activeIcon: Icon(Icons.star,
                     color: CustomTheme().accentPlus),
                 label: "Ulubione sklepy",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.bookmark_border_outlined,
+                    color: CustomTheme().accent),
+                activeIcon: Icon(Icons.bookmark,
+                    color: CustomTheme().accentPlus),
+                label: "Zamówienia",
               ),
             ],
           ),

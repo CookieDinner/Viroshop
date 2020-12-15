@@ -167,15 +167,6 @@ class _ShopListState extends State<ShopList> {
               color: CustomTheme().accentPlus,
             ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     FlatButton(
-          //       onPressed: () => refreshShops(),
-          //       child: Text("Odśwież", style: TextStyle(color: Colors.white),),
-          //     ),
-          //   ],
-          // )
         ],
       ),
     );
