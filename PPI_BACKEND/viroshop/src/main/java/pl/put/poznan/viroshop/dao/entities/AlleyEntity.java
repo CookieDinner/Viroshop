@@ -1,5 +1,7 @@
 package pl.put.poznan.viroshop.dao.entities;
 
+import pl.put.poznan.viroshop.dao.AlleyType;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,6 +16,8 @@ public class AlleyEntity {
 
     private int yposition;
 
+    private AlleyType type;
+
     @OneToMany(mappedBy = "alleyEntity")
     private Set<ProductEntity> products;
 
@@ -23,10 +27,11 @@ public class AlleyEntity {
     public AlleyEntity() {
     }
 
-    public AlleyEntity(Long id, int xposition, int yposition, Set<ProductEntity> products, ShopEntity shopEntity) {
+    public AlleyEntity(Long id, int xposition, int yposition, AlleyType type, Set<ProductEntity> products, ShopEntity shopEntity) {
         this.id = id;
         this.xposition = xposition;
         this.yposition = yposition;
+        this.type = type;
         this.products = products;
         this.shopEntity = shopEntity;
     }
@@ -69,5 +74,13 @@ public class AlleyEntity {
 
     public void setShopEntity(ShopEntity shopEntity) {
         this.shopEntity = shopEntity;
+    }
+
+    public AlleyType getType() {
+        return type;
+    }
+
+    public void setType(AlleyType type) {
+        this.type = type;
     }
 }
