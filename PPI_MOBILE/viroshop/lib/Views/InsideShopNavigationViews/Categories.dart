@@ -28,7 +28,10 @@ class _CategoriesState extends State<Categories> {
       color: CustomTheme().background,
       child: Stack(
         children: [
-          BackgroundAnimation(),
+          SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: BackgroundAnimation()
+          ),
           //TODO Kategorie
           Container(
             child: Column(

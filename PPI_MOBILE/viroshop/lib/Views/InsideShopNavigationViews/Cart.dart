@@ -46,7 +46,10 @@ class _CartState extends State<Cart> {
       color: CustomTheme().background,
       child: Stack(
         children: [
-          BackgroundAnimation(),
+          SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: BackgroundAnimation()
+          ),
           //TODO Koszyk
           Container(
             child: Column(

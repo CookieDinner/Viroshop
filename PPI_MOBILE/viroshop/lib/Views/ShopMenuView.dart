@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
-import 'package:viroshop/CustomWidgets/StoreFront.dart';
+import 'package:viroshop/World/Templates/StoreFront.dart';
 import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';

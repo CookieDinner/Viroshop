@@ -1,7 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
@@ -9,7 +14,7 @@ import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
-import 'package:viroshop/CustomWidgets/ShopTemplate.dart';
+import 'package:viroshop/World/Templates/ShopTemplate.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
@@ -28,6 +33,7 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
   ShopList(this.parent, this.openDrawer);
 
   final String title = "Sklepy";
+  List<Shop> favoriteShops = [];
 
   _ShopListState shopListState = _ShopListState();
 
@@ -42,19 +48,23 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
   }
 
   Future<void> getShops() async{
+    favoriteShops = await DbHandler.getFavoriteShops();
     shopListState.shops = await DbHandler.getShops();
     shopListState.filteredShops = List.from(shopListState.shops);
-    shopListState.stateSet();
+    shopListState.updateSearch(shopListState.searchController.text);
+    //shopListState.stateSet();
   }
 
 }
 
 class _ShopListState extends State<ShopList> {
   final ScrollController scrollController = ScrollController();
+  StreamController<bool> streamController = StreamController<bool>();
 
   List<Shop> filteredShops = [];
   List<Shop> shops = [];
   TextEditingController searchController = TextEditingController();
+  bool isCurrentlyProcessingFavorites = false;
 
   void stateSet(){
     setState(() {
@@ -65,6 +75,7 @@ class _ShopListState extends State<ShopList> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
       await widget.getShops();
+      streamController.add(true);
     });
     super.initState();
   }
@@ -76,9 +87,7 @@ class _ShopListState extends State<ShopList> {
       filteredShops.retainWhere((element)=>
       (element.name.toUpperCase().startsWith(textPart.toUpperCase()) ||
           element.street.toUpperCase().startsWith(textPart.toUpperCase())));
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void pushChosenShop(Shop chosenShop) async{
@@ -86,6 +95,27 @@ class _ShopListState extends State<ShopList> {
     FocusScope.of(context).unfocus();
     CustomAlerts.showLoading(context, (){});
     await sendRequest(chosenShop);
+  }
+
+  Future<bool> addToFavorites(Shop shopToAdd, bool shouldDelete) async{
+    if (isCurrentlyProcessingFavorites)
+      return true;
+    else {
+      setState(() {isCurrentlyProcessingFavorites = true;});
+      if (shouldDelete) {
+        await DbHandler.deleteFavoriteShop(shopToAdd);
+        await widget.getShops();
+        widget.favoriteShops.remove(shopToAdd);
+        setState(() {isCurrentlyProcessingFavorites = false;});
+        return false;
+      } else {
+        await DbHandler.insertToFavoriteShops(shopToAdd);
+        widget.favoriteShops.add(shopToAdd);
+        await widget.getShops();
+        setState(() {isCurrentlyProcessingFavorites = false;});
+        return false;
+      }
+    }
   }
 
   Future<void> sendRequest(Shop chosenShop) async{
@@ -128,7 +158,10 @@ class _ShopListState extends State<ShopList> {
       color: CustomTheme().background,
       child: Stack(
         children: [
-          SingleChildScrollView(child: BackgroundAnimation()),
+          SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: BackgroundAnimation()
+          ),
           Container(
             child: Column(
               children: [
@@ -139,20 +172,33 @@ class _ShopListState extends State<ShopList> {
                 ),
                 SizedBox(height: mediaSize.height * 0.02,),
                 Expanded(
-                  child: Scrollbar(
-                    radius: Radius.circular(20),
-                    thickness: 15,
-                    isAlwaysShown: true,
-                    controller: scrollController,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        controller: scrollController,
-                        itemCount: filteredShops.length,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return ShopTemplate(filteredShops[index], pushChosenShop);
-                        }
-                    ),
+                  child: StreamBuilder<Object>(
+                    stream: streamController.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData)
+                        return DraggableScrollbar.rrect(
+                          alwaysVisibleScrollThumb: true,
+                          backgroundColor: CustomTheme().accent,
+                          heightScrollThumb: filteredShops.length > 4 ?
+                          max(mediaSize.height * 2 / filteredShops.length,
+                              mediaSize.height * 0.05) : 0,
+                          padding: EdgeInsets.all(1),
+                          controller: scrollController,
+                          child: ListView.builder(
+                              controller: scrollController,
+                              itemCount: filteredShops.length,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              itemBuilder: (BuildContext context, int index) {
+                                return ShopTemplate(filteredShops[index], pushChosenShop, addToFavorites, widget);
+                              }
+                          ),
+                        );
+                      else
+                        return SpinKitFadingCube(
+                          color: CustomTheme().buttonColor,
+                          size: MediaQuery.of(context).size.width * 0.1,
+                        );
+                    }
                   ),
                 ),
               ],

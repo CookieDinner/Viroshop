@@ -5,11 +5,14 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ShopListNavigationView.dart';
 import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
+import 'package:viroshop/World/Shop.dart';
 
 class Orders extends StatefulWidget implements ShopListNavigationViewTemplate{
   final ShopListNavigationView parent;
   final Function openDrawer;
   Orders(this.parent, this.openDrawer);
+
+  List<Shop> favoriteShops = [];
 
   _OrdersState ordersState = _OrdersState();
   @override
@@ -38,7 +41,10 @@ class _OrdersState extends State<Orders> {
       color: CustomTheme().background,
       child: Stack(
         children: [
-          SingleChildScrollView(child: BackgroundAnimation()),
+          SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: BackgroundAnimation()
+          ),
           Container(),
           CustomAppBar("Zamówienia",
             withOptionButton: true,
