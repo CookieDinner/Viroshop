@@ -17,13 +17,13 @@ class ProductTemplate extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(
           mediaSize.width * 0.1,
-          mediaSize.height * 0.015,
+          mediaSize.height * 0.01,
           mediaSize.width * 0.1,
-          mediaSize.height * 0.015),
+          mediaSize.height * 0.01),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => currentProduct.available == 1 ? function() : (){},
+          onTap: () => currentProduct.available == 1 ? function(currentProduct, 1) : (){},
           splashColor: currentProduct.available == 1 ?
             CustomTheme().accentPlus.withOpacity(0.4) :
             Colors.transparent,
@@ -31,7 +31,7 @@ class ProductTemplate extends StatelessWidget {
             CustomTheme().cardColor :
             Colors.transparent,
           child: Container(
-            height: mediaSize.height * 0.15,
+            height: mediaSize.height * 0.12,
             color: currentProduct.available == 1 ?
               CustomTheme().cardColor.withOpacity(0.17) :
               Colors.blueGrey.withOpacity(0.17),

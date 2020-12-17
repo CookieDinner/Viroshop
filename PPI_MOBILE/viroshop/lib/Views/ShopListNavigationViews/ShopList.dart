@@ -50,7 +50,7 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
   Future<void> getShops() async{
     favoriteShops = await DbHandler.getFavoriteShops();
     shopListState.shops = await DbHandler.getShops();
-    shopListState.filteredShops = List.from(shopListState.shops);
+    //shopListState.filteredShops = List.from(shopListState.shops);
     shopListState.updateSearch(shopListState.searchController.text);
     //shopListState.stateSet();
   }
@@ -65,6 +65,7 @@ class _ShopListState extends State<ShopList> {
   List<Shop> shops = [];
   TextEditingController searchController = TextEditingController();
   bool isCurrentlyProcessingFavorites = false;
+  double cancelTextOpacity = 0.0;
 
   void stateSet(){
     setState(() {
@@ -82,11 +83,17 @@ class _ShopListState extends State<ShopList> {
 
   void updateSearch(String text){
     filteredShops = List.from(shops);
-    var split = text.split(" ");
-    for (String textPart in split)
-      filteredShops.retainWhere((element)=>
-      (element.name.toUpperCase().startsWith(textPart.toUpperCase()) ||
-          element.street.toUpperCase().startsWith(textPart.toUpperCase())));
+    if (text != "") {
+      cancelTextOpacity = 1.0;
+      var split = text.split(" ");
+      for (String textPart in split)
+        filteredShops.retainWhere((element) =>
+        (element.name.toUpperCase().startsWith(textPart.toUpperCase()) ||
+            element.street.toUpperCase().startsWith(textPart.toUpperCase())));
+      filteredShops.sort((a, b) => a.name.compareTo(b.name));
+    }else{
+      cancelTextOpacity = 0.0;
+    }
     setState(() {});
   }
 
@@ -169,6 +176,26 @@ class _ShopListState extends State<ShopList> {
                 CustomTextFormField(searchController, "Nazwa sklepu / ulica...",
                   TextInputAction.search, (_){}, null, trailingIcon: Icon(Icons.search),
                   onChangeAction: updateSearch,
+                  withSuffixIcon: true,
+                  suffixIcon: IgnorePointer(
+                    ignoring: cancelTextOpacity == 1.0 ? false : true,
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: cancelTextOpacity,
+                      child: IconButton(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onPressed: () {
+                          searchController.clear();
+                          filteredShops = List.from(shops);
+                          cancelTextOpacity = 0.0;
+                          setState(() {});
+                          FocusScope.of(context).unfocus();
+                        },
+                        icon: Icon(Icons.cancel, color: !CustomTheme().isDark ? Colors.white : Colors.grey,),
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: mediaSize.height * 0.02,),
                 Expanded(

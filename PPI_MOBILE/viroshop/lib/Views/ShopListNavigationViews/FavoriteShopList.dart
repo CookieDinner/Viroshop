@@ -20,7 +20,7 @@ class FavoriteShopList extends ShopList{
   Future<void> getShops() async{
     shopListState.shops = await DbHandler.getFavoriteShops();
     favoriteShops = shopListState.shops;
-    shopListState.filteredShops = List.from(shopListState.shops);
+    //shopListState.filteredShops = List.from(shopListState.shops);
     shopListState.updateSearch(shopListState.searchController.text);
   }
 

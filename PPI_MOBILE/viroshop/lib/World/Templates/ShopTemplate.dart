@@ -43,9 +43,9 @@ class _ShopTemplateState extends State<ShopTemplate> {
     return Padding(
       padding: EdgeInsets.fromLTRB(
           mediaSize.width * 0.1,
-          mediaSize.height * 0.015,
+          mediaSize.height * 0.01,
           mediaSize.width * 0.1,
-          mediaSize.height * 0.015),
+          mediaSize.height * 0.01),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -66,7 +66,7 @@ class _ShopTemplateState extends State<ShopTemplate> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.currentShop.name,
+                      widget.currentShop.name + ",",
                       style: TextStyle(
                           color: CustomTheme().cardColor.withOpacity(1),
                           fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
@@ -74,7 +74,7 @@ class _ShopTemplateState extends State<ShopTemplate> {
                     ),
                     SizedBox(height: mediaSize.height * 0.005,),
                     Text(
-                      "ul. " + widget.currentShop.street,
+                      "ul. " + widget.currentShop.street + ",",
                       style: TextStyle(
                           color: CustomTheme().cardColor.withOpacity(1),
                           fontSize: mediaSize.width * Constants.appBarFontSize * 0.9

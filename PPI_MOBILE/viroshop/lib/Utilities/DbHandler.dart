@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/World/CartItem.dart';
 import 'package:viroshop/World/Product.dart';
 import 'package:viroshop/World/Shop.dart';
 
@@ -98,7 +99,7 @@ class DbHandler {
     try {
       db = await openDatabase(Data().dbPath);
       await db.transaction((txn) async{
-        txn.insert("favorite_shops", {
+        await txn.insert("favorite_shops", {
             'id' : currentShop.id,
             'city' : currentShop.city,
             'street' : currentShop.street,
@@ -119,7 +120,7 @@ class DbHandler {
     try {
       db = await openDatabase(Data().dbPath);
       await db.transaction((txn) async{
-        txn.delete("favorite_shops", where: 'id = ?', whereArgs: [currentShop.id]);
+        await txn.delete("favorite_shops", where: 'id = ?', whereArgs: [currentShop.id]);
       });
     } on Exception catch(e){
       debugPrint("Error deleting from favorite shops:\n${e.toString()}");
@@ -171,7 +172,7 @@ class DbHandler {
         );
       }
     } on Exception catch(e){
-      debugPrint("Error reading shops:\n${e.toString()}");
+      debugPrint("Error reading favorite shops:\n${e.toString()}");
     } finally{
       if(db != null)
         await db.close();
@@ -187,7 +188,7 @@ class DbHandler {
       var queryShops = await db.query('favorite_shops', where: "id = ?", whereArgs: [shop.id]);
       isFavorite = queryShops.isNotEmpty;
     } on Exception catch(e){
-      debugPrint("Error reading shops:\n${e.toString()}");
+      debugPrint("Error checking if shop is favorite:\n${e.toString()}");
     } finally{
       if(db != null)
         await db.close();
@@ -246,5 +247,106 @@ class DbHandler {
         await db.close();
     }
     return products;
+  }
+
+  static Future<bool> insertToCart(Shop shop, Product product, int quantity) async{
+    Database db;
+    try{
+      db = await openDatabase(Data().dbPath);
+      var queryCheck = await db.rawQuery("""
+        Select * from cart
+        where shop_id == ${shop.id} and product_id = ${product.id};  
+      """);
+      if (queryCheck.isEmpty) {
+        await db.transaction((txn) async {
+          await txn.insert("cart", {
+            'shop_id': shop.id,
+            'product_id': product.id,
+            'quantity': quantity,
+          });
+        });
+      }else{
+        int id = queryCheck.first['id'];
+        double currentQuantity = queryCheck.first['quantity'];
+        await db.transaction((txn) async{
+          await txn.update('cart',
+            {'quantity' : (currentQuantity + 1)},
+            where: 'id = ?',
+            whereArgs: [id]
+          );
+        });
+      }
+    } on Exception catch(e){
+      debugPrint("Error adding to cart:\n${e.toString()}");
+    }finally{
+      if(db != null)
+        await db.close();
+    }
+    return false;
+  }
+  static Future<bool> deleteFromCart(Shop shop, CartItem cartItem, int quantity) async{
+    Database db;
+    try {
+      db = await openDatabase(Data().dbPath);
+      var query = await db.rawQuery("""Select quantity from cart where id = ${cartItem.id};""");
+      double currentQuantity = query.first['quantity'];
+      if (currentQuantity == 1 || quantity == 0) {
+        await db.transaction((txn) async {
+          await txn.delete("cart", where: 'id = ?', whereArgs: [cartItem.id]);
+        });
+      }else{
+        await db.transaction((txn) async{
+          await txn.update('cart',
+              {'quantity' : (currentQuantity - quantity)},
+              where: 'id = ?',
+              whereArgs: [cartItem.id]);
+        });
+      }
+    } on Exception catch(e){
+      debugPrint("Error deleting from cart:\n${e.toString()}");
+    } finally{
+      if(db != null)
+        await db.close();
+    }
+    return false;
+  }
+
+  static Future<List<CartItem>> getCart(Shop shop) async{
+    Database db;
+    List<CartItem> cartItems = [];
+    try{
+      db = await openDatabase(Data().dbPath);
+      var queryCartItems = await db.rawQuery("""
+        Select cart.id            as cartId, 
+               products.id        as productId, 
+               products.name      as productName, 
+               products.category  as productCategory, 
+               products.available as productAvailable, 
+               products.price     as productPrice, 
+               cart.quantity      as cartQuantity
+        from cart inner join products on (cart.product_id == products.id)
+        where cart.shop_id == ${shop.id} order by cart.id;  
+      """);
+      for(Map<String, dynamic> singleCartItem in queryCartItems){
+        cartItems.add(
+          CartItem(singleCartItem['cartId'],
+            Product(
+              singleCartItem['productId'],
+              singleCartItem['productName'],
+              singleCartItem['productCategory'],
+              singleCartItem['productAvailable'],
+              singleCartItem['productPrice']
+            ),
+            singleCartItem['cartQuantity']
+          )
+        );
+      }
+    } on Exception catch(e){
+      debugPrint("Error reading cart:\n${e.toString()}");
+    } finally{
+      if(db != null)
+        await db.close();
+    }
+    return cartItems;
   }
 }

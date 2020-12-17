@@ -37,6 +37,7 @@ class Products extends StatefulWidget implements InsideShopNavigationViewTemplat
   Future<void> getProducts() async{
     state.products = await DbHandler.getProducts();
     state.filteredProducts = List.from(state.products);
+    state.filteredProducts.sort((a, b) => a.name.compareTo(b.name));
     state.stateSet();
   }
 
@@ -49,6 +50,8 @@ class _ProductsState extends State<Products> {
   List<Product> filteredProducts = [];
   TextEditingController searchController = TextEditingController();
   StreamController<bool> streamController = StreamController<bool>();
+  bool isCurrentlyProcessing = false;
+  double cancelTextOpacity = 0.0;
 
   @override
   void initState(){
@@ -70,12 +73,26 @@ class _ProductsState extends State<Products> {
     });
   }
 
+  Future<void> addToCart(Product productToAdd, int quantity) async{
+    if (isCurrentlyProcessing)
+      return false;
+    else {
+      setState(() {isCurrentlyProcessing = true;});
+      await DbHandler.insertToCart(Data().currentShop, productToAdd, quantity);
+      setState(() {isCurrentlyProcessing = false;});
+    }
+  }
   void updateSearch(String text){
     filteredProducts = List.from(products);
-    var split = text.split(" ");
-    for (String textPart in split)
-      filteredProducts.retainWhere((element)=>
-      (element.name.toUpperCase().contains(textPart.toUpperCase())));
+    if (text != "") {
+      cancelTextOpacity = 1.0;
+      var split = text.split(" ");
+      for (String textPart in split)
+        filteredProducts.retainWhere((element) =>
+        (element.name.toUpperCase().contains(textPart.toUpperCase())));
+    }else{
+      cancelTextOpacity = 0.0;
+    }
     setState(() {});
   }
 
@@ -98,7 +115,28 @@ class _ProductsState extends State<Products> {
                 SizedBox(height: mediaSize.height * 0.08,),
                 CustomTextFormField(searchController, "Nazwa produktu...",
                   TextInputAction.search, (_){}, null, trailingIcon: Icon(Icons.search),
-                  onChangeAction: updateSearch,),
+                  onChangeAction: updateSearch,
+                  withSuffixIcon: true,
+                  suffixIcon: IgnorePointer(
+                    ignoring: cancelTextOpacity == 1.0 ? false : true,
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: cancelTextOpacity,
+                      child: IconButton(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onPressed: () {
+                          searchController.clear();
+                          filteredProducts = List.from(products);
+                          cancelTextOpacity = 0.0;
+                          setState(() {});
+                          FocusScope.of(context).unfocus();
+                        },
+                        icon: Icon(Icons.cancel, color: !CustomTheme().isDark ? Colors.white : Colors.grey,),
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(height: mediaSize.height * 0.02,),
                 Expanded(
                   child: StreamBuilder<Object>(
@@ -108,7 +146,7 @@ class _ProductsState extends State<Products> {
                         return DraggableScrollbar.rrect(
                           alwaysVisibleScrollThumb: true,
                           backgroundColor: CustomTheme().accent,
-                          heightScrollThumb: filteredProducts.length > 4 ?
+                          heightScrollThumb: filteredProducts.length > 5 ?
                             max(mediaSize.height * 2 / filteredProducts.length,
                                 mediaSize.height * 0.05) : 0,
                           padding: EdgeInsets.all(1),
@@ -118,7 +156,7 @@ class _ProductsState extends State<Products> {
                               itemCount: filteredProducts.length,
                               physics: AlwaysScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
-                                return ProductTemplate(filteredProducts[index], (){});
+                                return ProductTemplate(filteredProducts[index], addToCart);
                               }
                           ),
                         );
@@ -133,7 +171,15 @@ class _ProductsState extends State<Products> {
               ],
             ),
           ),
-          CustomAppBar("Lista produktów")
+          CustomAppBar("Lista produktów", withOptionButton: true,
+            optionButtonWidget: Icon(
+              Icons.sort_sharp,
+              size: mediaSize.width * 0.07,
+              color: CustomTheme().accentPlus,
+            ),
+            //TODO Opcje sortowania
+            optionButtonAction: ()=>print("tutaj będą opcje sortu"),
+          )
         ],
       ),
     );

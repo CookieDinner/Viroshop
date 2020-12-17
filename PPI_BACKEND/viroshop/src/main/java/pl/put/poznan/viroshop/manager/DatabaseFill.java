@@ -37,8 +37,14 @@ public class DatabaseFill {
             new ShopEntity(3L, "Gdańsk", "Mroźna", 41, "Lidl"),
             new ShopEntity(4L, "Poznań", "Roosvelta", 41, "Lidl"),
             new ShopEntity(5L, "Poznań", "Główna", 41, "Biedronka"),
-            new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche")
+            new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche"),
 
+            new ShopEntity(7L, "Poznań", "Dworki", 41, "Kaufland"),
+            new ShopEntity(8L, "Gdańsk", "Górki", 41, "Kaufland"),
+            new ShopEntity(9L, "Gdańsk", "Uliczna", 41, "Lidl"),
+            new ShopEntity(10L, "Poznań", "Gajowa", 41, "Lidl"),
+            new ShopEntity(11L, "Poznań", "Ciasna", 41, "Żabka"),
+            new ShopEntity(12L, "Września", "Litewska", 41, "Biedronka")
     };
 
     static StoreEntity[] storeEntities = new StoreEntity[]{
@@ -63,6 +69,18 @@ public class DatabaseFill {
             new StoreEntity(13L, true, 8.88f, shopEntities[3], productsEntities[11]),
             new StoreEntity(14L, true, 5.50f, shopEntities[3], productsEntities[12]),
             new StoreEntity(15L, false, 0.99f, shopEntities[3], productsEntities[16]),
+
+            new StoreEntity(21L, true, 7.29f, shopEntities[3], productsEntities[0]),
+            new StoreEntity(22L, true, 22.99f, shopEntities[3], productsEntities[1]),
+            new StoreEntity(23L, true, 15.99f, shopEntities[3], productsEntities[3]),
+            new StoreEntity(24L, false, 13.88f, shopEntities[3], productsEntities[4]),
+            new StoreEntity(25L, true, 8.50f, shopEntities[3], productsEntities[5]),
+            new StoreEntity(27L, true, 12.29f, shopEntities[3], productsEntities[7]),
+            new StoreEntity(28L, true, 17.99f, shopEntities[3], productsEntities[8]),
+            new StoreEntity(29L, true, 23.99f, shopEntities[3], productsEntities[9]),
+            new StoreEntity(30L, true, 2.88f, shopEntities[3], productsEntities[13]),
+            new StoreEntity(31L, true, 0.50f, shopEntities[3], productsEntities[14]),
+            new StoreEntity(32L, false, 3.99f, shopEntities[3], productsEntities[15]),
             // For Shop 5L:
             new StoreEntity(16L, true, 3.30f, shopEntities[4], productsEntities[3]),
             new StoreEntity(17L, true, 4.50f, shopEntities[4], productsEntities[13]),

@@ -20,11 +20,11 @@ class _StoreNavigationViewState extends State<InsideShopNavigationView> {
 
   @override
   void initState() {
-
     currentTab = widget.chosenTab;
     navigationViews.add(Products(widget));
     navigationViews.add(Categories(widget));
     navigationViews.add(Cart(widget));
+    navigationViews[currentTab].update();
     super.initState();
   }
   @override

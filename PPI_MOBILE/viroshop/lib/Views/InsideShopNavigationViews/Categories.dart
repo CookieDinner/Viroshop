@@ -16,7 +16,6 @@ class Categories extends StatefulWidget implements InsideShopNavigationViewTempl
 
   @override
   Future<void> update() {
-    print("updating Categories");
     return null;
   }
 }
