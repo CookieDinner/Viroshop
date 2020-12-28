@@ -18,7 +18,7 @@ public class AlleyEntity {
 
     private AlleyType type;
 
-    @OneToMany(mappedBy = "alleyEntity")
+    @ManyToMany
     private Set<ProductEntity> products;
 
     @ManyToOne
