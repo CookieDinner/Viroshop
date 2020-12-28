@@ -1,6 +1,7 @@
 package pl.put.poznan.viroshop.dao.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 
@@ -18,6 +19,9 @@ public class ShopEntity {
 
     @OneToMany(mappedBy = "shopEntity")
     private Set<StoreEntity> storeEntities;
+
+    @OneToMany(mappedBy = "shopEntity")
+    private List<AlleyEntity> alleys;
 
     public ShopEntity() {
     }
@@ -68,5 +72,13 @@ public class ShopEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<AlleyEntity> getAlleys() {
+        return alleys;
+    }
+
+    public void setAlleys(List<AlleyEntity> alleys) {
+        this.alleys = alleys;
     }
 }

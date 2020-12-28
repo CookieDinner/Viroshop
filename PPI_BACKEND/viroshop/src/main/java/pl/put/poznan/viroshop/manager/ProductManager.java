@@ -65,14 +65,4 @@ public class ProductManager {
         productRepo.deleteById(id);
     }
 
-    /**
-     * Add to database specific records.
-     * EventListener activate this method when application starts (parameter of the adnotation)
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDataBase() {
-        for (ProductEntity product : DatabaseFill.productsEntities) {
-            save(product);
-        }
-    }
 }
