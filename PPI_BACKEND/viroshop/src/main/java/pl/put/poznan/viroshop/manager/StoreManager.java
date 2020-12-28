@@ -35,14 +35,4 @@ public class StoreManager {
         storeRepo.deleteById(id);
     }
 
-    /**
-     * Add to database specific records.
-     * EventListener activate this method when application starts (parameter of the adnotation)
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDataBase() {
-        for (StoreEntity store : DatabaseFill.storeEntities) {
-            save(store);
-        }
-    }
 }

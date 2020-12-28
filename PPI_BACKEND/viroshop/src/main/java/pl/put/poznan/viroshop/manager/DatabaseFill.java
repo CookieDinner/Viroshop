@@ -1,5 +1,9 @@
 package pl.put.poznan.viroshop.manager;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
 import pl.put.poznan.viroshop.dao.AlleyType;
 import pl.put.poznan.viroshop.dao.Category;
 import pl.put.poznan.viroshop.dao.Unit;
@@ -10,8 +14,25 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@Service
 public class DatabaseFill {
-    static ProductEntity[] productsEntities = new ProductEntity[]{
+
+    private UserManager userManager;
+    private ShopManager shopManager;
+    private ProductManager productManager;
+    private StoreManager storeManager;
+    private AlleyManager alleyManager;
+
+    @Autowired
+    public DatabaseFill(UserManager userManager, ShopManager shopManager, ProductManager productManager, StoreManager storeManager, AlleyManager alleyManager) {
+        this.userManager = userManager;
+        this.shopManager = shopManager;
+        this.productManager = productManager;
+        this.storeManager = storeManager;
+        this.alleyManager = alleyManager;
+    }
+
+    private ProductEntity[] productsEntities = new ProductEntity[]{
             new ProductEntity(1L, "111222333444", "Makaron", Category.FOOD, "Makaron", Unit.PACKAGE),
             new ProductEntity(2L, "222333444101", "Jajka", Category.FOOD, "Jajka 10 sztuk", Unit.PACKAGE),
             new ProductEntity(3L, "222333444121", "Jajka", Category.FOOD, "Jajka 12 sztuk", Unit.PACKAGE),
@@ -31,7 +52,7 @@ public class DatabaseFill {
             new ProductEntity(17L, "112233445577", "Jogobella Owoce Leśne", Category.FOOD, "Jogurt o smaku owoców leśnych", Unit.PACKAGE)
     };
 
-    static ShopEntity[] shopEntities = new ShopEntity[]{
+    private ShopEntity[] shopEntities = new ShopEntity[]{
             //TODO Nazwy sklepów możemy zrobić jako Enum albo wogóle jako osobną encję, bo mamy niepotrzebną dupliakcje
             new ShopEntity(1L, "Poznań", "Dworcowa", 15, "Biedronka"),
             new ShopEntity(2L, "Gdańsk", "Warszawska", 1, "Auchan"),
@@ -42,7 +63,7 @@ public class DatabaseFill {
 
     };
 
-    static StoreEntity[] storeEntities = new StoreEntity[]{
+    private StoreEntity[] storeEntities = new StoreEntity[]{
             // For Shop 1L:
             new StoreEntity(1L, true, 3.99f, shopEntities[0], productsEntities[0]),
             new StoreEntity(2L, true, 23.20f, shopEntities[0], productsEntities[1]),
@@ -88,8 +109,8 @@ public class DatabaseFill {
             new StoreEntity(35L, true, 1.99f, shopEntities[5], productsEntities[15]),
     };
 
-    static AlleyEntity[] alleyEntities = new AlleyEntity[]{
-            new AlleyEntity(1L, 1, 1, AlleyType.UNUSED, null, shopEntities[0]),
+    private AlleyEntity[] alleyEntities = new AlleyEntity[]{
+            new AlleyEntity(1L, 1, 1, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
             new AlleyEntity(2L, 2, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(3L, 3, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(4L, 4, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
@@ -100,7 +121,7 @@ public class DatabaseFill {
             new AlleyEntity(9L, 9, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(10L, 10, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(11L, 11, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
-            new AlleyEntity(12L, 12, 1, AlleyType.UNUSED, null, shopEntities[0]),
+            new AlleyEntity(12L, 12, 1, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
             //////////////////////////////////////////////////////////////////////////////////
             new AlleyEntity(13L, 1, 2, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(14L, 2, 2, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
@@ -230,15 +251,38 @@ public class DatabaseFill {
             new AlleyEntity(129L, 9, 11, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(130L, 10, 11, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(131L, 11, 11, AlleyType.SHELF, new HashSet(), shopEntities[0]),
-            new AlleyEntity(132L, 12, 11, AlleyType.UNUSED, null, shopEntities[0]),
+            new AlleyEntity(132L, 12, 11, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
 
     };
 
-    static UserEntity[] userEntities = new UserEntity[]{
+    private UserEntity[] userEntities = new UserEntity[]{
             new UserEntity(1L, "lennon123", "lenon@lemon.pl", "ouiya11", LocalDate.of(1995, 1, 1)),
             new UserEntity(2L, "maQWE77", "jubikom@gmail.com", "Zazdro99", LocalDate.of(1990, 2, 22)),
             new UserEntity(3L, "qwerty", "linki@gmail.com", "12345", LocalDate.of(2005, 2, 24))
     };
+
+    /**
+     * Add to database specific records.
+     * EventListener activate this method when application starts (parameter of the adnotation)
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void fillDataBase() {
+        for (UserEntity user : this.userEntities) {
+            userManager.save(user);
+        }
+        for (ProductEntity product : this.productsEntities) {
+            productManager.save(product);
+        }
+        for (ShopEntity shop : this.shopEntities) {
+            shopManager.save(shop);
+        }
+        for (StoreEntity store : this.storeEntities) {
+            storeManager.save(store);
+        }
+        for (AlleyEntity alley : this.alleyEntities) {
+            alleyManager.save(alley);
+        }
+    }
 
 
 }

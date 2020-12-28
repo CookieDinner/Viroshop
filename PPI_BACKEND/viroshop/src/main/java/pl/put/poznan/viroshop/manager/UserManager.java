@@ -59,14 +59,4 @@ public class UserManager {
         return true;
     }
 
-    /**
-     * Add to database specific records.
-     * EventListener activate this method when application starts (parameter of the adnotation)
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDataBase() {
-        for (UserEntity user : DatabaseFill.userEntities) {
-            save(user);
-        }
-    }
 }
