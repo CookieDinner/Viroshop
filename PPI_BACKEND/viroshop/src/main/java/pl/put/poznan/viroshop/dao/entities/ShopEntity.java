@@ -1,5 +1,9 @@
 package pl.put.poznan.viroshop.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +25,8 @@ public class ShopEntity {
     private Set<StoreEntity> storeEntities;
 
     @OneToMany(mappedBy = "shopEntity")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<AlleyEntity> alleys;
 
     public ShopEntity() {
