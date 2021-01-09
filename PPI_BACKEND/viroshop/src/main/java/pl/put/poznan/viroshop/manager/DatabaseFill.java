@@ -12,7 +12,6 @@ import pl.put.poznan.viroshop.dao.entities.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class DatabaseFill {
