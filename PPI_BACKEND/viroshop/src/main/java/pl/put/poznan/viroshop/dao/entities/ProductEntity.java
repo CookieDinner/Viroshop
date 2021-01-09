@@ -1,7 +1,7 @@
 package pl.put.poznan.viroshop.dao.entities;
 
-import pl.put.poznan.viroshop.dao.Category;
-import pl.put.poznan.viroshop.dao.Unit;
+import pl.put.poznan.viroshop.dao.enums.Category;
+import pl.put.poznan.viroshop.dao.enums.Unit;
 
 import javax.persistence.*;
 import java.util.Set;

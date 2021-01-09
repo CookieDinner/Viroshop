@@ -1,6 +1,6 @@
 package pl.put.poznan.viroshop.dao.models;
 
-import pl.put.poznan.viroshop.dao.Category;
+import pl.put.poznan.viroshop.dao.enums.Category;
 
 public class BasicProductModel {
 

@@ -3,7 +3,7 @@ package pl.put.poznan.viroshop.dao.entities;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import pl.put.poznan.viroshop.dao.AlleyType;
+import pl.put.poznan.viroshop.dao.enums.AlleyType;
 
 import javax.persistence.*;
 import java.util.Set;
