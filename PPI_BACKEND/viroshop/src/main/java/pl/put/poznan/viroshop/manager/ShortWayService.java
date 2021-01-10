@@ -9,7 +9,6 @@ import pl.put.poznan.viroshop.dao.models.RoadPoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,15 +40,17 @@ public class ShortWayService {
         }).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private ArrayList<AlleyEntity> getAlleysTheClosestToDoors(ArrayList<AlleyEntity> doors, ArrayList<AlleyEntity> shopAlleys) {
+    private ArrayList<AlleyEntity> getAlleysTheClosestToDoors(ArrayList<AlleyEntity> shopAlleys) {
+        ArrayList<AlleyEntity> doors = shopAlleys.stream().filter(alley -> alley.getType() == AlleyType.DOOR).collect(Collectors.toCollection(ArrayList::new));
         return getAlleysTheClosestToAnother(doors, AlleyType.DOOR, shopAlleys);
     }
 
-    private ArrayList<AlleyEntity> getAlleysTheClosestToCashes(ArrayList<AlleyEntity> cashes, ArrayList<AlleyEntity> shopAlleys) {
+    private ArrayList<AlleyEntity> getAlleysTheClosestToCashes(ArrayList<AlleyEntity> shopAlleys) {
+        ArrayList<AlleyEntity> cashes = shopAlleys.stream().filter(alley -> alley.getType() == AlleyType.CASH).collect(Collectors.toCollection(ArrayList::new));
         return getAlleysTheClosestToAnother(cashes, AlleyType.CASH, shopAlleys);
     }
 
-    public ArrayList<RoadPoint> getShortestWay(ArrayList<AlleyEntity> shopAlleys, List<Long> productIds) {
+    private ArrayList<AlleyEntity> getAlleysWithSelectedProducts(ArrayList<AlleyEntity> shopAlleys, List<Long> productIds) {
         ArrayList<AlleyEntity> alleysWithSelectedProducts = new ArrayList<>();
         productIds.forEach(productId -> {
             shopAlleys.forEach(alley -> {
@@ -59,16 +60,20 @@ public class ShortWayService {
                 }
             });
         });
-        ArrayList<AlleyEntity> doors = shopAlleys.stream().filter(alley -> alley.getType() == AlleyType.DOOR).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<AlleyEntity> cashes = shopAlleys.stream().filter(alley -> alley.getType() == AlleyType.CASH).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<AlleyEntity> firstAlleys = getAlleysTheClosestToDoors(doors, shopAlleys);
-        ArrayList<AlleyEntity> endAlleys = getAlleysTheClosestToCashes(cashes, shopAlleys);
+        return alleysWithSelectedProducts;
+    }
 
-        for (AlleyEntity alley: firstAlleys) {
-            System.out.println("FIRST: " + alley.getId() + " " +  alley.getXposition() + " " + alley.getYposition());
+
+    public ArrayList<RoadPoint> getShortestWay(ArrayList<AlleyEntity> shopAlleys, List<Long> productIds) {
+        ArrayList<AlleyEntity> alleysWithSelectedProducts = getAlleysWithSelectedProducts(shopAlleys, productIds);
+        ArrayList<AlleyEntity> firstAlleys = getAlleysTheClosestToDoors(shopAlleys);
+        ArrayList<AlleyEntity> endAlleys = getAlleysTheClosestToCashes(shopAlleys);
+
+        for (AlleyEntity alley : firstAlleys) {
+            System.out.println("FIRST: " + alley.getId() + " " + alley.getXposition() + " " + alley.getYposition());
         }
-        for (AlleyEntity alley: endAlleys) {
-            System.out.println("END: " + alley.getId() + " " +  alley.getXposition() + " " + alley.getYposition());
+        for (AlleyEntity alley : endAlleys) {
+            System.out.println("END: " + alley.getId() + " " + alley.getXposition() + " " + alley.getYposition());
         }
 
         ArrayList<RoadPoint> resultRoad = new ArrayList<>();
