@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.put.poznan.viroshop.dao.entities.AlleyEntity;
 import pl.put.poznan.viroshop.dao.entities.ShopEntity;
+import pl.put.poznan.viroshop.dao.models.RoadPoint;
 import pl.put.poznan.viroshop.manager.AlleyManager;
 import pl.put.poznan.viroshop.manager.ShopManager;
 
@@ -44,7 +45,7 @@ public class ShopApi {
     }
 
     @GetMapping(value = "/api/shop/shortway", produces = "application/json; charset=UTF-8")
-    public Iterable<AlleyEntity> getShortestWay(@RequestParam Long shopId, @RequestParam List<Long> productIds) {
+    public Iterable<RoadPoint> getShortestWay(@RequestParam Long shopId, @RequestParam List<Long> productIds) {
         return shopManager.getShortestWay(shopId, productIds);
     }
 
