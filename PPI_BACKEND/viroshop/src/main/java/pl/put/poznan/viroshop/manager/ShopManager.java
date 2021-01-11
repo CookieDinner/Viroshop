@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.put.poznan.viroshop.dao.entities.AlleyEntity;
 import pl.put.poznan.viroshop.dao.entities.ProductEntity;
 import pl.put.poznan.viroshop.dao.entities.ShopEntity;
+import pl.put.poznan.viroshop.dao.enums.AlleysPositioning;
 import pl.put.poznan.viroshop.dao.models.RoadPoint;
 import pl.put.poznan.viroshop.dao.repositories.ShopRepo;
 
@@ -79,7 +80,8 @@ public class ShopManager {
                 shopAlleys.add(alley);
             }
         });
-        return shortWayService.getShortestWay(shopAlleys, productIds);
+        AlleysPositioning positioning = this.findOneById(shopId).get().getAlleysPositioning();
+        return shortWayService.getShortestWay(shopAlleys, productIds, positioning);
     }
 
 }
