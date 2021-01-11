@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import pl.put.poznan.viroshop.dao.AlleyType;
-import pl.put.poznan.viroshop.dao.Category;
-import pl.put.poznan.viroshop.dao.Unit;
+import pl.put.poznan.viroshop.dao.enums.AlleyType;
+import pl.put.poznan.viroshop.dao.enums.AlleysPositioning;
+import pl.put.poznan.viroshop.dao.enums.Category;
+import pl.put.poznan.viroshop.dao.enums.Unit;
 import pl.put.poznan.viroshop.dao.entities.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class DatabaseFill {
@@ -54,12 +54,12 @@ public class DatabaseFill {
 
     private ShopEntity[] shopEntities = new ShopEntity[]{
             //TODO Nazwy sklepów możemy zrobić jako Enum albo wogóle jako osobną encję, bo mamy niepotrzebną dupliakcje
-            new ShopEntity(1L, "Poznań", "Dworcowa", 15, "Biedronka"),
-            new ShopEntity(2L, "Gdańsk", "Warszawska", 1, "Auchan"),
-            new ShopEntity(3L, "Gdańsk", "Mroźna", 41, "Lidl"),
-            new ShopEntity(4L, "Poznań", "Roosvelta", 41, "Lidl"),
-            new ShopEntity(5L, "Poznań", "Główna", 41, "Biedronka"),
-            new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche")
+            new ShopEntity(1L, "Poznań", "Dworcowa", 15, "Biedronka", AlleysPositioning.HORIZONTAL),
+            new ShopEntity(2L, "Gdańsk", "Warszawska", 1, "Auchan",  AlleysPositioning.HORIZONTAL),
+            new ShopEntity(3L, "Gdańsk", "Mroźna", 41, "Lidl", AlleysPositioning.VERTICAL),
+            new ShopEntity(4L, "Poznań", "Roosvelta", 41, "Lidl",  AlleysPositioning.HORIZONTAL),
+            new ShopEntity(5L, "Poznań", "Główna", 41, "Biedronka", AlleysPositioning.VERTICAL),
+            new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche", AlleysPositioning.HORIZONTAL)
 
     };
 
@@ -123,8 +123,8 @@ public class DatabaseFill {
             new AlleyEntity(11L, 11, 1, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(12L, 12, 1, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
             //////////////////////////////////////////////////////////////////////////////////
-            new AlleyEntity(13L, 1, 2, AlleyType.SHELF, new HashSet(), shopEntities[0]),
-            new AlleyEntity(14L, 2, 2, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
+            new AlleyEntity(13L, 1, 2, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
+            new AlleyEntity(14L, 2, 2, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(15L, 3, 2, AlleyType.ALLEY, new HashSet<>(Arrays.asList(productsEntities[1])), shopEntities[0]),
             new AlleyEntity(16L, 4, 2, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
             new AlleyEntity(17L, 5, 2, AlleyType.ALLEY, new HashSet(Arrays.asList(productsEntities[6])), shopEntities[0]),
@@ -136,9 +136,9 @@ public class DatabaseFill {
             new AlleyEntity(23L, 11, 2, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
             new AlleyEntity(24L, 12, 2, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             //////////////////////////////////////////////////////////////////////////////////
-            new AlleyEntity(25L, 1, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
-            new AlleyEntity(26L, 2, 3, AlleyType.ALLEY, new HashSet(Arrays.asList(productsEntities[5])), shopEntities[0]),
-            new AlleyEntity(27L, 3, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
+            new AlleyEntity(25L, 1, 3, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
+            new AlleyEntity(26L, 2, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
+            new AlleyEntity(27L, 3, 3, AlleyType.ALLEY, new HashSet(Arrays.asList(productsEntities[5])), shopEntities[0]),
             new AlleyEntity(28L, 4, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(29L, 5, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(30L, 6, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
@@ -149,8 +149,8 @@ public class DatabaseFill {
             new AlleyEntity(35L, 11, 3, AlleyType.ALLEY, new HashSet(Arrays.asList(productsEntities[5])), shopEntities[0]),
             new AlleyEntity(36L, 12, 3, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             //////////////////////////////////////////////////////////////////////////////////
-            new AlleyEntity(37L, 1, 4, AlleyType.SHELF, new HashSet(), shopEntities[0]),
-            new AlleyEntity(38L, 2, 4, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
+            new AlleyEntity(37L, 1, 4, AlleyType.UNUSED, new HashSet(), shopEntities[0]),
+            new AlleyEntity(38L, 2, 4, AlleyType.SHELF, new HashSet(), shopEntities[0]),
             new AlleyEntity(39L, 3, 4, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
             new AlleyEntity(40L, 4, 4, AlleyType.ALLEY, new HashSet(), shopEntities[0]),
             new AlleyEntity(41L, 5, 4, AlleyType.ALLEY, new HashSet(Arrays.asList(productsEntities[0])), shopEntities[0]),

@@ -1,6 +1,9 @@
 package pl.put.poznan.viroshop.dao.entities;
 
-import pl.put.poznan.viroshop.dao.AlleyType;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import pl.put.poznan.viroshop.dao.enums.AlleyType;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -22,6 +25,8 @@ public class AlleyEntity {
     private Set<ProductEntity> products;
 
     @ManyToOne
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private ShopEntity shopEntity;
 
     public AlleyEntity() {
