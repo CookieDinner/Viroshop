@@ -39,6 +39,11 @@ public class ShopApi {
         return shopManager.findAllFromCity(city);
     }
 
+    @GetMapping(value = "/api/shop/alleys", produces = "application/json; charset=UTF-8")
+    public Iterable<AlleyEntity> getAllShopAlleys(@RequestParam Long shopId) {
+        return shopManager.getAllShopAlleys(shopId);
+    }
+
     @GetMapping(value = "/api/shop/places", produces = "application/json; charset=UTF-8")
     public Iterable<AlleyEntity> getAlleysWithSelectedProducts(@RequestParam Long shopId, @RequestParam List<Long> productIds) {
         return shopManager.getAlleysWithSelectedProducts(shopId, productIds);

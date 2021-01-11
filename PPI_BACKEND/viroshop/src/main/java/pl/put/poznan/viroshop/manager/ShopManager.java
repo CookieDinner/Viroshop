@@ -52,15 +52,21 @@ public class ShopManager {
         shopRepo.deleteById(id);
     }
 
-    public Iterable<AlleyEntity> getAlleysWithSelectedProducts(Long shopId, List<Long> productIds) {
+    public ArrayList<AlleyEntity> getAllShopAlleys(Long shopId) {
         Iterable<AlleyEntity> allAlleys = alleyManager.findAll();
         ArrayList<AlleyEntity> shopAlleys = new ArrayList<>();
-        ArrayList<AlleyEntity> alleysWithSelectedProducts = new ArrayList<>();
         allAlleys.forEach(alley -> {
             if (alley.getShopEntity().getId() == shopId) {
                 shopAlleys.add(alley);
             }
         });
+        return shopAlleys;
+    }
+
+    public Iterable<AlleyEntity> getAlleysWithSelectedProducts(Long shopId, List<Long> productIds) {
+        Iterable<AlleyEntity> allAlleys = alleyManager.findAll();
+        ArrayList<AlleyEntity> shopAlleys = getAllShopAlleys(shopId);
+        ArrayList<AlleyEntity> alleysWithSelectedProducts = new ArrayList<>();
         productIds.forEach(productId -> {
             shopAlleys.forEach(alley -> {
                 Optional<ProductEntity> foundProduct = alley.getProducts().stream().filter(product -> product.getId() == productId).findFirst();
