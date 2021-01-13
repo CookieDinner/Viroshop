@@ -22,6 +22,9 @@ public class ProductEntity {
     @OneToMany(mappedBy = "productEntity")
     private Set<StoreEntity> storeEntities;
 
+    @OneToMany(mappedBy = "product")
+    private Set<ProductReservationEntity> productReservations;
+
     public ProductEntity() {
     }
 
