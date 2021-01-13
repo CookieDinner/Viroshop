@@ -5,6 +5,7 @@ import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/MainMenuView.dart';
 
@@ -16,8 +17,7 @@ class SyncView extends StatefulWidget {
 class _SyncViewState extends State<SyncView> {
 
   List<String> downloadElements = [
-    "Sklepów", "Produktów", "Stanów magazynowych", "Alejek sklepowych",
-    "Czegoś tam jeszcze"
+    "Sklepów"
   ];
   var currentElement = "";
   var progressPercentage = 0.0;
@@ -25,56 +25,53 @@ class _SyncViewState extends State<SyncView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      await commenceDownload();
-        Navigator.of(context).pushReplacement(
-            CustomPageTransition(
-              MainMenuView(),
-              x: 0.0,
-              y: 0.0,
-            )
+      setState(() {
+        currentElement = downloadElements[0];
+      });
+      await Future.delayed(Duration(milliseconds: 500));
+      String response = await commenceDownload();
+      await Future.delayed(Duration(milliseconds: 500));
+      Navigator.of(context).pushReplacement(
+          CustomPageTransition(
+            MainMenuView(response),
+            x: 0.0,
+            y: 0.0,
+          )
         );
       });
   }
 
-  Future<bool> commenceDownload() async{
-    setState(() {
-      currentElement = downloadElements[0];
-    });
+  Future<String> commenceDownload() async{
 
-    for (var i = 0; i < downloadElements.length; i++){
-      await Future.delayed(Duration(milliseconds: 50), (){});
+      String shops = await Requests.GetShops();
       for (var j = 0; j < 10; j++) {
         setState(() {
-          progressPercentage+= 1 / (downloadElements.length*20);
+          progressPercentage+= 1 / (downloadElements.length*10);
         });
         if (j < 9)
           await Future.delayed(Duration(milliseconds: 30), (){});
       }
-      setState(() {
-        if (i + 1 < downloadElements.length)
-          currentElement = downloadElements[i+1];
-      });
-    }
+      return shops;
 
-    setState(() {
-      currentElement = downloadElements[0];
-    });
-
-    for (var i = downloadElements.length; i < downloadElements.length * 2; i++){
-      await Future.delayed(Duration(milliseconds: 50), (){});
-      for (var j = 0; j < 10; j++) {
-        setState(() {
-          progressPercentage += 1 / (downloadElements.length*20);
-        });
-        if (j < 9)
-          await Future.delayed(Duration(milliseconds: 30), (){});
-      }
-      setState(() {
-        if (i + 1 - downloadElements.length < downloadElements.length)
-          currentElement = downloadElements[i+1-downloadElements.length];
-      });
-    }
-    return true;
+    // setState(() {
+    //   currentElement = downloadElements[0];
+    // });
+    //
+    // for (var i = downloadElements.length; i < downloadElements.length * 2; i++){
+    //   await Future.delayed(Duration(milliseconds: 50), (){});
+    //   for (var j = 0; j < 10; j++) {
+    //     setState(() {
+    //       progressPercentage += 1 / (downloadElements.length*20);
+    //     });
+    //     if (j < 9)
+    //       await Future.delayed(Duration(milliseconds: 30), (){});
+    //   }
+    //   setState(() {
+    //     if (i + 1 - downloadElements.length < downloadElements.length)
+    //       currentElement = downloadElements[i+1-downloadElements.length];
+    //   });
+    // }
+    //return true;
   }
 
   @override
@@ -100,9 +97,7 @@ class _SyncViewState extends State<SyncView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            progressPercentage < 0.5 ?
-                            "Trwa \"pobieranie\":" :
-                            "Trwa \"scalanie\":",
+                            "Trwa \"pobieranie\":",
                             style: TextStyle(
                               color: CustomTheme().accentText,
                               fontSize: mediaSize.width * Constants.appBarFontSize

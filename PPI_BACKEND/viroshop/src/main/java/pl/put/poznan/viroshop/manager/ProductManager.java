@@ -1,8 +1,6 @@
 package pl.put.poznan.viroshop.manager;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.put.poznan.viroshop.dao.entities.ProductEntity;
 import pl.put.poznan.viroshop.dao.entities.StoreEntity;
@@ -65,14 +63,4 @@ public class ProductManager {
         productRepo.deleteById(id);
     }
 
-    /**
-     * Add to database specific records.
-     * EventListener activate this method when application starts (parameter of the adnotation)
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void fillDataBase() {
-        for (ProductEntity product : DatabaseFill.productsEntities) {
-            save(product);
-        }
-    }
 }
