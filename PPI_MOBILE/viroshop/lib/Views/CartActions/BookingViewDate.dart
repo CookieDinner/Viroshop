@@ -20,6 +20,11 @@ class BookingViewDate extends StatefulWidget {
 
 class _BookingViewDateState extends State<BookingViewDate> {
 
+  bool hasChosenOnce = false;
+
+  Color buttonColor = Colors.grey.withOpacity(0.5);
+  Color textColor = Colors.black.withOpacity(0.5);
+
   bool compareDates(DateTime date1, DateTime date2){
     if(DateTime(date1.year, date1.month, date1.day).difference(DateTime(date2.year, date2.month, date2.day)).inDays >= 0)
       return true;
@@ -28,13 +33,14 @@ class _BookingViewDateState extends State<BookingViewDate> {
   }
 
   void openHoursView(){
-    Navigator.of(context).push(
-        CustomPageTransition(
-          BookingViewHours(_currentDate, widget.clearCart),
-          x: 0.0,
-          y: 0.1,
-        )
-    );
+    if(hasChosenOnce)
+      Navigator.of(context).push(
+          CustomPageTransition(
+            BookingViewHours(_currentDate, widget.clearCart),
+            x: 0.0,
+            y: 0.1,
+          )
+      );
   }
 
   DateTime _currentDate;
@@ -60,6 +66,9 @@ class _BookingViewDateState extends State<BookingViewDate> {
                         SizedBox(height: mediaSize.height * 0.1,),
                         CalendarCarousel(
                           onDayPressed: (DateTime date, List events){
+                            hasChosenOnce = true;
+                            buttonColor = CustomTheme().buttonColor;
+                            textColor = Colors.white;
                             if(compareDates(date, DateTime.now()))
                               this.setState(() {
                                 _currentDate = date;
@@ -119,7 +128,7 @@ class _BookingViewDateState extends State<BookingViewDate> {
                             child: Container(
                                 width: mediaSize.width * 0.7,
                                 height: mediaSize.height * 0.1,
-                                child: Button("Wybierz godzinę", openHoursView)
+                                child: Button("Wybierz godzinę", openHoursView, optionalColor: buttonColor, optionalTextColor: textColor,)
                             ),
                           ),
                         ),

@@ -1,11 +1,21 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/Views/OrderView.dart';
 import 'package:viroshop/Views/ShopListNavigationView.dart';
 import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
+import 'package:viroshop/World/Order.dart';
 import 'package:viroshop/World/Shop.dart';
+import 'package:viroshop/World/Templates/OrderTemplate.dart';
 
 class Orders extends StatefulWidget implements ShopListNavigationViewTemplate{
   final ShopListNavigationView parent;
@@ -27,9 +37,25 @@ class Orders extends StatefulWidget implements ShopListNavigationViewTemplate{
 
 class _OrdersState extends State<Orders> {
 
+  StreamController<bool> streamController = StreamController<bool>();
+  ScrollController scrollController = ScrollController();
+
+  List<Order> orders = [];
   void stateSet(){
     setState(() {
     });
+  }
+
+  @override
+  void initState() {
+    orders.add(Order(1, [], DateTime.now(), Shop(1, "dsa", "dsad", 4, "Biedronka")));
+    streamController.add(true);
+    super.initState();
+  }
+  @override
+  void dispose() {
+    streamController.close();
+    super.dispose();
   }
 
   @override
@@ -45,8 +71,56 @@ class _OrdersState extends State<Orders> {
             physics: NeverScrollableScrollPhysics(),
             child: BackgroundAnimation()
           ),
-          Container(),
-          CustomAppBar("Zamówienia",
+          Container(
+            height: mediaSize.height,
+            width: mediaSize.width,
+            child: Column(
+              children: [
+                SizedBox(height: mediaSize.height * 0.08,),
+                Container(
+                  height: mediaSize.height * 0.78,
+                  child: StreamBuilder<Object>(
+                      stream: streamController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return DraggableScrollbar.rrect(
+                            alwaysVisibleScrollThumb: true,
+                            backgroundColor: CustomTheme().accent,
+                            heightScrollThumb: orders.length > 5 ?
+                            max(mediaSize.height * 2 / orders.length,
+                                mediaSize.height * 0.05) : 0,
+                            padding: EdgeInsets.all(1),
+                            controller: scrollController,
+                            child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: orders.length,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return OrderTemplate(orders[index],
+                                  (Order currentOrder){
+                                    Navigator.of(context).push(
+                                        CustomPageTransition(
+                                          OrderView(currentOrder),
+                                          x: 0.0,
+                                          y: 0.1,
+                                        )
+                                    );
+                                  });
+                                }
+                            ),
+                          );
+                        else
+                          return SpinKitFadingCube(
+                            color: CustomTheme().buttonColor,
+                            size: MediaQuery.of(context).size.width * 0.1,
+                          );
+                      }
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CustomAppBar("Rezerwacje",
             withOptionButton: true,
             optionButtonAction: widget.openDrawer,
             optionButtonWidget: Icon(
