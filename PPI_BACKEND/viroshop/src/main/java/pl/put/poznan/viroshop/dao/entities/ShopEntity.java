@@ -25,6 +25,8 @@ public class ShopEntity {
     private Integer maxReservationsPerQuarterOfHour;
 
     @OneToMany(mappedBy = "shopEntity")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<StoreEntity> storeEntities;
 
     @OneToMany(mappedBy = "shopEntity")
