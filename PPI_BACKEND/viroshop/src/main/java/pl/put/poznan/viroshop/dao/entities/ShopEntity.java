@@ -1,6 +1,12 @@
 package pl.put.poznan.viroshop.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import pl.put.poznan.viroshop.dao.enums.AlleysPositioning;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 
@@ -15,19 +21,26 @@ public class ShopEntity {
     private String street;
     private Integer number;
     private String name;
+    private AlleysPositioning alleysPositioning;
 
     @OneToMany(mappedBy = "shopEntity")
     private Set<StoreEntity> storeEntities;
 
+    @OneToMany(mappedBy = "shopEntity")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<AlleyEntity> alleys;
+
     public ShopEntity() {
     }
 
-    public ShopEntity(Long id, String city, String street, Integer number, String name) {
+    public ShopEntity(Long id, String city, String street, Integer number, String name, AlleysPositioning alleysPositioning) {
         this.id = id;
         this.city = city;
         this.street = street;
         this.number = number;
         this.name = name;
+        this.alleysPositioning = alleysPositioning;
     }
 
     public Long getId() {
@@ -68,5 +81,21 @@ public class ShopEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<AlleyEntity> getAlleys() {
+        return alleys;
+    }
+
+    public void setAlleys(List<AlleyEntity> alleys) {
+        this.alleys = alleys;
+    }
+
+    public AlleysPositioning getAlleysPositioning() {
+        return alleysPositioning;
+    }
+
+    public void setAlleysPositioning(AlleysPositioning alleysPositioning) {
+        this.alleysPositioning = alleysPositioning;
     }
 }
