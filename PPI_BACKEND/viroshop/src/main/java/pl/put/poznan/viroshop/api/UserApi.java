@@ -3,10 +3,7 @@ package pl.put.poznan.viroshop.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
 import pl.put.poznan.viroshop.dao.models.ChangePasswordModel;
 import pl.put.poznan.viroshop.manager.UserManager;
@@ -14,6 +11,7 @@ import pl.put.poznan.viroshop.service.MailService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class UserApi {
 
