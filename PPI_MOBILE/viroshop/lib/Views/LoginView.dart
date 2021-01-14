@@ -54,6 +54,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                 break;
               case false:
                 await DbHandler.insertToShops(value);
+                Data().currentUsername = loginController.text;
                 Navigator.of(context).push(
                     CustomPageTransition(
                       ShopListNavigationView(),

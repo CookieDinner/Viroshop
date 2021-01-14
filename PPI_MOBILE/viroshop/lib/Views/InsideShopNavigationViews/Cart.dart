@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CartPopup.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Constants.dart';
@@ -14,6 +14,7 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/Views/CartActions/BookOrOrder.dart';
 import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
 import 'package:viroshop/Views/InsideShopNavigationView.dart';
 import 'package:viroshop/World/CartItem.dart';
@@ -54,12 +55,17 @@ class _CartState extends State<Cart> {
   double fullPrice = 0.0;
   bool isCurrentlyProcessing = false;
 
-  void openPaymentScreen() {
+  Future<void> clearCart() async{
+    await DbHandler.clearCart();
+    await widget.update();
+  }
+
+  void openCartActionsScreen(){
     Navigator.of(context).push(
         CustomPageTransition(
-          ZbikPaymentView(),
+          BookOrOrder(clearCart),
           x: 0.0,
-          y: 0.5,
+          y: 0.1,
         )
     );
   }
@@ -80,14 +86,10 @@ class _CartState extends State<Cart> {
     setState(() {});
   }
 
-  Future<void> addToCart(Product productToAdd, int quantity) async{
-    if (isCurrentlyProcessing)
-      return false;
-    else {
-      setState(() {isCurrentlyProcessing = true;});
-      await DbHandler.insertToCart(Data().currentShop, productToAdd, quantity);
-      setState(() {isCurrentlyProcessing = false;});
-    }
+
+  Future<void> onCartItemTapped(Product productToEdit, double quantity) async{
+    CartPopup(productToEdit, Icon(Icons.image_not_supported_sharp, color: Colors.white, size: 65,), preAmount: quantity, extraFunction: widget.update).showPopup(context, false);
+    return false;
   }
 
   Future<void> deleteFromCart(CartItem cartItem, int quantity) async{
@@ -95,7 +97,8 @@ class _CartState extends State<Cart> {
       return false;
     else {
       setState(() {isCurrentlyProcessing = true;});
-      await DbHandler.deleteFromCart(Data().currentShop, cartItem, quantity);
+      cartItems.removeWhere((element) => element.id == cartItem.id);
+      await DbHandler.deleteFromCart(cartItem);
       widget.update();
       setState(() {isCurrentlyProcessing = false;});
     }
@@ -112,7 +115,6 @@ class _CartState extends State<Cart> {
             physics: NeverScrollableScrollPhysics(),
             child: BackgroundAnimation()
           ),
-          //TODO Koszyk
           Container(
             child: Column(
               children: [
@@ -120,7 +122,7 @@ class _CartState extends State<Cart> {
                   "Koszyk",
                   withOptionButton: true,
                   optionButtonWidget: Text(
-                    "Zamów",
+                    "Zatwierdź",
                     style: TextStyle(
                       fontSize:
                           mediaSize.width * Constants.appBarFontSize * 0.9,
@@ -128,7 +130,7 @@ class _CartState extends State<Cart> {
                       color: CustomTheme().appBarTheme,
                     ),
                   ),
-                  optionButtonAction: openPaymentScreen,
+                  optionButtonAction: openCartActionsScreen,
                   isTextOptionButton: true,
                 ),
                 Container(
@@ -170,7 +172,7 @@ class _CartState extends State<Cart> {
                                             onTap: () => deleteFromCart(cartItems[index], 0),
                                           )
                                         ],
-                                        child: CartItemTemplate(cartItems[index], deleteFromCart)
+                                        child: CartItemTemplate(cartItems[index], onCartItemTapped)
                                       ),
                                       SizedBox(height: mediaSize.height * 0.008,),
                                     ],

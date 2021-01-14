@@ -58,9 +58,10 @@ class DbHandler {
       await txn.execute("""
         CREATE TABLE cart(
           id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+          username TEXT NOT NULL,
           shop_id INTEGER NOT NULL,
           product_id INTEGER NOT NULL,
-          quantity REAL NOT NULL
+          quantity INTEGER NOT NULL
         );
       """);
     });
@@ -255,11 +256,12 @@ class DbHandler {
       db = await openDatabase(Data().dbPath);
       var queryCheck = await db.rawQuery("""
         Select * from cart
-        where shop_id == ${shop.id} and product_id = ${product.id};  
+        where username == '${Data().currentUsername}' and shop_id == ${shop.id} and product_id = ${product.id};  
       """);
       if (queryCheck.isEmpty) {
         await db.transaction((txn) async {
           await txn.insert("cart", {
+            'username' : Data().currentUsername,
             'shop_id': shop.id,
             'product_id': product.id,
             'quantity': quantity,
@@ -270,7 +272,7 @@ class DbHandler {
         double currentQuantity = queryCheck.first['quantity'];
         await db.transaction((txn) async{
           await txn.update('cart',
-            {'quantity' : (currentQuantity + 1)},
+            {'quantity' : (currentQuantity + quantity)},
             where: 'id = ?',
             whereArgs: [id]
           );
@@ -284,24 +286,50 @@ class DbHandler {
     }
     return false;
   }
-  static Future<bool> deleteFromCart(Shop shop, CartItem cartItem, int quantity) async{
+
+  static Future<bool> editCart(Shop shop, Product product, int quantity) async{
+    Database db;
+    try{
+      db = await openDatabase(Data().dbPath);
+        await db.transaction((txn) async{
+          await txn.update('cart',
+              {'quantity' : quantity},
+              where: 'username = ? and shop_id = ? and product_id = ?',
+              whereArgs: [Data().currentUsername, shop.id, product.id]
+          );
+        });
+    } on Exception catch(e){
+      debugPrint("Error editing cart:\n${e.toString()}");
+    }finally{
+      if(db != null)
+        await db.close();
+    }
+    return false;
+  }
+
+  static Future<bool> deleteFromCart(CartItem cartItem) async{
     Database db;
     try {
       db = await openDatabase(Data().dbPath);
-      var query = await db.rawQuery("""Select quantity from cart where id = ${cartItem.id};""");
-      double currentQuantity = query.first['quantity'];
-      if (currentQuantity == 1 || quantity == 0) {
         await db.transaction((txn) async {
           await txn.delete("cart", where: 'id = ?', whereArgs: [cartItem.id]);
         });
-      }else{
-        await db.transaction((txn) async{
-          await txn.update('cart',
-              {'quantity' : (currentQuantity - quantity)},
-              where: 'id = ?',
-              whereArgs: [cartItem.id]);
-        });
-      }
+    } on Exception catch(e){
+      debugPrint("Error deleting from cart:\n${e.toString()}");
+    } finally{
+      if(db != null)
+        await db.close();
+    }
+    return false;
+  }
+
+  static Future<bool> clearCart() async{
+    Database db;
+    try {
+      db = await openDatabase(Data().dbPath);
+      await db.transaction((txn) async {
+        await txn.delete("cart", where: 'username = ? and shop_id = ?', whereArgs: [Data().currentUsername, Data().currentShop.id]);
+      });
     } on Exception catch(e){
       debugPrint("Error deleting from cart:\n${e.toString()}");
     } finally{
@@ -325,7 +353,7 @@ class DbHandler {
                products.price     as productPrice, 
                cart.quantity      as cartQuantity
         from cart inner join products on (cart.product_id == products.id)
-        where cart.shop_id == ${shop.id} order by cart.id;  
+        where cart.shop_id == ${shop.id} and cart.username == '${Data().currentUsername}' order by cart.id;  
       """);
       for(Map<String, dynamic> singleCartItem in queryCartItems){
         cartItems.add(

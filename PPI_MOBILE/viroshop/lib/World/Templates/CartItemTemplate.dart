@@ -24,7 +24,7 @@ class CartItemTemplate extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => function(currentCartItem, 1),
+          onTap: () => function(currentCartItem.cartProduct, currentCartItem.quantity),
           splashColor: CustomTheme().accentPlus.withOpacity(0.4),
           highlightColor: CustomTheme().cardColor,
           child: Container(

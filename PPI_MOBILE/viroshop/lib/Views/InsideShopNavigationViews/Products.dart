@@ -1,19 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CartPopup.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/World/Templates/ProductTemplate.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
-import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
-import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
 import 'package:viroshop/Views/InsideShopNavigationView.dart';
@@ -73,14 +70,9 @@ class _ProductsState extends State<Products> {
     });
   }
 
-  Future<void> addToCart(Product productToAdd, int quantity) async{
-    if (isCurrentlyProcessing)
-      return false;
-    else {
-      setState(() {isCurrentlyProcessing = true;});
-      await DbHandler.insertToCart(Data().currentShop, productToAdd, quantity);
-      setState(() {isCurrentlyProcessing = false;});
-    }
+  Future<void> onTappedProduct(Product productToAdd, int quantity) async{
+    CartPopup(productToAdd, Icon(Icons.image_not_supported_sharp, color: Colors.white, size: 65,)).showPopup(context, false);
+    return false;
   }
   void updateSearch(String text){
     filteredProducts = List.from(products);
@@ -156,7 +148,7 @@ class _ProductsState extends State<Products> {
                               itemCount: filteredProducts.length,
                               physics: AlwaysScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
-                                return ProductTemplate(filteredProducts[index], addToCart);
+                                return ProductTemplate(filteredProducts[index], onTappedProduct);
                               }
                           ),
                         );

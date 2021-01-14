@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
@@ -10,8 +11,19 @@ class CustomAppBar extends StatelessWidget{
   final Widget optionButtonWidget;
   final Function optionButtonAction;
   final bool isTextOptionButton;
+  final Color specialColor;
 
-  CustomAppBar(this.title, {this.withBackButton = true, this.withOptionButton = false, this.optionButtonAction, this.optionButtonWidget, this.isTextOptionButton = false});
+  CustomAppBar(
+    this.title,
+    {
+      this.withBackButton = true,
+      this.withOptionButton = false,
+      this.optionButtonAction,
+      this.optionButtonWidget,
+      this.isTextOptionButton = false,
+      this.specialColor
+    }
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +45,27 @@ class CustomAppBar extends StatelessWidget{
               child: Icon(
                 Icons.arrow_back_sharp,
                 size: buttonSize * 0.6,
-                color: CustomTheme().appBarTheme,)
+                color: specialColor ?? CustomTheme().appBarTheme,)
             ),
           ) : Container(height: buttonSize,width: mediaSize.width * 0.04,),
           withBackButton ? SizedBox(width: mediaSize.width * 0.01,) :
             SizedBox(),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: mediaSize.width * Constants.appBarFontSize,
-              color: CustomTheme().appBarTheme,
+          Container(
+            height: mediaSize.height * 0.033,
+            width: mediaSize.width * 0.59,
+            child: AutoSizeText(
+                title,
+                style: TextStyle(
+                  fontSize: mediaSize.width * Constants.appBarFontSize,
+                  color: CustomTheme().appBarTheme,
+                ),
             ),
           ),
           Spacer(),
           //withOptionButton ? SizedBox(width: mediaSize.width * 0.45,) : SizedBox(),
           withOptionButton ? Container(
             height: buttonSize,
-            width: isTextOptionButton ? buttonSize * 1.6 : buttonSize,
+            width: isTextOptionButton ? buttonSize * 2 : buttonSize,
             child: FlatButton(
               padding: EdgeInsets.all(0),
               onPressed: () => optionButtonAction(),
@@ -57,7 +73,7 @@ class CustomAppBar extends StatelessWidget{
             ),
           ) : Container(
             height: buttonSize,
-            width: buttonSize * 1.6,
+            width: buttonSize * 2.0,
           )
         ],
       ),

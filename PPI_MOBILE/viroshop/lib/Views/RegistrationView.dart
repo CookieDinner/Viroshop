@@ -298,7 +298,7 @@ class _RegistrationViewState extends State<RegistrationView> with TickerProvider
                                 Theme(
                                   data: ThemeData(
                                     primaryColor: CustomTheme().accentPlus,
-                                    colorScheme: CustomTheme().isDark ? ColorScheme.dark(
+                                    colorScheme: !CustomTheme().isDark ? ColorScheme.dark(
                                       primary: CustomTheme().appBarTheme,
                                       surface: CustomTheme().accent
                                     ) : ColorScheme.light(

@@ -76,7 +76,7 @@ class ProductTemplate extends StatelessWidget {
                         ),
                         Container(
                           width: mediaSize.width * 0.22,
-                          child: Text(currentProduct.price.toString() + " zł / szt",
+                          child: Text(currentProduct.price.toStringAsFixed(2) + " zł / szt",
                             style: TextStyle(
                               color: CustomTheme().cardColor.withOpacity(1),
                               fontSize: mediaSize.width * Constants.labelFontSize,

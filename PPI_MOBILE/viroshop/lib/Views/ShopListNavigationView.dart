@@ -90,7 +90,7 @@ class _ShopListNavigationViewState extends State<ShopListNavigationView> {
                     color: CustomTheme().accent),
                 activeIcon: Icon(Icons.bookmark,
                     color: CustomTheme().accentPlus),
-                label: "Zamówienia",
+                label: "Rezerwacje",
               ),
             ],
           ),

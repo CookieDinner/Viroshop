@@ -92,6 +92,7 @@ class _ShopListState extends State<ShopList> {
             element.street.toUpperCase().startsWith(textPart.toUpperCase())));
       filteredShops.sort((a, b) => a.name.compareTo(b.name));
     }else{
+      filteredShops.sort((a, b) => a.name.compareTo(b.name));
       cancelTextOpacity = 0.0;
     }
     setState(() {});
