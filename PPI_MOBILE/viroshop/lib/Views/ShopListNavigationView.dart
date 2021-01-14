@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/NavigationViews/Cart.dart';
-import 'package:viroshop/Views/NavigationViews/Categories.dart';
-import 'package:viroshop/Views/NavigationViews/EnterStore.dart';
-import 'package:viroshop/Views/NavigationViews/NavigationViewTemplate.dart';
-import 'package:viroshop/Views/NavigationViews/Products.dart';
-import 'package:viroshop/Views/NavigationViews/StoreMap.dart';
+import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
+import 'package:viroshop/Views/ShopListNavigationViews/FavoriteShopList.dart';
+import 'package:viroshop/Views/ShopListNavigationViews/Orders.dart';
+import 'package:viroshop/Views/ShopListNavigationViews/ShopList.dart';
 
-class StoreNavigationView extends StatefulWidget {
-  int chosenTab;
-  StoreNavigationView(this.chosenTab);
+class ShopListNavigationView extends StatefulWidget {
   @override
-  _StoreNavigationViewState createState() => _StoreNavigationViewState();
+  _ShopListNavigationViewState createState() => _ShopListNavigationViewState();
 }
 
-class _StoreNavigationViewState extends State<StoreNavigationView> {
+class _ShopListNavigationViewState extends State<ShopListNavigationView> {
   int currentTab;
   bool updating = false;
-  List<NavigationViewTemplate> navigationViews = [];
+  List<ShopListNavigationViewTemplate> navigationViews = [];
 
   @override
   void initState() {
-
-    currentTab = widget.chosenTab;
-    navigationViews.add(Products(widget));
-    navigationViews.add(Categories(widget));
-    navigationViews.add(Cart(widget));
-    navigationViews.add(EnterStore(widget));
-    navigationViews.add(StoreMap(widget));
-    navigationViews[currentTab].update();
+    currentTab = 0;
+    navigationViews.add(ShopList(widget, openDrawer));
+    navigationViews.add(FavoriteShopList(widget, openDrawer));
+    navigationViews.add(Orders(widget, openDrawer));
     super.initState();
   }
   @override
@@ -38,11 +30,24 @@ class _StoreNavigationViewState extends State<StoreNavigationView> {
     navigationViews.clear();
     super.dispose();
   }
+
+  void openDrawer(){
+    drawerKey.currentState.openEndDrawer();
+  }
+  void stateSet() {
+    navigationViews.forEach((element) => element.update());
+    setState(() {});
+  }
+
+  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return SafeArea(
       child: Scaffold(
+        key: drawerKey,
+        endDrawer: CustomDrawer(stateSet).loginDrawer(context),
         bottomNavigationBar: Container(
           color: CustomTheme().background,
           child: BottomNavigationBar(
@@ -67,40 +72,25 @@ class _StoreNavigationViewState extends State<StoreNavigationView> {
             elevation: 0,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag_outlined,
+                icon: Icon(Icons.store_mall_directory_outlined,
                     color: CustomTheme().accent),
-                activeIcon: Icon(Icons.shopping_bag_sharp,
+                activeIcon: Icon(Icons.store_mall_directory_sharp,
                     color: CustomTheme().accentPlus),
-                label: "Produkty",
+                label: "Sklepy",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.folder_special_outlined,
+                icon: Icon(Icons.star_outline,
                     color: CustomTheme().accent),
-                activeIcon: Icon(Icons.folder_special_sharp,
+                activeIcon: Icon(Icons.star,
                     color: CustomTheme().accentPlus),
-                label: "Kategorie",
+                label: "Ulubione sklepy",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_outlined,
-                  color: CustomTheme().accent),
-                activeIcon: Icon(Icons.shopping_cart_sharp,
-                  color: CustomTheme().accentPlus,
-                ),
-                label: "Koszyk",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.av_timer_sharp,
+                icon: Icon(Icons.bookmark_border_outlined,
                     color: CustomTheme().accent),
-                activeIcon: Icon(Icons.timer_sharp,
+                activeIcon: Icon(Icons.bookmark,
                     color: CustomTheme().accentPlus),
-                label: "Wejdź",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map_outlined,
-                    color: CustomTheme().accent),
-                activeIcon: Icon(Icons.map_sharp,
-                    color: CustomTheme().accentPlus),
-                label: "Mapa",
+                label: "Rezerwacje",
               ),
             ],
           ),

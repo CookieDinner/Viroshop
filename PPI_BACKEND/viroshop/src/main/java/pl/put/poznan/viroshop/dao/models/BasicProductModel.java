@@ -8,15 +8,17 @@ public class BasicProductModel {
     private String name;
     private boolean isAvailable;
     private Category category;
+    private Float price;
 
     public BasicProductModel() {
     }
 
-    public BasicProductModel(Long id, String name, boolean isAvailable, Category category) {
+    public BasicProductModel(Long id, String name, boolean isAvailable, Category category, Float price) {
         this.id = id;
         this.name = name;
         this.isAvailable = isAvailable;
         this.category = category;
+        this.price = price;
     }
 
     public Long getId() {
@@ -50,4 +52,8 @@ public class BasicProductModel {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public Float getPrice() { return price; }
+
+    public void setPrice(Float price) { this.price = price; }
 }

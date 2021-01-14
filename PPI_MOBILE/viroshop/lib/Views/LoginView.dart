@@ -1,17 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
+import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ForgotPasswordView.dart';
 import 'package:viroshop/Views/RegistrationView.dart';
-import 'package:viroshop/Views/SyncView.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:viroshop/Views/ShopListNavigationView.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -25,6 +30,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
   var loginFocusNode = FocusNode();
   var passwordController = TextEditingController();
   var passwordFocusNode = FocusNode();
+  bool theme = false;
 
   bool loginButton = false;
 
@@ -35,45 +41,43 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
     });
   }
   Future<void> sendRequest() async{
-    await Requests.PostLogin(loginController.text, passwordController.text).then(
-            (String message) {
-              switch(message){
-                case "usernotfound":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Podany użytkownik nie istnieje");
-                  break;
-                case "cannotlogin":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Błędne hasło");
-                  break;
-                case "unknown":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił nieoczekiwany błąd");
-                  break;
-                case "connfailed":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Połączenie nieudane");
-                  break;
-                case "conntimeout":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Przekroczono limit czasu połączenia");
-                  break;
-                case "httpexception":
-                  CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
-                  break;
-                default:
-                  //TODO: Wrzucanie klucza autoryzacji do singletona
-                  Navigator.of(context).push(
-                      CustomPageTransition(
-                        SyncView(),
-                        x: 0.0,
-                        y: 0.4,
-                      )
-                  );
-                  break;
-              }
+    await Requests.PostLogin(loginController.text, passwordController.text).then((String message) async{
+      switch(Constants.requestErrors.containsKey(message)){
+        case true:
+          CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[message]);
+          break;
+        case false:
+          await Requests.GetShopsInCity(Data().city).then((String value) async{
+            switch(Constants.requestErrors.containsKey(value)) {
+              case true:
+                CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[value]);
+                break;
+              case false:
+                await DbHandler.insertToShops(value);
+                Data().currentUsername = loginController.text;
+                Navigator.of(context).push(
+                    CustomPageTransition(
+                      ShopListNavigationView(),
+                      x: 0.0,
+                      y: 0.4,
+                    )
+                );
+            }
+          });
+      }
     });
-    //await Future.delayed(Duration(seconds: 1));
     updateButton();
   }
 
   @override
   void initState() {
+    loginController.text = "test";
+    passwordController.text = "123";
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      theme = (await SharedPreferences.getInstance()).getBool('theme');
+      await DbHandler.buildDatabase();
+      setState((){});
+    });
     super.initState();
   }
 
@@ -86,11 +90,23 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  void stateSet() {
+    setState(() {});
+  }
+
+  void openDrawer(){
+    drawerKey.currentState.openEndDrawer();
+  }
+
+  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return SafeArea(
         child: Scaffold(
+          key: drawerKey,
+          endDrawer: CustomDrawer(stateSet).loginDrawer(context, isOnLoginScreen: true),
           backgroundColor: CustomTheme().background,
           body: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -168,7 +184,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                                   ),
                                 ],
                               ),
-                              SizedBox(height: mediaSize.height * 0.02,),
+                              SizedBox(height: mediaSize.height * 0.01,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -202,10 +218,20 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
                     ),
                   ],
                   ),
+                  CustomAppBar("",
+                    withBackButton: false,
+                    withOptionButton: true,
+                    optionButtonAction: openDrawer,
+                    optionButtonWidget: Icon(
+                      Icons.settings,
+                      size: mediaSize.width * 0.07,
+                      color: CustomTheme().accentPlus,
+                    ),
+                  ),
               ]
-        ),
             ),
           ),
+        ),
       )
     );
   }

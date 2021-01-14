@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import '../Utilities/Constants.dart';
 import 'dart:async';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomAlerts{
-
 
   static void showAlertDialog(BuildContext context, String title, String body, {bool dismissible = true}) async {
     final mediaSize = Util.getDimensions(context);
@@ -35,6 +35,7 @@ class CustomAlerts{
     Timer timer;
     await showDialog(
       barrierDismissible: dismissible,
+      barrierColor: Colors.black.withOpacity(0.3),
       context: context,
       builder: (BuildContext context) {
         timer = Timer(Duration(seconds: 2), () {
@@ -97,7 +98,7 @@ class CustomAlerts{
   static showLoading(BuildContext context, Function fun) async{
 
     await showGeneralDialog(
-      barrierColor: Colors.white.withOpacity(0.5),
+      barrierColor: !CustomTheme().isDark ? Colors.black.withOpacity(0.1) : Colors.white.withOpacity(0.2),
       barrierDismissible: false,
       context: context,
       pageBuilder: (BuildContext context, animation, secondaryAnimation) {
@@ -114,9 +115,9 @@ class CustomAlerts{
           child: SafeArea(
               child: Center(
                   child: Container(
-                      child: SpinKitFadingCircle(
-                        color: CustomTheme().accent,
-                        size: 70,
+                      child: SpinKitFadingCube(
+                        color: CustomTheme().buttonColor,
+                        size: MediaQuery.of(context).size.width * 0.1,
                       )
                   )
               )

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Constants{
-  static const String api = "http://10.0.2.2:8080/api";
+  //static const String api = "http://10.0.2.2:8080/api";
+  static const String api = "http://192.168.0.94:8080/api";
   static const String apiUser = "$api/user";
   static const String apiShopList = "$api/shops";
+  static const String apiShopsInCity = "$apiShopList/area";
   static const String apiProductsInShop = "$api/data/products/basic";
 
   static const Color background = Color.fromRGBO(234, 239, 245, 1);
@@ -34,7 +36,7 @@ class Constants{
   static const Color darkAccentText = Color.fromRGBO(31, 142, 255, 1);
   static const Color darkLabelText = Color.fromRGBO(235, 235, 235, 1);
   static const Color darkTextBackground = Color.fromRGBO(143, 141, 136, 1);
-  static const Color darkPopupBackground = Color.fromRGBO(100, 100, 100, 1);
+  static const Color darkPopupBackground = Color.fromRGBO(50, 50, 55, 1);
   static const Color darkButtonColor = Color.fromRGBO(1, 106, 213, 1);
   static const Color darkCardColor = Color.fromRGBO(50, 152, 255, 0.18);
 
@@ -43,6 +45,17 @@ class Constants{
   static const double alertLabelFontSize = 0.03;
   static const double appBarFontSize = 0.055;
 
+  static const List<String> cities = ["Gniezno", "Poznań", "Gdańsk", "Września"];
+
   static int timeOutTime = 7;
+
+  static const Map<String, String> requestErrors = {
+    "usernotfound": "Podany użytkownik nie istnieje",
+    "cannotlogin": "Błędne hasło",
+    "unknown" : "Wystąpił nieoczekiwany błąd",
+    "connfailed" : "Połączenie nieudane",
+    "conntimeout" : "Przekroczono limit czasu połączenia",
+    "httpexception" : "Wystąpił błąd kontaktu z serwerem"
+  };
 
 }
