@@ -94,45 +94,55 @@ public class ReservationManager {
         }
     }
 
-    public ReservationEntity editReservation(UpdateReservationModel reservationModel) {
+    public boolean editReservation(UpdateReservationModel reservationModel) {
 
         ReservationEntity reservation = reservationRepo.findById(reservationModel.getReservationId()).get();
         if (reservation == null) {
-            return null;
+            return false;
         }
 
         synchronized (this) {
-            Integer quarter = reservationModel.getQuarterOfDay();
-            LocalDate date = reservationModel.getDate();
-            UserEntity userEntity = userManager.findOneById(reservationModel.getUserId()).get();
-            ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
-            long numberOfCurrentReservation = getReservationsCount(reservationModel, shopEntity);
 
-            if (numberOfCurrentReservation >= shopEntity.getMaxReservationsPerQuarterOfHour()) {
-                return null;
+            if (reservationModel.getUserId() != null) {
+                reservation.setUser(userManager.findOneById(reservationModel.getUserId()).get());
+            }
+            if (reservationModel.getShopId() != null) {
+                reservation.setShop(shopManager.findOneById(reservationModel.getShopId()).get());
             }
 
-            Set<ProductReservationEntity> productReservationEntities = getProductReservations(reservationModel);
+            long numberOfCurrentReservation = getReservationsCount(reservationModel, reservation.getShop());
 
+            if (numberOfCurrentReservation >= reservation.getShop().getMaxReservationsPerQuarterOfHour()) {
+                return false;
+            }
+
+            Set<ProductReservationEntity> productReservationEntities = null;
+            if (reservationModel.getProductReservations() != null) {
+                productReservationEntities = getNewProductReservations(reservationModel);
+            }
+
+            Integer quarter = reservationModel.getQuarterOfDay();
+            LocalDate date = reservationModel.getDate();
             if (quarter != null) {
                 reservation.setQuarterOfDay(quarter);
             }
             if (date != null) {
                 reservation.setDate(date);
             }
-            if (userEntity != null) {
-                reservation.setUser(userEntity);
-            }
-            if (shopEntity != null) {
-                reservation.setShop(shopEntity);
-            }
 
-            ReservationEntity newReservationEntity = reservationRepo.save(reservation);
-            productReservationEntities.forEach(x -> {
-                x.setReservation(newReservationEntity);
-                productReservationRepo.save(x);
-            });
-            return newReservationEntity;
+
+            if (productReservationEntities != null) {
+                reservation.getProductReservations().forEach(x -> {
+                    x.setReservation(null);
+                    productReservationRepo.save(x);
+                });
+                productReservationEntities.forEach(x -> {
+                    x.setReservation(reservation);
+                    productReservationRepo.save(x);
+                });
+            }
+            reservationRepo.save(reservation);
+            return true;
         }
     }
 
@@ -145,7 +155,7 @@ public class ReservationManager {
         }).collect(Collectors.toCollection(HashSet::new));
     }
 
-    private HashSet<ProductReservationEntity> getProductReservations(UpdateReservationModel reservationModel) {
+    private HashSet<ProductReservationEntity> getNewProductReservations(UpdateReservationModel reservationModel) {
         return reservationModel.getProductReservations().stream().map(model -> {
             int count = model.getCount();
             ProductEntity productEntity = productManager.findOneById(model.getProductId()).get();

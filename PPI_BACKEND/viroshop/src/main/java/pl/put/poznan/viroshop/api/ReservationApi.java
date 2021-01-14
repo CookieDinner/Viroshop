@@ -1,6 +1,8 @@
 package pl.put.poznan.viroshop.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.put.poznan.viroshop.dao.entities.ProductReservationEntity;
 import pl.put.poznan.viroshop.dao.entities.ReservationEntity;
@@ -44,8 +46,12 @@ public class ReservationApi {
     }
 
     @PutMapping(value = "/api/reservation/edit", produces = "application/json; charset=UTF-8")
-    public ReservationEntity editReservation(@RequestBody UpdateReservationModel reservation) {
-        return reservationManager.editReservation(reservation);
+    public ResponseEntity editReservation(@RequestBody UpdateReservationModel reservation) {
+        boolean result = reservationManager.editReservation(reservation);
+        if (!result) {
+            return new ResponseEntity("Error while updating reservation", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("Reservation updated", HttpStatus.OK);
     }
 
 
