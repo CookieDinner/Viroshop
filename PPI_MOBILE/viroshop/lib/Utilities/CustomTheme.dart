@@ -25,6 +25,10 @@ class CustomTheme{
   Color popupBackground;
   Color buttonColor;
   Color cardColor;
+  Color mapColor1;
+  Color mapColor2;
+  Color mapColor3;
+  Color mapBg;
 
   void setTheme(bool theme){
     this.isDark = !theme;
@@ -43,6 +47,10 @@ class CustomTheme{
     this.popupBackground = !theme ? Constants.popupBackground : Constants.darkPopupBackground;
     this.buttonColor = !theme ? Constants.buttonColor : Constants.darkButtonColor;
     this.cardColor = !theme ? Constants.cardColor : Constants.darkCardColor;
+    this.mapColor1 = !theme ? Constants.mapColor1 : Constants.darkMapColor1;
+    this.mapColor2 = !theme ? Constants.mapColor2 : Constants.darkMapColor2;
+    this.mapColor3 = !theme ? Constants.mapColor3 : Constants.darkMapColor3;
+    this.mapBg = !theme ? Constants.mapBg : Constants.darkMapBg;
   }
 
 }

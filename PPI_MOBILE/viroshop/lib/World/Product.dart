@@ -14,4 +14,11 @@ class Product {
         category = json["category"],
         available = json["available"] ? 1 : 0,
         price = json["price"];
+
+  Product.fromAlleysJson(Map<String, dynamic> json) :
+        id = json["id"],
+        name = json["name"],
+        category = "",
+        available = 1,
+        price = 0.0;
 }

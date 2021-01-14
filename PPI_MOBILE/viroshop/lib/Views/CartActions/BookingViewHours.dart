@@ -21,6 +21,7 @@ class BookingViewHours extends StatefulWidget {
 }
 
 class _BookingViewHoursState extends State<BookingViewHours> {
+
   bool compareHours(DateTime date1, DateTime date2){
     if(DateTime(date1.year, date1.month, date1.day).difference(DateTime(date2.year, date2.month, date2.day)).inDays > 0)
       return true;
@@ -76,10 +77,10 @@ class _BookingViewHoursState extends State<BookingViewHours> {
                               physics: AlwaysScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
                                 return Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Align(
                                     child: Container(
-                                      height: mediaSize.height * 0.1,
+                                      height: mediaSize.height * 0.07,
                                       width: mediaSize.width * 0.8,
                                       child: Button(
                                         (7 + (index / 4).floor()).toString()+":"+
