@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import pl.put.poznan.viroshop.dao.entities.*;
 import pl.put.poznan.viroshop.dao.enums.AlleyType;
 import pl.put.poznan.viroshop.dao.enums.AlleysPositioning;
 import pl.put.poznan.viroshop.dao.enums.Category;
 import pl.put.poznan.viroshop.dao.enums.Unit;
-import pl.put.poznan.viroshop.dao.entities.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -55,9 +55,9 @@ public class DatabaseFill {
     private ShopEntity[] shopEntities = new ShopEntity[]{
             //TODO Nazwy sklepów możemy zrobić jako Enum albo wogóle jako osobną encję, bo mamy niepotrzebną dupliakcje
             new ShopEntity(1L, "Poznań", "Dworcowa", 15, "Biedronka", AlleysPositioning.HORIZONTAL),
-            new ShopEntity(2L, "Gdańsk", "Warszawska", 1, "Auchan",  AlleysPositioning.HORIZONTAL),
+            new ShopEntity(2L, "Gdańsk", "Warszawska", 1, "Auchan", AlleysPositioning.HORIZONTAL),
             new ShopEntity(3L, "Gdańsk", "Mroźna", 41, "Lidl", AlleysPositioning.VERTICAL),
-            new ShopEntity(4L, "Poznań", "Roosvelta", 41, "Lidl",  AlleysPositioning.HORIZONTAL),
+            new ShopEntity(4L, "Poznań", "Roosvelta", 41, "Lidl", AlleysPositioning.HORIZONTAL),
             new ShopEntity(5L, "Poznań", "Główna", 41, "Biedronka", AlleysPositioning.VERTICAL),
             new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche", AlleysPositioning.HORIZONTAL)
 
