@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.put.poznan.viroshop.dao.entities.ProductReservationEntity;
 import pl.put.poznan.viroshop.dao.entities.ReservationEntity;
 import pl.put.poznan.viroshop.dao.models.CreateReservationModel;
+import pl.put.poznan.viroshop.dao.models.UpdateReservationModel;
 import pl.put.poznan.viroshop.manager.ReservationManager;
 
 @RestController
@@ -43,8 +44,8 @@ public class ReservationApi {
     }
 
     @PutMapping(value = "/api/reservation/edit", produces = "application/json; charset=UTF-8")
-    public boolean editReservation() {
-        return reservationManager.editReservation();
+    public ReservationEntity editReservation(@RequestBody UpdateReservationModel reservation) {
+        return reservationManager.editReservation(reservation);
     }
 
 

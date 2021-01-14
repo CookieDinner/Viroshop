@@ -3,15 +3,16 @@ package pl.put.poznan.viroshop.dao.models;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CreateReservationModel {
+public class UpdateReservationModel {
 
+    private Long reservationId;
     private LocalDate date;
     private Integer quarterOfDay;
     private List<CreateProductReservationModel> productReservations;
     private Long shopId;
     private Long userId;
 
-    public CreateReservationModel() {
+    public UpdateReservationModel() {
     }
 
     public LocalDate getDate() {
@@ -36,6 +37,14 @@ public class CreateReservationModel {
 
     public void setProductReservations(List<CreateProductReservationModel> productReservations) {
         this.productReservations = productReservations;
+    }
+
+    public Long getReservationId() {
+        return reservationId;
+    }
+
+    public void setReservationId(Long reservationId) {
+        this.reservationId = reservationId;
     }
 
     public Long getShopId() {
