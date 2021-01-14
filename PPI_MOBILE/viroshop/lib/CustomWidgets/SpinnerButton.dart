@@ -6,7 +6,10 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
   class Button extends StatelessWidget{
     final String label;
     final Function fun;
-    Button(this.label, this.fun);
+    final Color optionalColor;
+    final Color optionalTextColor;
+    final bool disableRipple;
+    Button(this.label, this.fun, {this.optionalColor, this.optionalTextColor, this.disableRipple = false});
 
     @override
     Widget build(BuildContext context) {
@@ -14,10 +17,10 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
       return Container(
         width: double.infinity,
         height: mediaSize.height * 0.06,
-        color: CustomTheme().buttonColor,
+        color: optionalColor ?? CustomTheme().buttonColor,
         child: FlatButton(
           onPressed: () => fun(),
-          child: Text(label,style: TextStyle(fontSize: mediaSize.height * 0.026, color: Colors.white, fontWeight: FontWeight.w400),),
+          child: Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: mediaSize.height * 0.026, color: optionalTextColor ?? Colors.white, fontWeight: FontWeight.w400),),
         ),
       );
     }

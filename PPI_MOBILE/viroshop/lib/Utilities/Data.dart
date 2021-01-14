@@ -12,6 +12,8 @@ class Data{
   String tempDbPath = "";
   //Za pomocą loginKey będą autoryzowane wszystkie późniejsze requesty
   String loginKey = "";
+  String currentUsername = "";
   Shop currentShop;
+  String city = "";
 
 }

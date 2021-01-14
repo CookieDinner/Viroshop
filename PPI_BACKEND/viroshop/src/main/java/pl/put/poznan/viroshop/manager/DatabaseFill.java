@@ -59,8 +59,14 @@ public class DatabaseFill {
             new ShopEntity(3L, "Gdańsk", "Mroźna", 41, "Lidl", AlleysPositioning.VERTICAL),
             new ShopEntity(4L, "Poznań", "Roosvelta", 41, "Lidl", AlleysPositioning.HORIZONTAL),
             new ShopEntity(5L, "Poznań", "Główna", 41, "Biedronka", AlleysPositioning.VERTICAL),
-            new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche", AlleysPositioning.HORIZONTAL)
+            new ShopEntity(6L, "Września", "Poznańska", 41, "InterMarche", AlleysPositioning.HORIZONTAL),
 
+            new ShopEntity(7L, "Poznań", "Dworki", 41, "Kaufland", AlleysPositioning.HORIZONTAL),
+            new ShopEntity(8L, "Gdańsk", "Górki", 41, "Kaufland", AlleysPositioning.HORIZONTAL),
+            new ShopEntity(9L, "Gdańsk", "Uliczna", 41, "Lidl", AlleysPositioning.HORIZONTAL),
+            new ShopEntity(10L, "Poznań", "Gajowa", 41, "Lidl", AlleysPositioning.HORIZONTAL),
+            new ShopEntity(11L, "Poznań", "Ciasna", 41, "Żabka", AlleysPositioning.HORIZONTAL),
+            new ShopEntity(12L, "Września", "Litewska", 41, "Biedronka", AlleysPositioning.HORIZONTAL)
     };
 
     private StoreEntity[] storeEntities = new StoreEntity[]{
@@ -258,7 +264,8 @@ public class DatabaseFill {
     private UserEntity[] userEntities = new UserEntity[]{
             new UserEntity(1L, "lennon123", "lenon@lemon.pl", "ouiya11", LocalDate.of(1995, 1, 1)),
             new UserEntity(2L, "maQWE77", "jubikom@gmail.com", "Zazdro99", LocalDate.of(1990, 2, 22)),
-            new UserEntity(3L, "qwerty", "linki@gmail.com", "12345", LocalDate.of(2005, 2, 24))
+            new UserEntity(3L, "qwerty", "linki@gmail.com", "12345", LocalDate.of(2005, 2, 24)),
+            new UserEntity(4L, "test", "a@b.c", "123", LocalDate.of(2000, 1, 1))
     };
 
     /**

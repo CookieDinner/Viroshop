@@ -25,24 +25,32 @@ class CustomTheme{
   Color popupBackground;
   Color buttonColor;
   Color cardColor;
+  Color mapColor1;
+  Color mapColor2;
+  Color mapColor3;
+  Color mapBg;
 
   void setTheme(bool theme){
     this.isDark = !theme;
-    this.background = theme ? Constants.background : Constants.darkBackground;
-    this.backgroundWave1 = theme ? Constants.backgroundWave1 : Constants.darkBackgroundWave1;
-    this.backgroundWave2 = theme ? Constants.backgroundWave2 : Constants.darkBackgroundWave2;
-    this.backgroundWave3 = theme ? Constants.backgroundWave3 : Constants.darkBackgroundWave3;
-    this.waveBottom = theme ? Constants.waveBottom : Constants.darkWaveBottom;
-    this.appBarTheme = theme ? Constants.appBarTheme : Constants.darkAppBarTheme;
-    this.accent = theme ? Constants.accent : Constants.darkAccent;
-    this.accentPlus = theme ? Constants.accentPlus : Constants.darkAccentPlus;
-    this.standardText = theme ? Constants.standardText : Constants.darkStandardText;
-    this.accentText = theme ? Constants.accentText : Constants.darkAccentText;
-    this.labelText = theme ? Constants.labelText : Constants.darkLabelText;
-    this.textBackground = theme ? Constants.textBackground : Constants.darkTextBackground;
-    this.popupBackground = theme ? Constants.popupBackground : Constants.darkPopupBackground;
-    this.buttonColor = theme ? Constants.buttonColor : Constants.darkButtonColor;
-    this.cardColor = theme ? Constants.cardColor : Constants.darkCardColor;
+    this.background = !theme ? Constants.background : Constants.darkBackground;
+    this.backgroundWave1 = !theme ? Constants.backgroundWave1 : Constants.darkBackgroundWave1;
+    this.backgroundWave2 = !theme ? Constants.backgroundWave2 : Constants.darkBackgroundWave2;
+    this.backgroundWave3 = !theme ? Constants.backgroundWave3 : Constants.darkBackgroundWave3;
+    this.waveBottom = !theme ? Constants.waveBottom : Constants.darkWaveBottom;
+    this.appBarTheme = !theme ? Constants.appBarTheme : Constants.darkAppBarTheme;
+    this.accent = !theme ? Constants.accent : Constants.darkAccent;
+    this.accentPlus = !theme ? Constants.accentPlus : Constants.darkAccentPlus;
+    this.standardText = !theme ? Constants.standardText : Constants.darkStandardText;
+    this.accentText = !theme ? Constants.accentText : Constants.darkAccentText;
+    this.labelText = !theme ? Constants.labelText : Constants.darkLabelText;
+    this.textBackground = !theme ? Constants.textBackground : Constants.darkTextBackground;
+    this.popupBackground = !theme ? Constants.popupBackground : Constants.darkPopupBackground;
+    this.buttonColor = !theme ? Constants.buttonColor : Constants.darkButtonColor;
+    this.cardColor = !theme ? Constants.cardColor : Constants.darkCardColor;
+    this.mapColor1 = !theme ? Constants.mapColor1 : Constants.darkMapColor1;
+    this.mapColor2 = !theme ? Constants.mapColor2 : Constants.darkMapColor2;
+    this.mapColor3 = !theme ? Constants.mapColor3 : Constants.darkMapColor3;
+    this.mapBg = !theme ? Constants.mapBg : Constants.darkMapBg;
   }
 
 }

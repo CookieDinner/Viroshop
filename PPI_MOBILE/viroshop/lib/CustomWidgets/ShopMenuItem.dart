@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/World/Product.dart';
-import 'package:viroshop/World/Shop.dart';
 
-class ProductTemplate extends StatelessWidget {
-  final Product currentProduct;
+class ShopMenuItem extends StatelessWidget {
+  final String label;
   final Function function;
-  ProductTemplate(this.currentProduct, this.function);
+
+  ShopMenuItem(this.label,this.function);
+
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
@@ -27,22 +25,16 @@ class ProductTemplate extends StatelessWidget {
           splashColor: CustomTheme().accentPlus.withOpacity(0.4),
           highlightColor: CustomTheme().cardColor,
           child: Container(
-            height: mediaSize.height * 0.09,
+            height: mediaSize.height * 0.11,
             color: CustomTheme().cardColor.withOpacity(0.17),
             child: Center(
-                child: Row(
-                  children: [
-                    SizedBox(width: mediaSize.width * 0.04,),
-                    Icon(Icons.image_not_supported_sharp, color: CustomTheme().standardText, size: 40,),
-                    SizedBox(width: mediaSize.width * 0.04,),
-                    Text(
-                      currentProduct.name,
-                      style: TextStyle(
-                          color: CustomTheme().cardColor.withOpacity(1),
-                          fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  label,
+                  style: TextStyle(
+                      color: CustomTheme().cardColor.withOpacity(1),
+                      fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
+                  ),
+                  textAlign: TextAlign.center,
                 )
             ),
           ),

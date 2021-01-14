@@ -12,7 +12,6 @@ class Requests{
 
   static Future<String> PostLogin(String login, String password) async {
     try{
-      //TODO UNCOMMENT WHEN TESTING WITH THE SERVER
       http.Response response = await http.post(
           "${Constants.apiUser}/login",
           headers: <String, String>{
@@ -94,10 +93,54 @@ class Requests{
       return "httpexception";
     }
   }
+
+  static Future<String> GetShopsInCity(String city) async{
+    try{
+      http.Response response = await http.get(
+          "${Constants.apiShopsInCity}?city=$city", headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      }
+      ).timeout(Duration(seconds: Constants.timeOutTime));
+
+      return response.body;
+
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
   static Future<String> GetProductsInShop(int id) async{
     try{
       http.Response response = await http.get(
           "${Constants.apiProductsInShop}?shopId=$id",headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      }
+      ).timeout(Duration(seconds: Constants.timeOutTime));
+
+      return response.body;
+
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> GetAlleys(int shopId) async{
+    try{
+      http.Response response = await http.get(
+          "${Constants.apiAlleysInShop}?shopId=$shopId",headers: <String, String>{
         'Content-Type': 'application/json; charset=utf-8',
       }
       ).timeout(Duration(seconds: Constants.timeOutTime));

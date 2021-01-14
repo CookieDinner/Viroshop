@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Constants{
-  static const String api = "http://10.0.2.2:8080/api";
+  //static const String api = "http://10.0.2.2:8080/api";
+  static const String api = "http://192.168.0.94:8080/api";
   static const String apiUser = "$api/user";
   static const String apiShopList = "$api/shops";
+  static const String apiShopsInCity = "$apiShopList/area";
   static const String apiProductsInShop = "$api/data/products/basic";
+  static const String apiAlleysInShop = "$api/shop/alleys";
 
   static const Color background = Color.fromRGBO(234, 239, 245, 1);
   static const Color backgroundWave1 = Color.fromRGBO(185, 180, 222, 1);
@@ -21,6 +24,10 @@ class Constants{
   static const Color popupBackground = Color.fromRGBO(244, 249, 255, 1);
   static const Color buttonColor = Color.fromRGBO(1, 106, 213, 1);
   static const Color cardColor = Color.fromRGBO(0, 112, 226, 0.15);
+  static const Color mapColor1 = Colors.white;
+  static const Color mapColor2 = Color.fromRGBO(1, 106, 213, 1);
+  static const Color mapColor3 = Colors.deepPurple;
+  static Color mapBg = Colors.black.withOpacity(0.1);
 
   static const Color darkBackground = Color.fromRGBO(46, 48, 50, 1);
   static const Color darkBackgroundWave1 = Color.fromRGBO(45, 45, 51, 0.7);
@@ -34,15 +41,30 @@ class Constants{
   static const Color darkAccentText = Color.fromRGBO(31, 142, 255, 1);
   static const Color darkLabelText = Color.fromRGBO(235, 235, 235, 1);
   static const Color darkTextBackground = Color.fromRGBO(143, 141, 136, 1);
-  static const Color darkPopupBackground = Color.fromRGBO(100, 100, 100, 1);
+  static const Color darkPopupBackground = Color.fromRGBO(50, 50, 55, 1);
   static const Color darkButtonColor = Color.fromRGBO(1, 106, 213, 1);
   static const Color darkCardColor = Color.fromRGBO(50, 152, 255, 0.18);
+  static const Color darkMapColor1 = Color.fromRGBO(235, 235, 235, 1);
+  static const Color darkMapColor2 = Color.fromRGBO(1, 106, 213, 1);
+  static const Color darkMapColor3 = Colors.deepPurpleAccent;
+  static Color darkMapBg = Colors.white.withOpacity(0.1);
 
   static const double labelFontSize = 0.04;
   static const double accentFontSize = 0.037;
   static const double alertLabelFontSize = 0.03;
   static const double appBarFontSize = 0.055;
 
+  static const List<String> cities = ["Gniezno", "Poznań", "Gdańsk", "Września"];
+
   static int timeOutTime = 7;
+
+  static const Map<String, String> requestErrors = {
+    "usernotfound": "Podany użytkownik nie istnieje",
+    "cannotlogin": "Błędne hasło",
+    "unknown" : "Wystąpił nieoczekiwany błąd",
+    "connfailed" : "Połączenie nieudane",
+    "conntimeout" : "Przekroczono limit czasu połączenia",
+    "httpexception" : "Wystąpił błąd kontaktu z serwerem"
+  };
 
 }
