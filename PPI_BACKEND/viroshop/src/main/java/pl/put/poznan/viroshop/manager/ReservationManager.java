@@ -70,25 +70,36 @@ public class ReservationManager {
     }
 
     public ReservationEntity addNewReservation(CreateReservationModel reservationModel) {
-        int quarter = reservationModel.getQuarterOfDay();
-        LocalDate date = reservationModel.getDate();
-        UserEntity userEntity = userManager.findOneById(reservationModel.getUserId()).get();
-        ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
+        synchronized (this) {
+            int quarter = reservationModel.getQuarterOfDay();
+            LocalDate date = reservationModel.getDate();
+            UserEntity userEntity = userManager.findOneById(reservationModel.getUserId()).get();
+            ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
+            long numberOfCurrentReservation = StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
+                    .filter(res -> res.getShop().getId() == shopEntity.getId())
+                    .filter(res -> res.getDate() == reservationModel.getDate())
+                    .filter(res -> res.getQuarterOfDay() == reservationModel.getQuarterOfDay())
+                    .count();
 
-        Set<ProductReservationEntity> productReservationEntities = reservationModel.getProductReservations().stream().map(model -> {
-            int count = model.getCount();
-            ProductEntity productEntity = productManager.findOneById(model.getProductId()).get();
-            ProductReservationEntity productReservationEntity = new ProductReservationEntity(count, productEntity);
-            return productReservationRepo.save(productReservationEntity);
-        }).collect(Collectors.toCollection(HashSet::new));
-        ReservationEntity reservation = new ReservationEntity(date, quarter, productReservationEntities, shopEntity, userEntity);
+            if (numberOfCurrentReservation >= shopEntity.getMaxReservationsPerQuarterOfHour()) {
+                return null;
+            }
 
-        ReservationEntity newReservationEntity = reservationRepo.save(reservation);
-        productReservationEntities.forEach(x -> {
-            x.setReservation(newReservationEntity);
-            productReservationRepo.save(x);
-        });
-        return newReservationEntity;
+            Set<ProductReservationEntity> productReservationEntities = reservationModel.getProductReservations().stream().map(model -> {
+                int count = model.getCount();
+                ProductEntity productEntity = productManager.findOneById(model.getProductId()).get();
+                ProductReservationEntity productReservationEntity = new ProductReservationEntity(count, productEntity);
+                return productReservationRepo.save(productReservationEntity);
+            }).collect(Collectors.toCollection(HashSet::new));
+            ReservationEntity reservation = new ReservationEntity(date, quarter, productReservationEntities, shopEntity, userEntity);
+
+            ReservationEntity newReservationEntity = reservationRepo.save(reservation);
+            productReservationEntities.forEach(x -> {
+                x.setReservation(newReservationEntity);
+                productReservationRepo.save(x);
+            });
+            return newReservationEntity;
+        }
     }
 
     public boolean editReservation() {

@@ -22,6 +22,7 @@ public class ShopEntity {
     private Integer number;
     private String name;
     private AlleysPositioning alleysPositioning;
+    private Integer maxReservationsPerQuarterOfHour;
 
     @OneToMany(mappedBy = "shopEntity")
     private Set<StoreEntity> storeEntities;
@@ -41,6 +42,17 @@ public class ShopEntity {
         this.number = number;
         this.name = name;
         this.alleysPositioning = alleysPositioning;
+        this.maxReservationsPerQuarterOfHour = 5;
+    }
+
+    public ShopEntity(Long id, String city, String street, Integer number, String name, AlleysPositioning alleysPositioning, Integer maxReservationsPerQuarterOfHour) {
+        this.id = id;
+        this.city = city;
+        this.street = street;
+        this.number = number;
+        this.name = name;
+        this.alleysPositioning = alleysPositioning;
+        this.maxReservationsPerQuarterOfHour = maxReservationsPerQuarterOfHour;
     }
 
     public Long getId() {
@@ -97,5 +109,21 @@ public class ShopEntity {
 
     public void setAlleysPositioning(AlleysPositioning alleysPositioning) {
         this.alleysPositioning = alleysPositioning;
+    }
+
+    public Integer getMaxReservationsPerQuarterOfHour() {
+        return maxReservationsPerQuarterOfHour;
+    }
+
+    public void setMaxReservationsPerQuarterOfHour(Integer maxReservationsPerQuarterOfHour) {
+        this.maxReservationsPerQuarterOfHour = maxReservationsPerQuarterOfHour;
+    }
+
+    public Set<StoreEntity> getStoreEntities() {
+        return storeEntities;
+    }
+
+    public void setStoreEntities(Set<StoreEntity> storeEntities) {
+        this.storeEntities = storeEntities;
     }
 }
