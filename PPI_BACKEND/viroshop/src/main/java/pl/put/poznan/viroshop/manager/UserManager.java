@@ -19,7 +19,7 @@ public class UserManager {
         this.userRepo = userRepo;
     }
 
-    public Optional<UserEntity> findAllById(Long id) {
+    public Optional<UserEntity> findOneById(Long id) {
         return userRepo.findById(id);
     }
 
