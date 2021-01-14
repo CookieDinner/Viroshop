@@ -27,13 +27,13 @@ public class MailService {
         javaMailSender.send(simpleMailMessage);
     }
 
-    public void sendForgotPasswordMail(String userMail) {
+    public void sendForgotPasswordMail(String userMail, String password) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(userMail);
         simpleMailMessage.setFrom(senderMail);
         simpleMailMessage.setSubject("Welcome in viroShop!");
         simpleMailMessage.setText("Hi!\n" +
-                "Your temporary password is ____");
+                "Your temporary password is " + password);
         javaMailSender.send(simpleMailMessage);
     }
 }

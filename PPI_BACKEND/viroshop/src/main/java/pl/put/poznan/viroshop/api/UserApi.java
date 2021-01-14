@@ -66,12 +66,12 @@ public class UserApi {
     }
 
     @PostMapping("/api/user/password/forgot")
-    public ResponseEntity forgotPassword(@RequestBody String userLogin) {
-        List<UserEntity> foundUsers = userManager.findByLogin(userLogin);
-        if (foundUsers.size() == 0) {
-            return new ResponseEntity("User not found", HttpStatus.BAD_REQUEST);
+    public ResponseEntity forgotPassword(@RequestParam String userLogin) {
+        boolean result = userManager.forgotPassword(userLogin);
+        if (!result) {
+            return new ResponseEntity("Error while generating new password", HttpStatus.BAD_REQUEST);
         }
-        mailService.sendForgotPasswordMail(foundUsers.get(0).getEmail());
+        
         return new ResponseEntity("Check your email, we send you temporary password", HttpStatus.OK);
     }
 
