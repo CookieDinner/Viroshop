@@ -11,17 +11,19 @@ public class BasicProductModel {
     private Category category;
     private Float price;
     private Unit unit;
+    private String picture;
 
     public BasicProductModel() {
     }
 
-    public BasicProductModel(Long id, String name, boolean isAvailable, Category category, Float price, Unit unit) {
+    public BasicProductModel(Long id, String name, boolean isAvailable, Category category, Float price, Unit unit, String picture) {
         this.id = id;
         this.name = name;
         this.isAvailable = isAvailable;
         this.category = category;
         this.price = price;
         this.unit = unit;
+        this.picture = picture;
     }
 
     public Long getId() {
@@ -66,5 +68,13 @@ public class BasicProductModel {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

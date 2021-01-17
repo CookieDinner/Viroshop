@@ -1,5 +1,12 @@
 package pl.put.poznan.viroshop.dao.enums;
 
 public enum Category {
-    FOOD
+    NABIAŁ,
+    OWOCE,
+    WARZYWA,
+    PIECZYWO,
+    SŁODYCZE,
+    OGÓLNE,
+    MIĘSO,
+
 }

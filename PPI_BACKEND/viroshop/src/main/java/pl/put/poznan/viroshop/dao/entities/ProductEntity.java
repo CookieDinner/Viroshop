@@ -18,6 +18,7 @@ public class ProductEntity {
     private Category category;
     private String description;
     private Unit unit;
+    private String picture;
 
     @OneToMany(mappedBy = "productEntity")
     private Set<StoreEntity> storeEntities;
@@ -35,6 +36,16 @@ public class ProductEntity {
         this.category = category;
         this.description = description;
         this.unit = unit;
+    }
+
+    public ProductEntity(Long id, String barcode, String name, Category category, String description, Unit unit, String picture) {
+        this.id = id;
+        this.barcode = barcode;
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.unit = unit;
+        this.picture = picture;
     }
 
     public Long getId() {
@@ -83,5 +94,13 @@ public class ProductEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }
