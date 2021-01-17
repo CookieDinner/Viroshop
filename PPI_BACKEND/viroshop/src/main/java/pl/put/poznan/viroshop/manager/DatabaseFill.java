@@ -33,23 +33,23 @@ public class DatabaseFill {
     }
 
     private ProductEntity[] productsEntities = new ProductEntity[]{
-            new ProductEntity(1L, "111222333444", "Makaron", Category.FOOD, "Makaron", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg"),
-            new ProductEntity(2L, "222333444101", "Jajka", Category.FOOD, "Jajka 10 sztuk", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/325/132/008/1249/front_fr.53.200.jpg"),
-            new ProductEntity(3L, "222333444121", "Jajka", Category.FOOD, "Jajka 12 sztuk", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/325/132/002/1030/front_fr.61.200.jpg"),
-            new ProductEntity(4L, "333444555666", "Szynka", Category.FOOD, "Szynka", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/20834142/front_en.3.200.jpg"),
-            new ProductEntity(5L, "111222333555", "Tofu", Category.FOOD, "Tofu", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/841/078/914/0118/front_es.28.200.jpg"),
-            new ProductEntity(6L, "112233445566", "Jabłko", Category.FOOD, "Jabłko", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/20817138/front_de.7.200.jpg"),
-            new ProductEntity(7L, "112233445567", "Gruszka", Category.FOOD, "Odmiana wschodnia", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/20241926/front_de.5.200.jpg"),
-            new ProductEntity(8L, "112233445568", "Tofeefe", Category.FOOD, "Opakowanie 12 czekoladek", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/401/440/040/0007/front_en.135.200.jpg"),
-            new ProductEntity(9L, "112233445569", "Czekolada Magnetic", Category.FOOD, "", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/590/744/360/0994/front_pl.4.200.jpg"),
-            new ProductEntity(10L, "112233445570", "Czekolada Milka", Category.FOOD, "", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/304/514/010/5502/front_en.162.200.jpg"),
-            new ProductEntity(11L, "112233445571", "Pomidory gałązka", Category.FOOD, "Pomidory gałązka luz", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/327/655/709/2820/front_fr.4.200.jpg"),
-            new ProductEntity(12L, "112233445572", "Pomidory malinowe", Category.FOOD, "luzem", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/359/094/100/1275/front_fr.11.200.jpg"),
-            new ProductEntity(13L, "112233445573", "Żelki Haribo", Category.FOOD, "Haribo w paczce 400g", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/310/322/000/7822/front_en.108.200.jpg"),
-            new ProductEntity(14L, "112233445574", "Żelki fasolki", Category.FOOD, "100g", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/20714710/front_cs.18.200.jpg"),
-            new ProductEntity(15L, "112233445575", "Jogurt naturalny MILKO", Category.FOOD, "", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/885/019/958/5275/front_en.4.200.jpg"),
-            new ProductEntity(16L, "112233445576", "Jogobella Truskawka", Category.FOOD, "Jogurt o smaku truskawek", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/401/450/051/2907/front_en.4.200.jpg"),
-            new ProductEntity(17L, "112233445577", "Jogobella Owoce Leśne", Category.FOOD, "Jogurt o smaku owoców leśnych", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/401/450/051/0927/front_fr.4.200.jpg")
+            new ProductEntity(1L, "111222333444", "Makaron", Category.OGÓLNE, "Makaron", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg"),
+            new ProductEntity(2L, "222333444101", "Jajka", Category.OGÓLNE, "Jajka 10 sztuk", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/325/132/008/1249/front_fr.53.200.jpg"),
+            new ProductEntity(3L, "222333444121", "Jajka", Category.OGÓLNE, "Jajka 12 sztuk", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/325/132/002/1030/front_fr.61.200.jpg"),
+            new ProductEntity(4L, "333444555666", "Szynka", Category.MIĘSO, "Szynka", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/20834142/front_en.3.200.jpg"),
+            new ProductEntity(5L, "111222333555", "Tofu", Category.NABIAŁ, "Tofu", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/841/078/914/0118/front_es.28.200.jpg"),
+            new ProductEntity(6L, "112233445566", "Jabłko", Category.OWOCE, "Jabłko", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/20817138/front_de.7.200.jpg"),
+            new ProductEntity(7L, "112233445567", "Gruszka", Category.OWOCE, "Odmiana wschodnia", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/20241926/front_de.5.200.jpg"),
+            new ProductEntity(8L, "112233445568", "Tofeefe", Category.SŁODYCZE, "Opakowanie 12 czekoladek", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/401/440/040/0007/front_en.135.200.jpg"),
+            new ProductEntity(9L, "112233445569", "Czekolada Magnetic", Category.SŁODYCZE, "", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/590/744/360/0994/front_pl.4.200.jpg"),
+            new ProductEntity(10L, "112233445570", "Czekolada Milka", Category.SŁODYCZE, "", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/304/514/010/5502/front_en.162.200.jpg"),
+            new ProductEntity(11L, "112233445571", "Pomidory gałązka", Category.WARZYWA, "Pomidory gałązka luz", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/327/655/709/2820/front_fr.4.200.jpg"),
+            new ProductEntity(12L, "112233445572", "Pomidory malinowe", Category.WARZYWA, "luzem", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/359/094/100/1275/front_fr.11.200.jpg"),
+            new ProductEntity(13L, "112233445573", "Żelki Haribo", Category.SŁODYCZE, "Haribo w paczce 400g", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/310/322/000/7822/front_en.108.200.jpg"),
+            new ProductEntity(14L, "112233445574", "Żelki fasolki", Category.SŁODYCZE, "100g", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/20714710/front_cs.18.200.jpg"),
+            new ProductEntity(15L, "112233445575", "Jogurt naturalny MILKO", Category.NABIAŁ, "", Unit.KILOGRAMS, "https://static.openfoodfacts.org/images/products/885/019/958/5275/front_en.4.200.jpg"),
+            new ProductEntity(16L, "112233445576", "Jogobella Truskawka", Category.NABIAŁ, "Jogurt o smaku truskawek", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/401/450/051/2907/front_en.4.200.jpg"),
+            new ProductEntity(17L, "112233445577", "Jogobella Owoce Leśne", Category.NABIAŁ, "Jogurt o smaku owoców leśnych", Unit.PACKAGE, "https://static.openfoodfacts.org/images/products/401/450/051/0927/front_fr.4.200.jpg")
     };
 
     private ShopEntity[] shopEntities = new ShopEntity[]{
