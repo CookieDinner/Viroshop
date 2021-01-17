@@ -95,4 +95,12 @@ public class ProductEntity {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 }
