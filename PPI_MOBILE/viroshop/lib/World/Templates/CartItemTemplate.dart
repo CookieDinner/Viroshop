@@ -16,15 +16,11 @@ class CartItemTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-          mediaSize.width * 0.1,
-          0,
-          0,
-          0),
+      padding: EdgeInsets.fromLTRB(mediaSize.width * 0.05, 0, mediaSize.width * 0.05, 0),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => function(currentCartItem.cartProduct, currentCartItem.quantity),
+          onTap: () => function != null ? function(currentCartItem.cartProduct, currentCartItem.quantity) : (){},
           splashColor: CustomTheme().accentPlus.withOpacity(0.4),
           highlightColor: CustomTheme().cardColor,
           child: Container(

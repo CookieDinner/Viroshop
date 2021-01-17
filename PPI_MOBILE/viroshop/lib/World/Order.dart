@@ -8,8 +8,9 @@ class Order {
   final DateTime orderDate;
   final Shop shop;
   final List<Product> products;
+  int quarterOfDay;
 
-  Order(this.id, this.products, this.orderDate, this.shop);
+  Order(this.id, this.products, this.orderDate, this.shop, this.quarterOfDay);
 
   // Order.fromJson(Map<String, dynamic> json) :
   //       id = json["id"],

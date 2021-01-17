@@ -269,7 +269,7 @@ class DbHandler {
         });
       }else{
         int id = queryCheck.first['id'];
-        double currentQuantity = queryCheck.first['quantity'];
+        int currentQuantity = queryCheck.first['quantity'];
         await db.transaction((txn) async{
           await txn.update('cart',
             {'quantity' : (currentQuantity + quantity)},

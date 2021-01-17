@@ -7,14 +7,16 @@ import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/World/CartItem.dart';
 
 import 'BookingViewResult.dart';
 
 class BookingViewHours extends StatefulWidget {
   final DateTime _chosenDate;
   final Function clearCart;
+  final List<CartItem> cartItems;
 
-  BookingViewHours(this._chosenDate, this.clearCart);
+  BookingViewHours(this._chosenDate, this.clearCart, this.cartItems);
 
   @override
   _BookingViewHoursState createState() => _BookingViewHoursState();
@@ -31,7 +33,7 @@ class _BookingViewHoursState extends State<BookingViewHours> {
   void openResultsView(int quarterIndex){
     Navigator.of(context).push(
         CustomPageTransition(
-          BookingViewResult(widget._chosenDate, quarterIndex, widget.clearCart),
+          BookingViewResult(widget._chosenDate, quarterIndex, widget.clearCart, widget.cartItems),
           x: 0.0,
           y: 0.1,
         )

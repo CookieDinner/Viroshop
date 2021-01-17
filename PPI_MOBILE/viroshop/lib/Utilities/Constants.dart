@@ -8,6 +8,8 @@ class Constants{
   static const String apiShopsInCity = "$apiShopList/area";
   static const String apiProductsInShop = "$api/data/products/basic";
   static const String apiAlleysInShop = "$api/shop/alleys";
+  static const String apiFavoriteShops = "$api/shops/favourites";
+  static const String apiReservations = "$api/reservation";
 
   static const Color background = Color.fromRGBO(234, 239, 245, 1);
   static const Color backgroundWave1 = Color.fromRGBO(185, 180, 222, 1);

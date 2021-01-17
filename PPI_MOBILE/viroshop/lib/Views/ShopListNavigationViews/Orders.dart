@@ -48,7 +48,7 @@ class _OrdersState extends State<Orders> {
 
   @override
   void initState() {
-    orders.add(Order(1, [], DateTime.now(), Shop(1, "dsa", "dsad", 4, "Biedronka")));
+    orders.add(Order(1, [], DateTime.now(), Shop(1, "dsa", "dsad", 4, "Biedronka"), 5));
     streamController.add(true);
     super.initState();
   }

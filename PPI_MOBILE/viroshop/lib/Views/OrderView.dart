@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,6 +118,8 @@ class _OrderViewState extends State<OrderView> {
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
+    print(mediaSize.width);
+    print(mediaSize.height);
     outerPadding = MediaQuery.of(context).padding.top;
     return SafeArea(
         child: Scaffold(
@@ -175,6 +178,31 @@ class _OrderViewState extends State<OrderView> {
                         ],
                       ),
                     ),
+                    Container(
+                      height: mediaSize.height,
+                      width: mediaSize.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: mediaSize.height * 0.079,),
+                          Container(
+                            width: mediaSize.width * 0.9,
+                            height: mediaSize.width * 0.9,
+                            child: CustomPaint(
+                              painter: ShortestPath(
+                                alleys: alleysList,
+                                columnsCount: columnsCount,
+                                blocSize: blocSize,
+                                allCount: allCount,
+                                crossAxisCount: crossAxisCount,
+                                mediaSize: mediaSize
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                     CustomAppBar("Rezerwacja ${widget.currentOrder.shop.name}"),
                   ]
               ),
@@ -186,11 +214,6 @@ class _OrderViewState extends State<OrderView> {
 }
 
 class CustomGridView extends CustomPainter {
-  final double gap = 1;
-  final Paint painter = Paint()
-    ..strokeWidth = 1
-    ..style = PaintingStyle.fill;
-
   final int columnsCount;
   final double blocSize;
   final List<Alley> alleys;
@@ -198,6 +221,11 @@ class CustomGridView extends CustomPainter {
   final int crossAxisCount;
 
   CustomGridView({this.columnsCount, this.blocSize, this.alleys, this.allCount, this.crossAxisCount});
+
+  final double gap = 1;
+  final Paint painter = Paint()
+    ..strokeWidth = 1
+    ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -246,4 +274,38 @@ class CustomGridView extends CustomPainter {
         break;
     }
   }
+}
+
+class ShortestPath extends CustomPainter{
+  final int columnsCount;
+  final double blocSize;
+  final List<Alley> alleys;
+  final int allCount;
+  final int crossAxisCount;
+  final Size mediaSize;
+  ShortestPath({this.columnsCount, this.blocSize, this.alleys, this.allCount, this.crossAxisCount, this.mediaSize});
+  
+  @override
+  void paint(Canvas canvas, Size size){
+    final pointMode = ui.PointMode.polygon;
+    final points = [
+      Offset(0.5 * blocSize, 0.5 * blocSize),
+      Offset(1.5 * blocSize, 0.5 * blocSize),
+      Offset(1.5 * blocSize, 1.5 * blocSize),
+      Offset(1.5 * blocSize, 2.5 * blocSize),
+      Offset(2.5 * blocSize, 2.5 * blocSize),
+      Offset(2.5 * blocSize, 1.5 * blocSize),
+      Offset(2.5 * blocSize, 1.5 * blocSize),
+    ];
+    final paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 5
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPoints(pointMode, points, paint);
+  }
+
+  @override
+  bool shouldRepaint(ShortestPath oldDelegate) => true;
+  @override
+  bool shouldRebuildSemantics(ShortestPath oldDelegate) => true;
 }

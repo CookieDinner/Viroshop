@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
@@ -32,24 +33,45 @@ class OrderTemplate extends StatelessWidget {
                   children: [
                     SizedBox(width: mediaSize.width * 0.04,),
                     Container(
-                      width: mediaSize.width * 0.32,
+                      width: mediaSize.width * 0.4,
                       child: Text(
-                        currentOrder.shop.name,
+                        currentOrder.shop.name + ",\nul."+
+                        currentOrder.shop.street + ",\n"+
+                        currentOrder.shop.city,
                         style: TextStyle(
                           color: CustomTheme().cardColor.withOpacity(1),
                           fontSize: mediaSize.width * Constants.appBarFontSize * 0.8,
                         ),
                       ),
                     ),
-                    Container(
-                      width: mediaSize.width * 0.32,
-                      child: Text(
-                        currentOrder.orderDate.toString(),
-                        style: TextStyle(
-                          color: CustomTheme().cardColor.withOpacity(1),
-                          fontSize: mediaSize.width * Constants.appBarFontSize * 0.8,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: mediaSize.width * 0.32,
+                          child: Text(
+                            DateFormat("yyyy-MM-dd").format(currentOrder.orderDate),
+                            style: TextStyle(
+                              color: CustomTheme().cardColor.withOpacity(1),
+                              fontSize: mediaSize.width * Constants.appBarFontSize * 0.8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
+                        Container(
+                          width: mediaSize.width * 0.32,
+                          child: Text(
+                            (7 + (currentOrder.quarterOfDay / 4).floor()).toString()+":"+
+                                (((currentOrder.quarterOfDay % 4) * 15) == 0 ? "00" :
+                                ((currentOrder.quarterOfDay % 4) * 15).toString()),
+                            style: TextStyle(
+                              color: CustomTheme().cardColor.withOpacity(1),
+                              fontSize: mediaSize.width * Constants.appBarFontSize * 0.8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 )
