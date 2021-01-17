@@ -25,16 +25,16 @@ public class FavouriteShopManager {
         this.userManager = userManager;
     }
 
-    public Iterable<ShopEntity> findFavouritesShops(Long userId) {
+    public Iterable<ShopEntity> findFavouritesShops(String login) {
         return StreamSupport.stream(favouriteShopRepo.findAll().spliterator(), false)
-                .filter(favourite -> favourite.getUserEntity().getId() == userId)
+                .filter(favourite -> favourite.getUserEntity().getLogin().equals(login))
                 .map(favourite -> favourite.getShopEntity())
                 .collect(Collectors.toList());
     }
 
-    public boolean addNewFavouriteShop(Long shopId, Long userId) {
+    public boolean addNewFavouriteShop(Long shopId, String login) {
         long count = StreamSupport.stream(favouriteShopRepo.findAll().spliterator(), false)
-                .filter(favourite -> favourite.getUserEntity().getId() == userId)
+                .filter(favourite -> favourite.getUserEntity().getLogin().equals(login))
                 .filter(favourite -> favourite.getShopEntity().getId() == shopId)
                 .count();
         if (count > 0) {
@@ -42,7 +42,7 @@ public class FavouriteShopManager {
         }
 
         ShopEntity shopEntity = shopManager.findOneById(shopId).get();
-        UserEntity userEntity = userManager.findOneById(userId).get();
+        UserEntity userEntity = userManager.findByLogin(login).get(0);
         FavouriteShopEntity result = favouriteShopRepo.save(new FavouriteShopEntity(shopEntity, userEntity));
         if (result != null) {
             return true;
@@ -50,9 +50,9 @@ public class FavouriteShopManager {
         return false;
     }
 
-    public boolean deleteFavouriteShop(Long shopId, Long userId) {
+    public boolean deleteFavouriteShop(Long shopId, String login) {
         List<FavouriteShopEntity> found = StreamSupport.stream(favouriteShopRepo.findAll().spliterator(), false)
-                .filter(favourite -> favourite.getUserEntity().getId() == userId)
+                .filter(favourite -> favourite.getUserEntity().getLogin().equals(login))
                 .filter(favourite -> favourite.getShopEntity().getId() == shopId)
                 .collect(Collectors.toList());
         if (found == null || found.isEmpty() || found.get(0) == null) {
