@@ -1,7 +1,5 @@
 package pl.put.poznan.viroshop.dao.models;
 
-import java.time.LocalDate;
-
 public class QuarterReservationCount {
 
     int quarter;
@@ -15,11 +13,11 @@ public class QuarterReservationCount {
         this.count = count;
     }
 
-    public int getDate() {
+    public int getQuarter() {
         return quarter;
     }
 
-    public void setDate(int quarter) {
+    public void setQuarter(int quarter) {
         this.quarter = quarter;
     }
 
