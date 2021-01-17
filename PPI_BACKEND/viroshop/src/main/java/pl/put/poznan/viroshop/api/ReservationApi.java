@@ -44,8 +44,8 @@ public class ReservationApi {
     }
 
     @GetMapping(value = "/api/reservation/all", produces = "application/json; charset=UTF-8")
-    public Iterable<ReservationEntity> getAllUserReservations(@RequestParam Long userId) {
-        return reservationManager.getAllUserReservations(userId);
+    public Iterable<ReservationEntity> getAllUserReservations(@RequestParam String login) {
+        return reservationManager.getAllUserReservations(login);
     }
 
     @GetMapping(value = "/api/reservation/all/shop", produces = "application/json; charset=UTF-8")

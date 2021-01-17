@@ -10,7 +10,8 @@ import 'package:viroshop/Utilities/Util.dart';
 
 class CustomDrawer{
   Function stateSet;
-  CustomDrawer(this.stateSet);
+  bool withCities;
+  CustomDrawer(this.stateSet, {this.withCities = true});
 
   Widget loginDrawer(BuildContext context, {bool isOnLoginScreen = false}) {
     var mediaSize = Util.getDimensions(context);
@@ -81,7 +82,7 @@ class CustomDrawer{
                 ),
               ),
             ),
-            Container(
+            withCities ? Container(
               height: mediaSize.height * 0.1,
               decoration: BoxDecoration(
                 border: Border(
@@ -142,7 +143,7 @@ class CustomDrawer{
                   ]
                 ),
               ),
-            ),
+            ) : Container(),
             Container(
               child: ListTile(),
             )

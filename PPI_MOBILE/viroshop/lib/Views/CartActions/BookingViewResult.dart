@@ -147,7 +147,7 @@ class _BookingViewResultState extends State<BookingViewResult> {
                               child: Button("Zatwierdź rezerwację",
                                 () async{
                                   await sendReservation();
-                                  await widget.clearCart();
+                                  //await widget.clearCart();
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();

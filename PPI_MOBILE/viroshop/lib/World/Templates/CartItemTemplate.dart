@@ -16,7 +16,8 @@ class CartItemTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(mediaSize.width * 0.05, 0, mediaSize.width * 0.05, 0),
+      padding: function != null ? EdgeInsets.fromLTRB(mediaSize.width * 0.05, 0, 0, 0) :
+      EdgeInsets.fromLTRB(mediaSize.width * 0.05, 0, mediaSize.width * 0.05, 0),
       child: Material(
         color: Colors.transparent,
         child: InkWell(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
@@ -9,11 +10,13 @@ import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/OrderView.dart';
 import 'package:viroshop/Views/ShopListNavigationView.dart';
 import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
 import 'package:viroshop/World/Order.dart';
+import 'package:viroshop/World/Product.dart';
 import 'package:viroshop/World/Shop.dart';
 import 'package:viroshop/World/Templates/OrderTemplate.dart';
 
@@ -48,8 +51,34 @@ class _OrdersState extends State<Orders> {
 
   @override
   void initState() {
-    orders.add(Order(1, [], DateTime.now(), Shop(1, "dsa", "dsad", 4, "Biedronka"), 5));
-    streamController.add(true);
+    //orders.add(Order(1, [], DateTime.now(), Shop(1, "dsa", "dsad", 4, "Biedronka"), 5));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      String response = await Requests.getReservations();
+      List<dynamic> ordersTemp = jsonDecode(response);
+      for(Map<String, dynamic> singleOrderTemp in ordersTemp){
+        Map<String, dynamic> tempShop = jsonDecode(await Requests.getShopById(singleOrderTemp["shop"]));
+        List<Product> tempProducts = [];
+        for(Map<String, dynamic> singleProduct in singleOrderTemp["productReservations"]){
+          Map<String, dynamic> tempProduct = jsonDecode(await Requests.getProductById(singleProduct["product"]));
+          tempProducts.add(Product(
+              tempProduct["id"],
+              tempProduct["name"],
+              tempProduct["category"],
+              tempProduct["available"],
+              tempProduct["price"]));
+        }
+        orders.add(
+            Order(
+                singleOrderTemp["id"],
+                tempProducts,
+                DateTime.parse(singleOrderTemp["date"]),
+                Shop(tempShop["id"], tempShop["city"], tempShop["street"], tempShop["number"], tempShop["name"]),
+                singleOrderTemp["quarterOfDay"]
+            )
+        );
+      }
+      streamController.add(true);
+    });
     super.initState();
   }
   @override

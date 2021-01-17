@@ -92,25 +92,25 @@ class _BookingViewDateState extends State<BookingViewDate> {
                                 return Container(
                                   height: 300,
                                   width: 300,
-                                  color: CustomTheme().textBackground.withOpacity(0.5),
+                                  color: CustomTheme().textBackground.withOpacity(0.8),
                                   child: Center(child: Text(day.day.toString(), style: TextStyle(),)),
                                 );
                               else
                                 return Container(
                                   height: 300,
                                   width: 300,
-                                  color: CustomTheme().textBackground.withOpacity(0.27),
+                                  color: CustomTheme().textBackground.withOpacity(0.4),
                                   child: Center(child: Text(day.day.toString(), style: TextStyle(),)),
                                 );
                             else
                               return Container(
                                 height: 300,
                                 width: 300,
-                                color: CustomTheme().textBackground.withOpacity(0.15),
+                                color: CustomTheme().textBackground.withOpacity(0.18),
                                 child: Center(child: Text(day.day.toString(), style: TextStyle(color: Colors.black.withOpacity(0.15)),)),
                               );
                           },
-                          weekDayBackgroundColor: CustomTheme().textBackground.withOpacity(0.15),
+                          weekDayBackgroundColor: CustomTheme().textBackground.withOpacity(0.35),
                           weekFormat: false,
                           height: mediaSize.height * 0.59,
                           selectedDateTime: _currentDate,

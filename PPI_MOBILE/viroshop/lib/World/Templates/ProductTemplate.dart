@@ -38,8 +38,12 @@ class ProductTemplate extends StatelessWidget {
             child: Center(
                 child: Row(
                   children: [
-                    SizedBox(width: mediaSize.width * 0.04,),
-                    Icon(Icons.image_not_supported_sharp, color: CustomTheme().standardText, size: 60,),
+                    SizedBox(width: mediaSize.width * 0.02,),
+                    Container(
+                      height: mediaSize.width * 0.18,
+                      width: mediaSize.width * 0.18,
+                      child: Image.network('https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg')
+                    ),
                     SizedBox(width: mediaSize.width * 0.04,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,

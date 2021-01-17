@@ -9,6 +9,8 @@ import 'package:viroshop/Utilities/Constants.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/World/CartItem.dart';
+import 'package:viroshop/World/Order.dart';
+import 'package:viroshop/World/Product.dart';
 import 'package:viroshop/World/Shop.dart';
 
 class Requests{
@@ -166,7 +168,7 @@ class Requests{
   static Future<String> addFavoriteShop(int shopId) async{
     try{
       http.Response response = await http.post(
-          "${Constants.apiFavoriteShops}/add?shopId=$shopId&login=${Data().currentUsername}",headers: <String, String>{
+          "${Constants.apiFavoriteShops}?shopId=$shopId&login=${Data().currentUsername}",headers: <String, String>{
         'Content-Type': 'application/json; charset=utf-8',
       }
       ).timeout(Duration(seconds: Constants.timeOutTime));
@@ -188,7 +190,7 @@ class Requests{
   static Future<String> deleteFavoriteShop(int shopId) async{
     try{
       http.Response response = await http.delete(
-          "${Constants.apiFavoriteShops}/delete?shopId=$shopId&login=${Data().currentUsername}",headers: <String, String>{
+          "${Constants.apiFavoriteShops}?shopId=$shopId&login=${Data().currentUsername}",headers: <String, String>{
         'Content-Type': 'application/json; charset=utf-8',
       }
       ).timeout(Duration(seconds: Constants.timeOutTime));
@@ -211,32 +213,6 @@ class Requests{
     try{
       http.Response response = await http.get(
           "${Constants.apiFavoriteShops}?login=${Data().currentUsername}",headers: <String, String>{
-        'Content-Type': 'application/json; charset=utf-8',
-      }
-      ).timeout(Duration(seconds: Constants.timeOutTime));
-
-      return response.body;
-
-    }on SocketException{
-      debugPrint("Connection failed");
-      return "connfailed";
-    }on TimeoutException{
-      debugPrint("Timeout");
-      return "conntimeout";
-    }on HttpException{
-      debugPrint("Http Exception");
-      return "httpexception";
-    }
-  }
-
-  static Future<String> test() async{
-    String queryString = Uri(queryParameters: {
-      "shopId" : '1',
-      "productIds" : ['2', '7', '8', '9', '10']
-    }).query;
-    try{
-      http.Response response = await http.get(
-          "${Constants.api}/shop/shortway?$queryString",headers: <String, String>{
         'Content-Type': 'application/json; charset=utf-8',
       }
       ).timeout(Duration(seconds: Constants.timeOutTime));
@@ -292,4 +268,97 @@ class Requests{
       return "httpexception";
     }
   }
+
+  static Future<String> getReservations() async{
+    try{
+      List<Order> orders = [];
+      http.Response response = await http.get(
+          "${Constants.apiReservations}/all?login=${Data().currentUsername}",headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      }
+      ).timeout(Duration(seconds: Constants.timeOutTime));
+
+      return response.body;
+
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> getShopById(int shopId) async{
+    try{
+      http.Response response = await http.get(
+          "${Constants.api}/shop?id=$shopId",headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      }
+      ).timeout(Duration(seconds: Constants.timeOutTime));
+
+      return response.body;
+
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+  static Future<String> getProductById(int productId) async{
+    try{
+      http.Response response = await http.get(
+          "${Constants.api}/data/product?id=$productId",headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      }
+      ).timeout(Duration(seconds: Constants.timeOutTime));
+
+      return response.body;
+
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
+static Future<String> getShortestPath(List<Product> products) async{
+  String queryString = Uri(queryParameters: {
+    "shopId" : '1',
+    "productIds" : "1,3,6,14,16"
+  }).query;
+  try{
+    http.Response response = await http.get(
+        "${Constants.api}/shop/shortway?$queryString",headers: <String, String>{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+    ).timeout(Duration(seconds: Constants.timeOutTime));
+
+    return response.body;
+
+  }on SocketException{
+    debugPrint("Connection failed");
+    return "connfailed";
+  }on TimeoutException{
+    debugPrint("Timeout");
+    return "conntimeout";
+  }on HttpException{
+    debugPrint("Http Exception");
+    return "httpexception";
+  }
+}
 }

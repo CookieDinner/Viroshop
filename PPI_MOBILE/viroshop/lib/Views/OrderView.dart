@@ -33,13 +33,16 @@ class _OrderViewState extends State<OrderView> {
   TransformationController transformationController = TransformationController();
   // List<BlockTypes> alleys;
   List<Alley> alleysList = [];
+  List<Offset> path = [];
+
   int columnsCount;
   double blocSize;
   int clickedIndex;
   Offset clickOffset;
   bool hasSizes = false;
   double outerPadding;
-  StreamController<bool> streamController = StreamController<bool>();
+  StreamController<bool> streamControllerMap = StreamController<bool>();
+  StreamController<bool> streamControllerPath = StreamController<bool>();
   int allCount = 0;
   int crossAxisCount = 0;
 
@@ -51,7 +54,8 @@ class _OrderViewState extends State<OrderView> {
   }
   @override
   void dispose() {
-    streamController.close();
+    streamControllerMap.close();
+    streamControllerPath.close();
     super.dispose();
   }
 
@@ -59,8 +63,16 @@ class _OrderViewState extends State<OrderView> {
     setState(() {
       allCount = alley.id;
       crossAxisCount = alley.xposition;
-      print(alley.id.toString() + "   " + alley.xposition.toString());
     });
+  }
+
+  Future<void> getShortestPath() async{
+    List<dynamic> requestPath = jsonDecode(await Requests.getShortestPath(widget.currentOrder.products));
+    for (Map<String, dynamic> pathElement in requestPath) {
+      path.add(Offset(
+          (pathElement["x"] - 0.5) * blocSize,
+          (pathElement["y"] - 0.5) * blocSize));
+    }
   }
   @override
   void initState() {
@@ -84,7 +96,10 @@ class _OrderViewState extends State<OrderView> {
       //     return BlockTypes.gray;
       //   });
       // });
-      streamController.add(true);
+      streamControllerMap.add(true);
+
+      await getShortestPath();
+      streamControllerPath.add(true);
     });
     super.initState();
   }
@@ -118,8 +133,6 @@ class _OrderViewState extends State<OrderView> {
   @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
-    print(mediaSize.width);
-    print(mediaSize.height);
     outerPadding = MediaQuery.of(context).padding.top;
     return SafeArea(
         child: Scaffold(
@@ -141,7 +154,7 @@ class _OrderViewState extends State<OrderView> {
                         children: <Widget>[
                           SizedBox(height: mediaSize.height * 0.079,),
                           StreamBuilder<Object>(
-                            stream: streamController.stream ,
+                            stream: streamControllerMap.stream ,
                             builder: (context, snapshot) {
                               if(snapshot.hasData) {
                                 return Container(
@@ -186,19 +199,37 @@ class _OrderViewState extends State<OrderView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(height: mediaSize.height * 0.079,),
-                          Container(
-                            width: mediaSize.width * 0.9,
-                            height: mediaSize.width * 0.9,
-                            child: CustomPaint(
-                              painter: ShortestPath(
-                                alleys: alleysList,
-                                columnsCount: columnsCount,
-                                blocSize: blocSize,
-                                allCount: allCount,
-                                crossAxisCount: crossAxisCount,
-                                mediaSize: mediaSize
-                              ),
-                            ),
+                          StreamBuilder<Object>(
+                            stream: streamControllerPath.stream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData) {
+                                return Container(
+                                  width: mediaSize.width * 0.9,
+                                  height: mediaSize.width * 0.9,
+                                  child: CustomPaint(
+                                    painter: ShortestPath(
+                                        path: path,
+                                        columnsCount: columnsCount,
+                                        blocSize: blocSize,
+                                        allCount: allCount,
+                                        crossAxisCount: crossAxisCount,
+                                        mediaSize: mediaSize
+                                    ),
+                                  ),
+                                );
+                              }else{
+                                return Container(
+                                  width: mediaSize.width * 0.9,
+                                  height: mediaSize.width * 0.9,
+                                  child: Center(
+                                    child: SpinKitFadingCube(
+                                      color: CustomTheme().accentPlus,
+                                      size: MediaQuery.of(context).size.width * 0.1,
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
                           )
                         ],
                       ),
@@ -279,29 +310,29 @@ class CustomGridView extends CustomPainter {
 class ShortestPath extends CustomPainter{
   final int columnsCount;
   final double blocSize;
-  final List<Alley> alleys;
+  final List<Offset> path;
   final int allCount;
   final int crossAxisCount;
   final Size mediaSize;
-  ShortestPath({this.columnsCount, this.blocSize, this.alleys, this.allCount, this.crossAxisCount, this.mediaSize});
+  ShortestPath({this.columnsCount, this.blocSize, this.path, this.allCount, this.crossAxisCount, this.mediaSize});
   
   @override
   void paint(Canvas canvas, Size size){
     final pointMode = ui.PointMode.polygon;
-    final points = [
-      Offset(0.5 * blocSize, 0.5 * blocSize),
-      Offset(1.5 * blocSize, 0.5 * blocSize),
-      Offset(1.5 * blocSize, 1.5 * blocSize),
-      Offset(1.5 * blocSize, 2.5 * blocSize),
-      Offset(2.5 * blocSize, 2.5 * blocSize),
-      Offset(2.5 * blocSize, 1.5 * blocSize),
-      Offset(2.5 * blocSize, 1.5 * blocSize),
-    ];
+    // final points = [
+    //   Offset(0.5 * blocSize, 0.5 * blocSize),
+    //   Offset(1.5 * blocSize, 0.5 * blocSize),
+    //   Offset(1.5 * blocSize, 1.5 * blocSize),
+    //   Offset(1.5 * blocSize, 2.5 * blocSize),
+    //   Offset(2.5 * blocSize, 2.5 * blocSize),
+    //   Offset(2.5 * blocSize, 1.5 * blocSize),
+    //   Offset(2.5 * blocSize, 1.5 * blocSize),
+    // ];
     final paint = Paint()
       ..color = Colors.red
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
-    canvas.drawPoints(pointMode, points, paint);
+    canvas.drawPoints(pointMode, path, paint);
   }
 
   @override
