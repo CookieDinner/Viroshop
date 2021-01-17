@@ -10,6 +10,7 @@ import pl.put.poznan.viroshop.dao.models.UpdateReservationModel;
 import pl.put.poznan.viroshop.dao.repositories.ProductReservationRepo;
 import pl.put.poznan.viroshop.dao.repositories.ReservationRepo;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -113,11 +114,25 @@ public class ReservationManager {
         return reservation.getProductReservations();
     }
 
+    public final int FIRST_QUARTER_FOR_SENIORS = 13; // 10:00
+    public final int LAST_QUARTER_FOR_SENIORS = 24; //12:00
+    public final int SENIOR_AGE = 65;
+
     public ReservationEntity addNewReservation(CreateReservationModel reservationModel) {
         synchronized (this) {
             int quarter = reservationModel.getQuarterOfDay();
             LocalDate date = reservationModel.getDate();
             UserEntity userEntity = userManager.findOneById(reservationModel.getUserId()).get();
+            if (quarter >= FIRST_QUARTER_FOR_SENIORS && quarter < LAST_QUARTER_FOR_SENIORS) {
+                boolean isSenior =
+                        date.getYear() - userEntity.getBirthDate().getYear() > SENIOR_AGE
+                                || (date.getYear() - userEntity.getBirthDate().getYear() == SENIOR_AGE
+                                || date.getDayOfYear() >= userEntity.getBirthDate().getDayOfYear());
+                boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+                if (!isSenior && !isWeekend) {
+                    return null;
+                }
+            }
             ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
             long numberOfCurrentReservation = getReservationsCountForQuarter(reservationModel.getDate(), reservationModel.getQuarterOfDay(), shopEntity);
 
