@@ -69,7 +69,7 @@ public class UserApi {
         if (!result) {
             return new ResponseEntity("Error while generating new password", HttpStatus.BAD_REQUEST);
         }
-        
+
         return new ResponseEntity("Check your email, we send you temporary password", HttpStatus.OK);
     }
 

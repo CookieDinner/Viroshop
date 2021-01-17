@@ -19,6 +19,7 @@ import java.util.stream.StreamSupport;
 public class ShopManager {
 
     private final ShopRepo shopRepo;
+
     private final AlleyManager alleyManager;
     private final ShortWayService shortWayService;
 
@@ -36,6 +37,7 @@ public class ShopManager {
     public Iterable<ShopEntity> findAll() {
         return shopRepo.findAll();
     }
+
 
     public Iterable<ShopEntity> findAllFromCity(String cityName) {
         Iterable<ShopEntity> shops = shopRepo.findAll();
