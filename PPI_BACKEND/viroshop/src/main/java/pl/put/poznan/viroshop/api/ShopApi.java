@@ -1,17 +1,13 @@
 package pl.put.poznan.viroshop.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.put.poznan.viroshop.dao.entities.AlleyEntity;
 import pl.put.poznan.viroshop.dao.entities.ShopEntity;
 import pl.put.poznan.viroshop.dao.models.RoadPoint;
-import pl.put.poznan.viroshop.manager.AlleyManager;
+import pl.put.poznan.viroshop.manager.FavouriteShopManager;
 import pl.put.poznan.viroshop.manager.ShopManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,15 +16,32 @@ import java.util.Optional;
 public class ShopApi {
 
     private final ShopManager shopManager;
+    private final FavouriteShopManager favouriteShopManager;
 
     @Autowired
-    public ShopApi(ShopManager shopManager) {
+    public ShopApi(ShopManager shopManager, FavouriteShopManager favouriteShopManager) {
         this.shopManager = shopManager;
+        this.favouriteShopManager = favouriteShopManager;
     }
 
     @GetMapping(value = "/api/shops", produces = "application/json; charset=UTF-8")
     public Iterable<ShopEntity> getAll() {
         return shopManager.findAll();
+    }
+
+    @GetMapping(value = "/api/shops/favourites", produces = "application/json; charset=UTF-8")
+    public Iterable<ShopEntity> getFavourites(@RequestParam Long userId) {
+        return favouriteShopManager.findFavouritesShops(userId);
+    }
+
+    @PostMapping(value = "/api/shops/favourites/add", produces = "application/json; charset=UTF-8")
+    public boolean addFavourite(@RequestParam Long shopId, @RequestParam Long userId) {
+        return favouriteShopManager.addNewFavouriteShop(shopId, userId);
+    }
+
+    @DeleteMapping(value = "/api/shops/favourites/delete", produces = "application/json; charset=UTF-8")
+    public boolean deleteFavourite(@RequestParam Long shopId, @RequestParam Long userId) {
+        return favouriteShopManager.deleteFavouriteShop(shopId, userId);
     }
 
     @GetMapping(value = "/api/shop", produces = "application/json; charset=UTF-8")
