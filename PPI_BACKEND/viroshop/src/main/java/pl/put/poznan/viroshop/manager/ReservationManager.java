@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.put.poznan.viroshop.dao.entities.*;
 import pl.put.poznan.viroshop.dao.models.CreateReservationModel;
+import pl.put.poznan.viroshop.dao.models.DayReservationCount;
+import pl.put.poznan.viroshop.dao.models.QuarterReservationCount;
+import pl.put.poznan.viroshop.dao.models.UpdateReservationModel;
 import pl.put.poznan.viroshop.dao.repositories.ProductReservationRepo;
 import pl.put.poznan.viroshop.dao.repositories.ReservationRepo;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,10 +39,7 @@ public class ReservationManager {
         ArrayList<ReservationEntity> filteredReservations = StreamSupport.stream(allReservations.spliterator(), false)
                 .filter(reservation -> reservation.getUser().getId() == userId)
                 .filter(reservation -> reservation.getDate().getYear() == year)
-                .filter(reservation -> {
-                    System.out.println(reservation.getDate().getMonth().getValue());
-                    return reservation.getDate().getMonth().getValue() == month;
-                })
+                .filter(reservation -> reservation.getDate().getMonth().getValue() == month)
                 .collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Integer> days = filteredReservations.stream()
                 .map(reservation -> reservation.getDate().getDayOfMonth())
@@ -48,6 +47,52 @@ public class ReservationManager {
                 .collect(Collectors.toCollection(ArrayList::new));
         return days;
     }
+
+    public Iterable<DayReservationCount> getMonthReservationCounts(Long shopId, int month, int year) {
+        Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
+        ArrayList<ReservationEntity> filteredReservations = StreamSupport.stream(allReservations.spliterator(), false)
+                .filter(reservation -> reservation.getShop().getId() == shopId)
+                .filter(reservation -> reservation.getDate().getYear() == year)
+                .filter(reservation -> reservation.getDate().getMonth().getValue() == month)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        Map<LocalDate, Long> mapCounts = new HashMap<>();
+
+        ShopEntity shopEntity = shopManager.findOneById(shopId).get();
+        for (ReservationEntity reservation : filteredReservations) {
+            LocalDate date = reservation.getDate();
+            long count = this.getReservationsDayCount(date, shopEntity);
+            if (mapCounts.keySet().contains(date)) {
+                Long oldValue = mapCounts.get(date);
+                mapCounts.put(date, oldValue + count);
+            } else {
+                mapCounts.put(date, count);
+            }
+        }
+        ArrayList<DayReservationCount> counts = new ArrayList<>();
+        mapCounts.forEach((key, value) -> {
+            counts.add(new DayReservationCount(key, value));
+        });
+
+        return counts;
+    }
+
+    public Iterable<QuarterReservationCount> getDayReservationCounts(Long shopId, LocalDate date) {
+        Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
+        ArrayList<ReservationEntity> filteredReservations = StreamSupport.stream(allReservations.spliterator(), false)
+                .filter(reservation -> reservation.getShop().getId() == shopId)
+                .filter(reservation -> reservation.getDate() == date)
+                .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<QuarterReservationCount> counts = new ArrayList<>();
+
+        ShopEntity shopEntity = shopManager.findOneById(shopId).get();
+        for (int quarter = 0; quarter < 16 * 4; quarter++) {
+            long count = getReservationsCountForQuarter(date, quarter, shopEntity);
+            counts.add(new QuarterReservationCount(quarter, count));
+        }
+        return counts;
+    }
+
 
     public Iterable<ReservationEntity> getAllUserReservations(Long userId) {
         Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
@@ -69,28 +114,33 @@ public class ReservationManager {
         return reservation.getProductReservations();
     }
 
+    public final int FIRST_QUARTER_FOR_SENIORS = 13; // 10:00
+    public final int LAST_QUARTER_FOR_SENIORS = 24; //12:00
+    public final int SENIOR_AGE = 65;
+
     public ReservationEntity addNewReservation(CreateReservationModel reservationModel) {
         synchronized (this) {
             int quarter = reservationModel.getQuarterOfDay();
             LocalDate date = reservationModel.getDate();
             UserEntity userEntity = userManager.findByLogin(reservationModel.getLogin()).get(0);
+            if (quarter >= FIRST_QUARTER_FOR_SENIORS && quarter < LAST_QUARTER_FOR_SENIORS) {
+                boolean isSenior =
+                        date.getYear() - userEntity.getBirthDate().getYear() > SENIOR_AGE
+                                || (date.getYear() - userEntity.getBirthDate().getYear() == SENIOR_AGE
+                                || date.getDayOfYear() >= userEntity.getBirthDate().getDayOfYear());
+                boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+                if (!isSenior && !isWeekend) {
+                    return null;
+                }
+            }
             ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
-            long numberOfCurrentReservation = StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
-                    .filter(res -> res.getShop().getId() == shopEntity.getId())
-                    .filter(res -> res.getDate() == reservationModel.getDate())
-                    .filter(res -> res.getQuarterOfDay() == reservationModel.getQuarterOfDay())
-                    .count();
+            long numberOfCurrentReservation = getReservationsCountForQuarter(reservationModel.getDate(), reservationModel.getQuarterOfDay(), shopEntity);
 
             if (numberOfCurrentReservation >= shopEntity.getMaxReservationsPerQuarterOfHour()) {
                 return null;
             }
 
-            Set<ProductReservationEntity> productReservationEntities = reservationModel.getProductReservations().stream().map(model -> {
-                int count = model.getCount();
-                ProductEntity productEntity = productManager.findOneById(model.getProductId()).get();
-                ProductReservationEntity productReservationEntity = new ProductReservationEntity(count, productEntity);
-                return productReservationRepo.save(productReservationEntity);
-            }).collect(Collectors.toCollection(HashSet::new));
+            Set<ProductReservationEntity> productReservationEntities = getProductReservations(reservationModel);
             ReservationEntity reservation = new ReservationEntity(date, quarter, productReservationEntities, shopEntity, userEntity);
 
             ReservationEntity newReservationEntity = reservationRepo.save(reservation);
@@ -102,9 +152,88 @@ public class ReservationManager {
         }
     }
 
-    public boolean editReservation() {
-        return false;
+    public boolean editReservation(UpdateReservationModel reservationModel) {
+
+        ReservationEntity reservation = reservationRepo.findById(reservationModel.getReservationId()).get();
+        if (reservation == null) {
+            return false;
+        }
+
+        synchronized (this) {
+
+            if (reservationModel.getUserId() != null) {
+                reservation.setUser(userManager.findOneById(reservationModel.getUserId()).get());
+            }
+            if (reservationModel.getShopId() != null) {
+                reservation.setShop(shopManager.findOneById(reservationModel.getShopId()).get());
+            }
+
+            long numberOfCurrentReservation = getReservationsCountForQuarter(reservationModel.getDate(), reservationModel.getQuarterOfDay(), reservation.getShop());
+
+            if (numberOfCurrentReservation >= reservation.getShop().getMaxReservationsPerQuarterOfHour()) {
+                return false;
+            }
+
+            Set<ProductReservationEntity> productReservationEntities = null;
+            if (reservationModel.getProductReservations() != null) {
+                productReservationEntities = getNewProductReservations(reservationModel);
+            }
+
+            Integer quarter = reservationModel.getQuarterOfDay();
+            LocalDate date = reservationModel.getDate();
+            if (quarter != null) {
+                reservation.setQuarterOfDay(quarter);
+            }
+            if (date != null) {
+                reservation.setDate(date);
+            }
+
+
+            if (productReservationEntities != null) {
+                reservation.getProductReservations().forEach(x -> {
+                    x.setReservation(null);
+                    productReservationRepo.save(x);
+                });
+                productReservationEntities.forEach(x -> {
+                    x.setReservation(reservation);
+                    productReservationRepo.save(x);
+                });
+            }
+            reservationRepo.save(reservation);
+            return true;
+        }
     }
 
+    private HashSet<ProductReservationEntity> getProductReservations(CreateReservationModel reservationModel) {
+        return reservationModel.getProductReservations().stream().map(model -> {
+            int count = model.getCount();
+            ProductEntity productEntity = productManager.findOneById(model.getProductId()).get();
+            ProductReservationEntity productReservationEntity = new ProductReservationEntity(count, productEntity);
+            return productReservationRepo.save(productReservationEntity);
+        }).collect(Collectors.toCollection(HashSet::new));
+    }
 
+    private HashSet<ProductReservationEntity> getNewProductReservations(UpdateReservationModel reservationModel) {
+        return reservationModel.getProductReservations().stream().map(model -> {
+            int count = model.getCount();
+            ProductEntity productEntity = productManager.findOneById(model.getProductId()).get();
+            ProductReservationEntity productReservationEntity = new ProductReservationEntity(count, productEntity);
+            return productReservationRepo.save(productReservationEntity);
+        }).collect(Collectors.toCollection(HashSet::new));
+    }
+
+    private long getReservationsDayCount(LocalDate date, ShopEntity shopEntity) {
+        return StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
+                .filter(res -> res.getShop().getId() == shopEntity.getId())
+                .filter(res -> res.getDate() == date)
+                .count();
+    }
+
+    private long getReservationsCountForQuarter(LocalDate date, int quarter, ShopEntity shopEntity) {
+        return StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
+                .filter(res -> res.getShop().getId() == shopEntity.getId())
+                .filter(res -> res.getDate() == date)
+                .filter(res -> res.getQuarterOfDay() == quarter)
+                .count();
+    }
 }
