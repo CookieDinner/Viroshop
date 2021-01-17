@@ -78,11 +78,6 @@ public class ReservationManager {
     }
 
     public Iterable<QuarterReservationCount> getDayReservationCounts(Long shopId, LocalDate date) {
-        Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
-        ArrayList<ReservationEntity> filteredReservations = StreamSupport.stream(allReservations.spliterator(), false)
-                .filter(reservation -> reservation.getShop().getId() == shopId)
-                .filter(reservation -> reservation.getDate() == date)
-                .collect(Collectors.toCollection(ArrayList::new));
         ArrayList<QuarterReservationCount> counts = new ArrayList<>();
 
         ShopEntity shopEntity = shopManager.findOneById(shopId).get();
