@@ -7,6 +7,7 @@ import pl.put.poznan.viroshop.dao.entities.ShopEntity;
 import pl.put.poznan.viroshop.dao.entities.UserEntity;
 import pl.put.poznan.viroshop.dao.repositories.FavouriteShopRepo;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -50,6 +51,14 @@ public class FavouriteShopManager {
     }
 
     public boolean deleteFavouriteShop(Long shopId, Long userId) {
-        return false;
+        List<FavouriteShopEntity> found = StreamSupport.stream(favouriteShopRepo.findAll().spliterator(), false)
+                .filter(favourite -> favourite.getUserEntity().getId() == userId)
+                .filter(favourite -> favourite.getShopEntity().getId() == shopId)
+                .collect(Collectors.toList());
+        if (found == null || found.isEmpty() || found.get(0) == null) {
+            return false;
+        }
+        favouriteShopRepo.delete(found.get(0));
+        return true;
     }
 }
