@@ -9,7 +9,7 @@ public class CreateReservationModel {
     private Integer quarterOfDay;
     private List<CreateProductReservationModel> productReservations;
     private Long shopId;
-    private Long userId;
+    private String login;
 
     public CreateReservationModel() {
     }
@@ -46,11 +46,11 @@ public class CreateReservationModel {
         this.shopId = shopId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setLogin(String login) {
+        this.login = login;
     }
 }

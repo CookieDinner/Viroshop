@@ -78,11 +78,6 @@ public class ReservationManager {
     }
 
     public Iterable<QuarterReservationCount> getDayReservationCounts(Long shopId, LocalDate date) {
-        Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
-        ArrayList<ReservationEntity> filteredReservations = StreamSupport.stream(allReservations.spliterator(), false)
-                .filter(reservation -> reservation.getShop().getId() == shopId)
-                .filter(reservation -> reservation.getDate() == date)
-                .collect(Collectors.toCollection(ArrayList::new));
         ArrayList<QuarterReservationCount> counts = new ArrayList<>();
 
         ShopEntity shopEntity = shopManager.findOneById(shopId).get();
@@ -114,15 +109,15 @@ public class ReservationManager {
         return reservation.getProductReservations();
     }
 
-    public final int FIRST_QUARTER_FOR_SENIORS = 13; // 10:00
-    public final int LAST_QUARTER_FOR_SENIORS = 24; //12:00
+    public final int FIRST_QUARTER_FOR_SENIORS = 12; // 10:00
+    public final int LAST_QUARTER_FOR_SENIORS = 23; //12:00
     public final int SENIOR_AGE = 65;
 
     public ReservationEntity addNewReservation(CreateReservationModel reservationModel) {
         synchronized (this) {
             int quarter = reservationModel.getQuarterOfDay();
             LocalDate date = reservationModel.getDate();
-            UserEntity userEntity = userManager.findOneById(reservationModel.getUserId()).get();
+            UserEntity userEntity = userManager.findByLogin(reservationModel.getLogin()).get(0);
             if (quarter >= FIRST_QUARTER_FOR_SENIORS && quarter < LAST_QUARTER_FOR_SENIORS) {
                 boolean isSenior =
                         date.getYear() - userEntity.getBirthDate().getYear() > SENIOR_AGE
@@ -161,8 +156,10 @@ public class ReservationManager {
 
         synchronized (this) {
 
+            UserEntity userEntity = reservation.getUser();
             if (reservationModel.getUserId() != null) {
-                reservation.setUser(userManager.findOneById(reservationModel.getUserId()).get());
+                userEntity = userManager.findOneById(reservationModel.getUserId()).get();
+                reservation.setUser(userEntity);
             }
             if (reservationModel.getShopId() != null) {
                 reservation.setShop(shopManager.findOneById(reservationModel.getShopId()).get());
@@ -181,13 +178,22 @@ public class ReservationManager {
 
             Integer quarter = reservationModel.getQuarterOfDay();
             LocalDate date = reservationModel.getDate();
+
             if (quarter != null) {
-                reservation.setQuarterOfDay(quarter);
+                if (quarter >= FIRST_QUARTER_FOR_SENIORS && quarter < LAST_QUARTER_FOR_SENIORS) {
+                    boolean isSenior =
+                            date.getYear() - userEntity.getBirthDate().getYear() > SENIOR_AGE
+                                    || (date.getYear() - userEntity.getBirthDate().getYear() == SENIOR_AGE
+                                    || date.getDayOfYear() >= userEntity.getBirthDate().getDayOfYear());
+                    boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+                    if (isSenior || isWeekend) {
+                        reservation.setQuarterOfDay(quarter);
+                    }
+                }
             }
             if (date != null) {
                 reservation.setDate(date);
             }
-
 
             if (productReservationEntities != null) {
                 reservation.getProductReservations().forEach(x -> {
