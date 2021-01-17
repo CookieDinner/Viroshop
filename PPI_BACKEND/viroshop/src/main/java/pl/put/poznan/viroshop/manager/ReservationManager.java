@@ -73,7 +73,7 @@ public class ReservationManager {
         synchronized (this) {
             int quarter = reservationModel.getQuarterOfDay();
             LocalDate date = reservationModel.getDate();
-            UserEntity userEntity = userManager.findOneById(reservationModel.getUserId()).get();
+            UserEntity userEntity = userManager.findByLogin(reservationModel.getLogin()).get(0);
             ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
             long numberOfCurrentReservation = StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
                     .filter(res -> res.getShop().getId() == shopEntity.getId())

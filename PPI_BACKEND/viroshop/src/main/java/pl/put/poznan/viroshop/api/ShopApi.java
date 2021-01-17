@@ -30,18 +30,18 @@ public class ShopApi {
     }
 
     @GetMapping(value = "/api/shops/favourites", produces = "application/json; charset=UTF-8")
-    public Iterable<ShopEntity> getFavourites(@RequestParam Long userId) {
-        return favouriteShopManager.findFavouritesShops(userId);
+    public Iterable<ShopEntity> getFavourites(@RequestParam String login) {
+        return favouriteShopManager.findFavouritesShops(login);
     }
 
-    @PostMapping(value = "/api/shops/favourites/add", produces = "application/json; charset=UTF-8")
-    public boolean addFavourite(@RequestParam Long shopId, @RequestParam Long userId) {
-        return favouriteShopManager.addNewFavouriteShop(shopId, userId);
+    @PostMapping(value = "/api/shops/favourites", produces = "application/json; charset=UTF-8")
+    public boolean addFavourite(@RequestParam Long shopId, @RequestParam String login) {
+        return favouriteShopManager.addNewFavouriteShop(shopId, login);
     }
 
-    @DeleteMapping(value = "/api/shops/favourites/delete", produces = "application/json; charset=UTF-8")
-    public boolean deleteFavourite(@RequestParam Long shopId, @RequestParam Long userId) {
-        return favouriteShopManager.deleteFavouriteShop(shopId, userId);
+    @DeleteMapping(value = "/api/shops/favourites", produces = "application/json; charset=UTF-8")
+    public boolean deleteFavourite(@RequestParam Long shopId, @RequestParam String login) {
+        return favouriteShopManager.deleteFavouriteShop(shopId, login);
     }
 
     @GetMapping(value = "/api/shop", produces = "application/json; charset=UTF-8")
