@@ -48,36 +48,51 @@ class _OrdersState extends State<Orders> {
     setState(() {
     });
   }
-
-  @override
-  void initState() {
-    //orders.add(Order(1, [], DateTime.now(), Shop(1, "dsa", "dsad", 4, "Biedronka"), 5));
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+  bool isUpdatingReservations = false;
+  Future<void> updateReservations() async {
+    if(!isUpdatingReservations) {
+      setState(() {
+        orders.clear();
+        isUpdatingReservations = true;
+      });
       String response = await Requests.getReservations();
       List<dynamic> ordersTemp = jsonDecode(response);
-      for(Map<String, dynamic> singleOrderTemp in ordersTemp){
-        Map<String, dynamic> tempShop = jsonDecode(await Requests.getShopById(singleOrderTemp["shop"]));
+      for (Map<String, dynamic> singleOrderTemp in ordersTemp) {
+        Map<String, dynamic> tempShop = jsonDecode(
+            await Requests.getShopById(singleOrderTemp["shop"]));
         List<Product> tempProducts = [];
-        for(Map<String, dynamic> singleProduct in singleOrderTemp["productReservations"]){
-          Map<String, dynamic> tempProduct = jsonDecode(await Requests.getProductById(singleProduct["product"]));
+        for (Map<String, dynamic> singleProduct in singleOrderTemp["productReservations"]) {
+          Map<String, dynamic> tempProduct = jsonDecode(
+              await Requests.getProductById(singleProduct["product"]));
           tempProducts.add(Product(
               tempProduct["id"],
               tempProduct["name"],
               tempProduct["category"],
-              tempProduct["available"],
-              tempProduct["price"]));
+              1,
+              0,
+          amount: singleProduct["count"]),);
         }
         orders.add(
             Order(
                 singleOrderTemp["id"],
                 tempProducts,
                 DateTime.parse(singleOrderTemp["date"]),
-                Shop(tempShop["id"], tempShop["city"], tempShop["street"], tempShop["number"], tempShop["name"]),
+                Shop(tempShop["id"], tempShop["city"], tempShop["street"],
+                    tempShop["number"], tempShop["name"]),
                 singleOrderTemp["quarterOfDay"]
             )
         );
       }
       streamController.add(true);
+      setState(() {
+        isUpdatingReservations = false;
+      });
+    }
+  }
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      await updateReservations();
     });
     super.initState();
   }
@@ -156,6 +171,13 @@ class _OrdersState extends State<Orders> {
               Icons.settings,
               size: mediaSize.width * 0.07,
               color: CustomTheme().accentPlus,
+            ),
+            withOptionButton2: true,
+            optionButtonAction2: updateReservations,
+            optionButtonWidget2: Icon(
+              Icons.refresh,
+              size: mediaSize.width * 0.07,
+              color: CustomTheme().accentPlus
             ),
           ),
         ],

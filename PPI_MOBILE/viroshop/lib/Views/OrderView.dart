@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
+import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
+import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
@@ -16,6 +19,9 @@ import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/World/Alley.dart';
 import 'package:viroshop/World/Order.dart';
 import 'package:viroshop/World/Product.dart';
+import 'package:viroshop/World/Templates/ProductTemplate.dart';
+
+import 'QRCode.dart';
 
 
 class OrderView extends StatefulWidget {
@@ -124,11 +130,15 @@ class _OrderViewState extends State<OrderView> {
     final tapedColumn = (dy / blocSize).floor();
     if (tapedRow > -1 && tapedRow < crossAxisCount && tapedColumn > - 1 && tapedColumn < (allCount / crossAxisCount).ceil()) {
       clickedIndex = tapedColumn * crossAxisCount + tapedRow;
+      for ( Product x in alleysList[clickedIndex].products)
+        print(x.id.toString() + " " + x.name);
       // setState(() {
       //   alleysList[clickedIndex].type = "CLICKED";
       // });
     }
   }
+
+  ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -153,84 +163,120 @@ class _OrderViewState extends State<OrderView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(height: mediaSize.height * 0.079,),
-                          StreamBuilder<Object>(
-                            stream: streamControllerMap.stream ,
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData) {
-                                return Container(
-                                  color: CustomTheme().mapBg,
-                                  width: mediaSize.width * 0.9,
-                                  height: mediaSize.width * 0.9,
-                                  child: GestureDetector(
-                                    onTapDown: onTapDown,
-                                    onTap: onTap,
-                                    child: CustomPaint(
-                                      painter: CustomGridView(
-                                        alleys: alleysList,
-                                        columnsCount: columnsCount,
-                                        blocSize: blocSize,
-                                        allCount: allCount,
-                                        crossAxisCount: crossAxisCount
-                                      ),
+                          GestureDetector(
+                            onTap: onTap,
+                            onTapDown: onTapDown,
+                            child: Stack(
+                              children: [
+                                StreamBuilder<Object>(
+                                  stream: streamControllerMap.stream ,
+                                  builder: (context, snapshot) {
+                                    if(snapshot.hasData) {
+                                      return Container(
+                                        width: mediaSize.width * 0.9,
+                                        height: mediaSize.width * 0.9,
+                                        child: CustomPaint(
+                                          painter: CustomGridView(
+                                            alleys: alleysList,
+                                            columnsCount: columnsCount,
+                                            blocSize: blocSize,
+                                            allCount: allCount,
+                                            crossAxisCount: crossAxisCount,
+                                            order: widget.currentOrder
+                                          ),
+                                        ),
+                                      );
+                                    }else
+                                      return Container(
+                                        width: mediaSize.width * 0.9,
+                                        height: mediaSize.width * 0.9,
+                                        child: Center(
+                                          child: SpinKitFadingCube(
+                                            color: CustomTheme().buttonColor,
+                                            size: MediaQuery.of(context).size.width * 0.1,
+                                          ),
+                                        ),
+                                      );
+                                  }
+                                ),
+                                StreamBuilder<Object>(
+                                    stream: streamControllerPath.stream,
+                                    builder: (context, snapshot) {
+                                      if(snapshot.hasData) {
+                                        return Container(
+                                          width: mediaSize.width * 0.9,
+                                          height: mediaSize.width * 0.9,
+                                          child: CustomPaint(
+                                            painter: ShortestPath(
+                                                path: path,
+                                                columnsCount: columnsCount,
+                                                blocSize: blocSize,
+                                                allCount: allCount,
+                                                crossAxisCount: crossAxisCount,
+                                                mediaSize: mediaSize
+                                            ),
+                                          ),
+                                        );
+                                      }else{
+                                        return Container(
+                                          width: mediaSize.width * 0.9,
+                                          height: mediaSize.width * 0.9,
+                                          child: Center(
+                                            child: SpinKitFadingCube(
+                                              color: CustomTheme().accentPlus,
+                                              size: MediaQuery.of(context).size.width * 0.1,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(width: mediaSize.width * 0.04,),
+                              Container(
+                                  height: mediaSize.height * 0.4,
+                                  width: mediaSize.width * 0.45,
+                                  child: DraggableScrollbar.rrect(
+                                    alwaysVisibleScrollThumb: true,
+                                    backgroundColor: CustomTheme().accent,
+                                    heightScrollThumb: widget.currentOrder.products.length > 6 ?
+                                    mediaSize.height * 2 / widget.currentOrder.products.length : 0,
+                                    padding: EdgeInsets.all(1),
+                                    controller: _scrollController,
+                                    child: ListView.builder(
+                                        controller: _scrollController,
+                                        itemCount: widget.currentOrder.products.length,
+                                        physics: AlwaysScrollableScrollPhysics(),
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(vertical: mediaSize.height * 0.003),
+                                            child: ProductTemplate(widget.currentOrder.products[index], null, isSmall: true,),
+                                          );
+                                        }
                                     ),
-                                  ),
-                                );
-                              }else
-                                return Container(
-                                  width: mediaSize.width * 0.9,
-                                  height: mediaSize.width * 0.9,
-                                  child: Center(
-                                    child: SpinKitFadingCube(
-                                      color: CustomTheme().buttonColor,
-                                      size: MediaQuery.of(context).size.width * 0.1,
-                                    ),
-                                  ),
-                                );
-                            }
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: mediaSize.height,
-                      width: mediaSize.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: mediaSize.height * 0.079,),
-                          StreamBuilder<Object>(
-                            stream: streamControllerPath.stream,
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData) {
-                                return Container(
-                                  width: mediaSize.width * 0.9,
-                                  height: mediaSize.width * 0.9,
-                                  child: CustomPaint(
-                                    painter: ShortestPath(
-                                        path: path,
-                                        columnsCount: columnsCount,
-                                        blocSize: blocSize,
-                                        allCount: allCount,
-                                        crossAxisCount: crossAxisCount,
-                                        mediaSize: mediaSize
-                                    ),
-                                  ),
-                                );
-                              }else{
-                                return Container(
-                                  width: mediaSize.width * 0.9,
-                                  height: mediaSize.width * 0.9,
-                                  child: Center(
-                                    child: SpinKitFadingCube(
-                                      color: CustomTheme().accentPlus,
-                                      size: MediaQuery.of(context).size.width * 0.1,
-                                    ),
-                                  ),
-                                );
-                              }
-                            }
-                          )
+                                  )
+                              ),
+                              SizedBox(width: mediaSize.width * 0.08,),
+                              Container(
+                                  width: mediaSize.width * 0.4,
+                                  height: mediaSize.height * 0.1,
+                                  child: Button("Kod QR", (){
+                                    Navigator.of(context).push(
+                                        CustomPageTransition(
+                                          QRCode(widget.currentOrder),
+                                          x: 0.0,
+                                          y: 0.1,
+                                        )
+                                    );
+                                  })
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -250,8 +296,9 @@ class CustomGridView extends CustomPainter {
   final List<Alley> alleys;
   final int allCount;
   final int crossAxisCount;
+  final Order order;
 
-  CustomGridView({this.columnsCount, this.blocSize, this.alleys, this.allCount, this.crossAxisCount});
+  CustomGridView({this.columnsCount, this.blocSize, this.alleys, this.allCount, this.crossAxisCount, this.order});
 
   final double gap = 1;
   final Paint painter = Paint()
@@ -292,7 +339,10 @@ class CustomGridView extends CustomPainter {
   void setColor(Alley alley) {
     switch (alley.type) {
       case "ALLEY":
-        painter.color = CustomTheme().mapColor1;
+        if (alley.products.any((element) => order.products.any((element1) => element.id == element1.id)))
+          painter.color = Colors.green;
+        else
+          painter.color = CustomTheme().mapColor1;
         break;
       case "SHELF":
         painter.color = CustomTheme().mapColor2;
@@ -319,15 +369,6 @@ class ShortestPath extends CustomPainter{
   @override
   void paint(Canvas canvas, Size size){
     final pointMode = ui.PointMode.polygon;
-    // final points = [
-    //   Offset(0.5 * blocSize, 0.5 * blocSize),
-    //   Offset(1.5 * blocSize, 0.5 * blocSize),
-    //   Offset(1.5 * blocSize, 1.5 * blocSize),
-    //   Offset(1.5 * blocSize, 2.5 * blocSize),
-    //   Offset(2.5 * blocSize, 2.5 * blocSize),
-    //   Offset(2.5 * blocSize, 1.5 * blocSize),
-    //   Offset(2.5 * blocSize, 1.5 * blocSize),
-    // ];
     final paint = Paint()
       ..color = Colors.red
       ..strokeWidth = 5
