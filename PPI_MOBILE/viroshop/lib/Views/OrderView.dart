@@ -140,7 +140,8 @@ class _OrderViewState extends State<OrderView> {
       String message = "";
       for(Product wowProduct in maybeProducts)
         message += wowProduct.name + " x " + wowProduct.amount.toString() + "\n";
-      CustomAlerts.showAlertDialog(context, "Produkty w wybranej alejce:", message);
+      if (message.isNotEmpty)
+        CustomAlerts.showAlertDialog(context, "Produkty w wybranej alejce:", message);
       // setState(() {
       //   alleysList[clickedIndex].type = "CLICKED";
       // });
