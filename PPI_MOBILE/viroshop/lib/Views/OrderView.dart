@@ -271,19 +271,46 @@ class _OrderViewState extends State<OrderView> {
                                     ),
                                   )
                               ),
-                              SizedBox(width: mediaSize.width * 0.08,),
-                              Container(
-                                  width: mediaSize.width * 0.4,
-                                  height: mediaSize.height * 0.1,
-                                  child: Button("Kod QR", (){
-                                    Navigator.of(context).push(
-                                        CustomPageTransition(
-                                          QRCode(widget.currentOrder),
-                                          x: 0.0,
-                                          y: 0.1,
-                                        )
-                                    );
-                                  })
+                              SizedBox(width: mediaSize.width * 0.06,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: mediaSize.height * 0.03,),
+                                  Container(
+                                      child: Text("Pozostały czas:",
+                                        style: TextStyle(
+                                            color: CustomTheme().accentText,
+                                            fontSize: mediaSize.width * Constants.appBarFontSize
+                                        ),
+                                      )
+                                  ),
+                                  SizedBox(height: mediaSize.height * 0.01,),
+                                  Container(
+                                      width: mediaSize.width * 0.4,
+                                      child: Text("15:00",
+                                        softWrap: true,
+                                        style: TextStyle(
+                                            color: CustomTheme().standardText,
+                                            fontSize: mediaSize.width * Constants.appBarFontSize * 0.9
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      )
+                                  ),
+                                  SizedBox(height: mediaSize.height * 0.07,),
+                                  Container(
+                                      width: mediaSize.width * 0.4,
+                                      height: mediaSize.height * 0.1,
+                                      child: Button("Kod QR", (){
+                                        Navigator.of(context).push(
+                                            CustomPageTransition(
+                                              QRCode(widget.currentOrder),
+                                              x: 0.0,
+                                              y: 0.1,
+                                            )
+                                        );
+                                      })
+                                  ),
+                                ],
                               ),
                             ],
                           ),

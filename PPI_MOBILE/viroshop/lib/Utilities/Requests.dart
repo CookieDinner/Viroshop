@@ -78,6 +78,28 @@ class Requests{
     }
   }
 
+  static Future<String> PostForgotPassword(String login) async{
+    try{
+      http.Response response = await http.post(
+          "${Constants.apiUser}/password/forgot?userLogin=$login",headers: <String, String>{
+        'Content-Type': 'application/json; charset=utf-8',
+      }
+      ).timeout(Duration(seconds: Constants.timeOutTime));
+
+      return response.body;
+
+    }on SocketException{
+      debugPrint("Connection failed");
+      return "connfailed";
+    }on TimeoutException{
+      debugPrint("Timeout");
+      return "conntimeout";
+    }on HttpException{
+      debugPrint("Http Exception");
+      return "httpexception";
+    }
+  }
+
   static Future<String> GetShops() async{
     try{
       http.Response response = await http.get(

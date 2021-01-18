@@ -31,7 +31,11 @@ class CartItemTemplate extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(width: mediaSize.width * 0.04,),
-                    Icon(Icons.image_not_supported_sharp, color: CustomTheme().standardText, size: 35,),
+                    Container(
+                        height: mediaSize.width * 0.09,
+                        width: mediaSize.width * 0.09,
+                        child: Image.network('https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg')
+                    ),
                     SizedBox(width: mediaSize.width * 0.04,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -67,7 +67,13 @@ class _BookOrOrderState extends State<BookOrOrder> {
                       Container(
                           width: mediaSize.width * 0.7,
                           height: mediaSize.height * 0.1,
-                          child: Button("Zamówienie do paczkomatu", openZbikView)
+                          child: Button("\"Zarezerwuj\" wizytę bez dnia i godziny", (){})
+                      ),
+                      SizedBox(height: mediaSize.height * 0.05,),
+                      Container(
+                          width: mediaSize.width * 0.7,
+                          height: mediaSize.height * 0.1,
+                          child: Button("Zamówienie do sklepomatu", openZbikView)
                       ),
                     ],
                   ),
