@@ -12,6 +12,9 @@ class CustomAppBar extends StatelessWidget{
   final Function optionButtonAction;
   final bool isTextOptionButton;
   final Color specialColor;
+  final bool withOptionButton2;
+  final Widget optionButtonWidget2;
+  final Function optionButtonAction2;
 
   CustomAppBar(
     this.title,
@@ -21,7 +24,10 @@ class CustomAppBar extends StatelessWidget{
       this.optionButtonAction,
       this.optionButtonWidget,
       this.isTextOptionButton = false,
-      this.specialColor
+      this.specialColor,
+      this.withOptionButton2 = false,
+      this.optionButtonAction2,
+      this.optionButtonWidget2,
     }
   );
 
@@ -62,7 +68,18 @@ class CustomAppBar extends StatelessWidget{
             ),
           ),
           Spacer(),
-          //withOptionButton ? SizedBox(width: mediaSize.width * 0.45,) : SizedBox(),
+          withOptionButton2 ? Container(
+            height: buttonSize,
+            width: buttonSize,
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () => optionButtonAction2(),
+              child: optionButtonWidget2,
+            ),
+          ) : Container(
+            height: 0,
+            width: 0,
+          ),
           withOptionButton ? Container(
             height: buttonSize,
             width: isTextOptionButton ? buttonSize * 2 : buttonSize,

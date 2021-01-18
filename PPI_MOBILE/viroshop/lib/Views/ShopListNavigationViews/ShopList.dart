@@ -48,7 +48,18 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
   }
 
   Future<void> getShops() async{
-    favoriteShops = await DbHandler.getFavoriteShops();
+    String response = await Requests.getFavoriteShops();
+    List<Shop> tempShops = [];
+    for(Map<String, dynamic> singleShop in jsonDecode(response))
+      tempShops.add(
+          Shop(
+              singleShop['id'],
+              singleShop['city'],
+              singleShop['street'],
+              singleShop['number'],
+              singleShop['name'])
+      );
+    favoriteShops = List.from(tempShops);
     shopListState.shops = await DbHandler.getShops();
     //shopListState.filteredShops = List.from(shopListState.shops);
     shopListState.updateSearch(shopListState.searchController.text);
@@ -111,13 +122,13 @@ class _ShopListState extends State<ShopList> {
     else {
       setState(() {isCurrentlyProcessingFavorites = true;});
       if (shouldDelete) {
-        await DbHandler.deleteFavoriteShop(shopToAdd);
+        await Requests.deleteFavoriteShop(shopToAdd.id);
         await widget.getShops();
         widget.favoriteShops.remove(shopToAdd);
         setState(() {isCurrentlyProcessingFavorites = false;});
         return false;
       } else {
-        await DbHandler.insertToFavoriteShops(shopToAdd);
+        await Requests.addFavoriteShop(shopToAdd.id);
         widget.favoriteShops.add(shopToAdd);
         await widget.getShops();
         setState(() {isCurrentlyProcessingFavorites = false;});

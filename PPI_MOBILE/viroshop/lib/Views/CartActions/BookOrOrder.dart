@@ -7,11 +7,13 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/CartActions/BookingViewDate.dart';
 import 'package:viroshop/Views/ZbikPayment/ZbikPaymentView.dart';
+import 'package:viroshop/World/CartItem.dart';
 
 class BookOrOrder extends StatefulWidget {
   final Function clearCart;
+  final List<CartItem> cartItems;
 
-  BookOrOrder(this.clearCart);
+  BookOrOrder(this.clearCart, this.cartItems);
 
   @override
   _BookOrOrderState createState() => _BookOrOrderState();
@@ -31,7 +33,7 @@ class _BookOrOrderState extends State<BookOrOrder> {
   void openBookingView(){
     Navigator.of(context).push(
         CustomPageTransition(
-          BookingViewDate(widget.clearCart),
+          BookingViewDate(widget.clearCart, widget.cartItems),
           x: 0.0,
           y: 0.1,
         )
@@ -65,7 +67,13 @@ class _BookOrOrderState extends State<BookOrOrder> {
                       Container(
                           width: mediaSize.width * 0.7,
                           height: mediaSize.height * 0.1,
-                          child: Button("Zamówienie do paczkomatu", openZbikView)
+                          child: Button("\"Zarezerwuj\" wizytę bez dnia i godziny", (){})
+                      ),
+                      SizedBox(height: mediaSize.height * 0.05,),
+                      Container(
+                          width: mediaSize.width * 0.7,
+                          height: mediaSize.height * 0.1,
+                          child: Button("Zamówienie do sklepomatu", openZbikView)
                       ),
                     ],
                   ),

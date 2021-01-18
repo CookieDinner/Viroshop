@@ -89,10 +89,10 @@ public class ReservationManager {
     }
 
 
-    public Iterable<ReservationEntity> getAllUserReservations(Long userId) {
+    public Iterable<ReservationEntity> getAllUserReservations(String login) {
         Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
         return StreamSupport.stream(allReservations.spliterator(), false)
-                .filter(reservation -> reservation.getUser().getId() == userId)
+                .filter(reservation -> reservation.getUser().getLogin().equals(login))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

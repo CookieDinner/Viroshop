@@ -61,13 +61,15 @@ class _CartState extends State<Cart> {
   }
 
   void openCartActionsScreen(){
-    Navigator.of(context).push(
-        CustomPageTransition(
-          BookOrOrder(clearCart),
-          x: 0.0,
-          y: 0.1,
-        )
-    );
+    if (cartItems.isNotEmpty) {
+      Navigator.of(context).push(
+          CustomPageTransition(
+            BookOrOrder(clearCart, cartItems),
+            x: 0.0,
+            y: 0.1,
+          )
+      );
+    }
   }
 
   @override
@@ -87,7 +89,7 @@ class _CartState extends State<Cart> {
   }
 
 
-  Future<void> onCartItemTapped(Product productToEdit, double quantity) async{
+  Future<void> onCartItemTapped(Product productToEdit, int quantity) async{
     CartPopup(productToEdit, Icon(Icons.image_not_supported_sharp, color: Colors.white, size: 65,), preAmount: quantity, extraFunction: widget.update).showPopup(context, false);
     return false;
   }
@@ -127,7 +129,7 @@ class _CartState extends State<Cart> {
                       fontSize:
                           mediaSize.width * Constants.appBarFontSize * 0.9,
                       fontWeight: FontWeight.w400,
-                      color: CustomTheme().appBarTheme,
+                      color: cartItems.isNotEmpty ? CustomTheme().appBarTheme : Colors.grey,
                     ),
                   ),
                   optionButtonAction: openCartActionsScreen,

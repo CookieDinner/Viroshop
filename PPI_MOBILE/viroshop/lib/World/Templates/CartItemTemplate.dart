@@ -16,15 +16,12 @@ class CartItemTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-          mediaSize.width * 0.1,
-          0,
-          0,
-          0),
+      padding: function != null ? EdgeInsets.fromLTRB(mediaSize.width * 0.05, 0, 0, 0) :
+      EdgeInsets.fromLTRB(mediaSize.width * 0.05, 0, mediaSize.width * 0.05, 0),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => function(currentCartItem.cartProduct, currentCartItem.quantity),
+          onTap: () => function != null ? function(currentCartItem.cartProduct, currentCartItem.quantity) : (){},
           splashColor: CustomTheme().accentPlus.withOpacity(0.4),
           highlightColor: CustomTheme().cardColor,
           child: Container(
@@ -34,7 +31,11 @@ class CartItemTemplate extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(width: mediaSize.width * 0.04,),
-                    Icon(Icons.image_not_supported_sharp, color: CustomTheme().standardText, size: 35,),
+                    Container(
+                        height: mediaSize.width * 0.09,
+                        width: mediaSize.width * 0.09,
+                        child: Image.network('https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg')
+                    ),
                     SizedBox(width: mediaSize.width * 0.04,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,

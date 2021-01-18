@@ -7,12 +7,14 @@ import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/CartActions/BookingViewHours.dart';
+import 'package:viroshop/World/CartItem.dart';
 
 class BookingViewDate extends StatefulWidget {
 
   final Function clearCart;
+  final List<CartItem> cartItems;
 
-  BookingViewDate(this.clearCart);
+  BookingViewDate(this.clearCart, this.cartItems);
 
   @override
   _BookingViewDateState createState() => _BookingViewDateState();
@@ -36,7 +38,7 @@ class _BookingViewDateState extends State<BookingViewDate> {
     if(hasChosenOnce)
       Navigator.of(context).push(
           CustomPageTransition(
-            BookingViewHours(_currentDate, widget.clearCart),
+            BookingViewHours(_currentDate, widget.clearCart, widget.cartItems),
             x: 0.0,
             y: 0.1,
           )
@@ -64,64 +66,67 @@ class _BookingViewDateState extends State<BookingViewDate> {
                     child: Column(
                       children: [
                         SizedBox(height: mediaSize.height * 0.1,),
-                        CalendarCarousel(
-                          onDayPressed: (DateTime date, List events){
-                            hasChosenOnce = true;
-                            buttonColor = CustomTheme().buttonColor;
-                            textColor = Colors.white;
-                            if(compareDates(date, DateTime.now()))
-                              this.setState(() {
-                                _currentDate = date;
-                              });
-                          },
-                          customDayBuilder: (
-                            bool isSelectable,
-                            int index,
-                            bool isSelectedDay,
-                            bool isToday,
-                            bool isPrevMonthDay,
-                            TextStyle textStyle,
-                            bool isNextMonthDay,
-                            bool isThisMonthDay,
-                            DateTime day,
-                          ){
-                            if(compareDates(day, DateTime.now()))
-                              if (!isPrevMonthDay && !isNextMonthDay)
-                                return Container(
-                                  height: 300,
-                                  width: 300,
-                                  color: CustomTheme().textBackground.withOpacity(0.5),
-                                  child: Center(child: Text(day.day.toString(), style: TextStyle(),)),
-                                );
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CalendarCarousel(
+                            onDayPressed: (DateTime date, List events){
+                              hasChosenOnce = true;
+                              buttonColor = CustomTheme().buttonColor;
+                              textColor = Colors.white;
+                              if(compareDates(date, DateTime.now()))
+                                this.setState(() {
+                                  _currentDate = date;
+                                });
+                            },
+                            customDayBuilder: (
+                              bool isSelectable,
+                              int index,
+                              bool isSelectedDay,
+                              bool isToday,
+                              bool isPrevMonthDay,
+                              TextStyle textStyle,
+                              bool isNextMonthDay,
+                              bool isThisMonthDay,
+                              DateTime day,
+                            ){
+                              if(compareDates(day, DateTime.now()))
+                                if (!isPrevMonthDay && !isNextMonthDay)
+                                  return Container(
+                                    height: 300,
+                                    width: 300,
+                                    color: CustomTheme().textBackground.withOpacity(0.8),
+                                    child: Center(child: Text(day.day.toString(), style: TextStyle(),)),
+                                  );
+                                else
+                                  return Container(
+                                    height: 300,
+                                    width: 300,
+                                    color: CustomTheme().textBackground.withOpacity(0.4),
+                                    child: Center(child: Text(day.day.toString(), style: TextStyle(),)),
+                                  );
                               else
                                 return Container(
                                   height: 300,
                                   width: 300,
-                                  color: CustomTheme().textBackground.withOpacity(0.27),
-                                  child: Center(child: Text(day.day.toString(), style: TextStyle(),)),
+                                  color: CustomTheme().textBackground.withOpacity(0.18),
+                                  child: Center(child: Text(day.day.toString(), style: TextStyle(color: Colors.black.withOpacity(0.15)),)),
                                 );
-                            else
-                              return Container(
-                                height: 300,
-                                width: 300,
-                                color: CustomTheme().textBackground.withOpacity(0.15),
-                                child: Center(child: Text(day.day.toString(), style: TextStyle(color: Colors.black.withOpacity(0.15)),)),
-                              );
-                          },
-                          weekDayBackgroundColor: CustomTheme().textBackground.withOpacity(0.15),
-                          weekFormat: false,
-                          height: mediaSize.height * 0.59,
-                          selectedDateTime: _currentDate,
-                          daysHaveCircularBorder: false,
-                          todayBorderColor: Colors.red,
-                          todayButtonColor: Colors.red.withOpacity(0.2),
-                          selectedDayBorderColor: CustomTheme().accentPlus,
-                          selectedDayButtonColor: CustomTheme().accentPlus.withOpacity(0.2),
-                          locale: "pl",
-                          thisMonthDayBorderColor: Colors.black.withOpacity(0.1),
-                          prevMonthDayBorderColor: Colors.grey.withOpacity(0.1),
-                          nextMonthDayBorderColor: Colors.grey.withOpacity(0.1),
-                          weekdayTextStyle: TextStyle(color: CustomTheme().accentPlus),
+                            },
+                            weekDayBackgroundColor: CustomTheme().textBackground.withOpacity(0.35),
+                            weekFormat: false,
+                            height: mediaSize.height * 0.59,
+                            selectedDateTime: _currentDate,
+                            daysHaveCircularBorder: false,
+                            todayBorderColor: Colors.red,
+                            todayButtonColor: Colors.red.withOpacity(0.2),
+                            selectedDayBorderColor: CustomTheme().accentPlus,
+                            selectedDayButtonColor: CustomTheme().accentPlus.withOpacity(0.2),
+                            locale: "pl",
+                            thisMonthDayBorderColor: Colors.black.withOpacity(0.1),
+                            prevMonthDayBorderColor: Colors.grey.withOpacity(0.1),
+                            nextMonthDayBorderColor: Colors.grey.withOpacity(0.1),
+                            weekdayTextStyle: TextStyle(color: CustomTheme().accentPlus),
+                          ),
                         ),
                         Expanded(
                           child: Center(
