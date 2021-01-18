@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
@@ -130,8 +131,16 @@ class _OrderViewState extends State<OrderView> {
     final tapedColumn = (dy / blocSize).floor();
     if (tapedRow > -1 && tapedRow < crossAxisCount && tapedColumn > - 1 && tapedColumn < (allCount / crossAxisCount).ceil()) {
       clickedIndex = tapedColumn * crossAxisCount + tapedRow;
-      for ( Product x in alleysList[clickedIndex].products)
-        print(x.id.toString() + " " + x.name);
+      List<Product> maybeProducts = [];
+      for (Product possibleProduct in widget.currentOrder.products) {
+        if (alleysList[clickedIndex].products.any((element) =>
+        element.id == possibleProduct.id))
+          maybeProducts.add(possibleProduct);
+      }
+      String message = "";
+      for(Product wowProduct in maybeProducts)
+        message += wowProduct.name + " x " + wowProduct.amount.toString() + "\n";
+      CustomAlerts.showAlertDialog(context, "Produkty w wybranej alejce:", message);
       // setState(() {
       //   alleysList[clickedIndex].type = "CLICKED";
       // });
