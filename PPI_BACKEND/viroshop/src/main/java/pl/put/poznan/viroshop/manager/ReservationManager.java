@@ -191,6 +191,8 @@ public class ReservationManager {
                     if (isSenior || isWeekend) {
                         reservation.setQuarterOfDay(quarter);
                     }
+                }else {
+                    reservation.setQuarterOfDay(quarter);
                 }
             }
             if (date != null) {
