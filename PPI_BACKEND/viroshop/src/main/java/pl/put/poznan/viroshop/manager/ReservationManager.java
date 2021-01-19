@@ -233,14 +233,14 @@ public class ReservationManager {
     private long getReservationsDayCount(LocalDate date, ShopEntity shopEntity) {
         return StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
                 .filter(res -> res.getShop().getId() == shopEntity.getId())
-                .filter(res -> res.getDate().equals(date))
+                .filter(res -> res.getDate() != null ? res.getDate().equals(date) : false)
                 .count();
     }
 
     private long getReservationsCountForQuarter(LocalDate date, int quarter, ShopEntity shopEntity) {
          return StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
                 .filter(res -> res.getShop().getId() == shopEntity.getId())
-                .filter(res -> res.getDate().equals(date))
+                .filter(res -> res.getDate() != null ? res.getDate().equals(date) : false)
                 .filter(res -> res.getQuarterOfDay() == quarter)
                 .count();
     }
