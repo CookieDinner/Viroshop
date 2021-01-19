@@ -129,10 +129,12 @@ public class ReservationManager {
                 }
             }
             ShopEntity shopEntity = shopManager.findOneById(reservationModel.getShopId()).get();
-            long numberOfCurrentReservation = getReservationsCountForQuarter(reservationModel.getDate(), reservationModel.getQuarterOfDay(), shopEntity);
+            if (reservationModel.getDate() != null) {
+                long numberOfCurrentReservation = getReservationsCountForQuarter(reservationModel.getDate(), reservationModel.getQuarterOfDay(), shopEntity);
 
-            if (numberOfCurrentReservation >= shopEntity.getMaxReservationsPerQuarterOfHour()) {
-                return null;
+                if (numberOfCurrentReservation >= shopEntity.getMaxReservationsPerQuarterOfHour()) {
+                    return null;
+                }
             }
 
             Set<ProductReservationEntity> productReservationEntities = getProductReservations(reservationModel);
