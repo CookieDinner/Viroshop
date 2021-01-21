@@ -52,8 +52,8 @@ public class ReservationManager {
         Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
         ArrayList<ReservationEntity> filteredReservations = StreamSupport.stream(allReservations.spliterator(), false)
                 .filter(reservation -> reservation.getShop().getId() == shopId)
-                .filter(reservation -> reservation.getDate().getYear() == year)
-                .filter(reservation -> reservation.getDate().getMonth().getValue() == month)
+                .filter(reservation -> reservation.getDate() != null ? reservation.getDate().getYear() == year : false)
+                .filter(reservation -> reservation.getDate() != null ? reservation.getDate().getMonth().getValue() == month : false)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         Map<LocalDate, Long> mapCounts = new HashMap<>();
