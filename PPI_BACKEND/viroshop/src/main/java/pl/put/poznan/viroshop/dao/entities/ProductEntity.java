@@ -19,6 +19,7 @@ public class ProductEntity {
     private String description;
     private Unit unit;
     private String picture;
+    private Boolean canBePurchaseToParcelLocker;
 
     @OneToMany(mappedBy = "productEntity")
     private Set<StoreEntity> storeEntities;
@@ -36,6 +37,7 @@ public class ProductEntity {
         this.category = category;
         this.description = description;
         this.unit = unit;
+        this.canBePurchaseToParcelLocker = true;
     }
 
     public ProductEntity(Long id, String barcode, String name, Category category, String description, Unit unit, String picture) {
@@ -46,6 +48,18 @@ public class ProductEntity {
         this.description = description;
         this.unit = unit;
         this.picture = picture;
+        this.canBePurchaseToParcelLocker = true;
+    }
+
+    public ProductEntity(Long id, String barcode, String name, Category category, String description, Unit unit, Boolean canBePurchaseToParcelLocker, String picture) {
+        this.id = id;
+        this.barcode = barcode;
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.unit = unit;
+        this.picture = picture;
+        this.canBePurchaseToParcelLocker = canBePurchaseToParcelLocker;
     }
 
     public Long getId() {
@@ -102,5 +116,13 @@ public class ProductEntity {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public Boolean getCanBePurchaseToParcelLocker() {
+        return canBePurchaseToParcelLocker;
+    }
+
+    public void setCanBePurchaseToParcelLocker(Boolean canBePurchaseToParcelLocker) {
+        this.canBePurchaseToParcelLocker = canBePurchaseToParcelLocker;
     }
 }
