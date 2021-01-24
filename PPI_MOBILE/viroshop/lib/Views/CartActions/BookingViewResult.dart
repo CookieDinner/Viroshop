@@ -65,7 +65,7 @@ class _BookingViewResultState extends State<BookingViewResult> {
                     child: Column(
                       children: [
                         SizedBox(height: mediaSize.height * 0.1,),
-                        Row(
+                        widget._chosenDate != null ? Row(
                           children: [
                             SizedBox(width: mediaSize.width * 0.05,),
                             Container(
@@ -89,7 +89,7 @@ class _BookingViewResultState extends State<BookingViewResult> {
                                 )
                             ),
                           ],
-                        ),
+                        ) : Container(),
                         SizedBox(height: mediaSize.height * 0.02,),
                         Row(
                           children: [

@@ -7,7 +7,8 @@ class Product {
   final int available;
   final double price;
   final int amount;
-  Product(this.id, this.name, this.category, this.available, this.price, {this.amount = 0});
+  final String picture;
+  Product(this.id, this.name, this.category, this.available, this.price, this.picture, {this.amount = 0});
 
   Product.fromJson(Map<String, dynamic> json) :
         id = json["id"],
@@ -15,7 +16,8 @@ class Product {
         category = json["category"],
         available = json["available"] ? 1 : 0,
         price = json["price"],
-        amount = 0;
+        amount = 0,
+        picture = json["picture"];
 
   Product.fromAlleysJson(Map<String, dynamic> json) :
         id = json["id"],
@@ -23,5 +25,6 @@ class Product {
         category = "",
         available = 1,
         price = 0.0,
-        amount = 0;
+        amount = 0,
+        picture = "";
 }

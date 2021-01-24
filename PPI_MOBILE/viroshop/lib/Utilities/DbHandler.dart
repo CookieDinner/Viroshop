@@ -52,7 +52,8 @@ class DbHandler {
           name TEXT NOT NULL,
           category TEXT NOT NULL,
           available INTEGER NOT NULL,
-          price REAL NOT NULL
+          price REAL NOT NULL,
+          picture TEXT NOT NULL
         );
       """);
       await txn.execute("""
@@ -212,7 +213,8 @@ class DbHandler {
             'name' : currentProduct.name,
             'category' : currentProduct.category,
             'available' : currentProduct.available,
-            'price' : currentProduct.price
+            'price' : currentProduct.price,
+            'picture' : currentProduct.picture
           });
         });
         await batch.commit(noResult: true);
@@ -238,7 +240,8 @@ class DbHandler {
                 singleProduct['name'],
                 singleProduct['category'],
                 singleProduct['available'],
-                singleProduct['price'])
+                singleProduct['price'],
+                singleProduct['picture'])
         );
       }
     } on Exception catch(e){
@@ -248,6 +251,24 @@ class DbHandler {
         await db.close();
     }
     return products;
+  }
+
+  static Future<List<String>> getCategories() async{
+    Database db;
+    List<String> categories = [];
+    try{
+      db = await openDatabase(Data().dbPath);
+      var queryCategories = await db.rawQuery("select distinct category from products");
+      for(Map<String, dynamic> singleProduct in queryCategories){
+        categories.add(singleProduct['category']);
+      }
+    } on Exception catch(e){
+      debugPrint("Error reading categories:\n${e.toString()}");
+    } finally{
+      if(db != null)
+        await db.close();
+    }
+    return categories;
   }
 
   static Future<bool> insertToCart(Shop shop, Product product, int quantity) async{
@@ -351,6 +372,7 @@ class DbHandler {
                products.category  as productCategory, 
                products.available as productAvailable, 
                products.price     as productPrice, 
+               products.picture   as productPicture,
                cart.quantity      as cartQuantity
         from cart inner join products on (cart.product_id == products.id)
         where cart.shop_id == ${shop.id} and cart.username == '${Data().currentUsername}' order by cart.id;  
@@ -363,7 +385,8 @@ class DbHandler {
               singleCartItem['productName'],
               singleCartItem['productCategory'],
               singleCartItem['productAvailable'],
-              singleCartItem['productPrice']
+              singleCartItem['productPrice'],
+              singleCartItem['productPicture']
             ),
             singleCartItem['cartQuantity']
           )

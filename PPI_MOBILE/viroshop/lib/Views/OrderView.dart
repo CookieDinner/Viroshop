@@ -56,7 +56,8 @@ class _OrderViewState extends State<OrderView> {
   List<Product> makeProductsList(List<dynamic> products) {
     List<Product> productsList = [];
     for(Map<String, dynamic> product in products)
-      productsList.add(Product(product["id"], product["name"], product["category"], 1, 0));
+      productsList.add(Product(product["id"], product["name"], product["category"], 1, 0, ""));
+    widget.currentOrder.products.sort((a, b) => a.name.compareTo(b.name));
     return productsList;
   }
   @override
@@ -275,7 +276,7 @@ class _OrderViewState extends State<OrderView> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  SizedBox(height: mediaSize.height * 0.03,),
+                                  SizedBox(height: mediaSize.height * 0.01,),
                                   Container(
                                       child: Text("Pozostały czas:",
                                         style: TextStyle(
@@ -296,7 +297,7 @@ class _OrderViewState extends State<OrderView> {
                                         textAlign: TextAlign.center,
                                       )
                                   ),
-                                  SizedBox(height: mediaSize.height * 0.07,),
+                                  SizedBox(height: mediaSize.height * 0.04,),
                                   Container(
                                       width: mediaSize.width * 0.4,
                                       height: mediaSize.height * 0.1,
@@ -309,6 +310,12 @@ class _OrderViewState extends State<OrderView> {
                                             )
                                         );
                                       })
+                                  ),
+                                  SizedBox(height: mediaSize.height * 0.075,),
+                                  Container(
+                                      width: mediaSize.width * 0.4,
+                                      height: mediaSize.height * 0.1,
+                                      child: Button("Wycofaj rezerwację", (){})
                                   ),
                                 ],
                               ),

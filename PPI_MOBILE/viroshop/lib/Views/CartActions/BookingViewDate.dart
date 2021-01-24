@@ -45,6 +45,12 @@ class _BookingViewDateState extends State<BookingViewDate> {
       );
   }
 
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
   DateTime _currentDate;
   @override
   Widget build(BuildContext context) {

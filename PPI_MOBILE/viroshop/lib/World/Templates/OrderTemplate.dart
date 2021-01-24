@@ -44,7 +44,7 @@ class OrderTemplate extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Column(
+                    currentOrder.orderDate != null ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
@@ -70,6 +70,19 @@ class OrderTemplate extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
+                        ),
+                      ],
+                    ) : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: mediaSize.width * 0.32,
+                          child: Text("Mapa produktów",
+                            style: TextStyle(
+                              color: CustomTheme().cardColor.withOpacity(1),
+                              fontSize: mediaSize.width * Constants.appBarFontSize * 0.8,
+                            ),
+                            textAlign: TextAlign.center,)
                         ),
                       ],
                     ),

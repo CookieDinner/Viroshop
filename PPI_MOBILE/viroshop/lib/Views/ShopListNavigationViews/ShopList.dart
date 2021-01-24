@@ -214,24 +214,39 @@ class _ShopListState extends State<ShopList> {
                   child: StreamBuilder<Object>(
                     stream: streamController.stream,
                     builder: (context, snapshot) {
-                      if (snapshot.hasData)
-                        return DraggableScrollbar.rrect(
-                          alwaysVisibleScrollThumb: true,
-                          backgroundColor: CustomTheme().accent,
-                          heightScrollThumb: filteredShops.length > 4 ?
-                          max(mediaSize.height * 2 / filteredShops.length,
-                              mediaSize.height * 0.05) : 0,
-                          padding: EdgeInsets.all(1),
-                          controller: scrollController,
-                          child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: filteredShops.length,
-                              physics: AlwaysScrollableScrollPhysics(),
-                              itemBuilder: (BuildContext context, int index) {
-                                return ShopTemplate(filteredShops[index], pushChosenShop, addToFavorites, widget);
-                              }
-                          ),
-                        );
+                      if (snapshot.hasData) {
+                        if (filteredShops.length != 0) {
+                          return DraggableScrollbar.rrect(
+                            alwaysVisibleScrollThumb: true,
+                            backgroundColor: CustomTheme().accent,
+                            heightScrollThumb: filteredShops.length > 4 ?
+                            max(mediaSize.height * 2 / filteredShops.length,
+                                mediaSize.height * 0.05) : 0,
+                            padding: EdgeInsets.all(1),
+                            controller: scrollController,
+                            child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: filteredShops.length,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ShopTemplate(
+                                      filteredShops[index], pushChosenShop,
+                                      addToFavorites, widget);
+                                }
+                            ),
+                          );
+                        }
+                        else{
+                          return Center(
+                            child: Container(
+                              child: Text("Brak\n sklepów", style: TextStyle(
+                                  color: CustomTheme().accentText,
+                                  fontSize: mediaSize.width * Constants.appBarFontSize
+                              ), textAlign: TextAlign.center,),
+                            ),
+                          );
+                        }
+                      }
                       else
                         return SpinKitFadingCube(
                           color: CustomTheme().buttonColor,

@@ -7,6 +7,9 @@ import 'package:viroshop/Views/ZbikPayment/ZbikButton.dart';
 import 'ZbikFinalView.dart';
 
 class ZbikPaymentView extends StatefulWidget {
+  final Function clearCart;
+  ZbikPaymentView(this.clearCart);
+
   @override
   _ZbikPaymentViewState createState() => _ZbikPaymentViewState();
 }

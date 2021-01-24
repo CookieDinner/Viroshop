@@ -268,7 +268,7 @@ class Requests{
         'Content-Type': 'application/json; charset=utf-8',
       }, body: jsonEncode(
         {
-          "date" : DateFormat("yyyy-MM-dd").format(chosenDate),
+          "date" : chosenDate != null ? DateFormat("yyyy-MM-dd").format(chosenDate) : null,
           "quarterOfDay" : quarter,
           "productReservations" : products,
           "shopId" : shopId,

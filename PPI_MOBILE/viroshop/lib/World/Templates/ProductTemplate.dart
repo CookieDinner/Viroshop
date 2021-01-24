@@ -44,7 +44,7 @@ class ProductTemplate extends StatelessWidget {
                       Container(
                         height: mediaSize.width * 0.18,
                         width: mediaSize.width * 0.18,
-                        child: Image.network('https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg')
+                        child: Image.network(currentProduct.picture)
                       ),
                       SizedBox(width: mediaSize.width * 0.04,),
                       Column(
@@ -110,7 +110,7 @@ class ProductTemplate extends StatelessWidget {
                 Container(
                     height: mediaSize.width * 0.09,
                     width: mediaSize.width * 0.09,
-                    child: Image.network('https://static.openfoodfacts.org/images/products/807/680/019/5057/front_it.108.200.jpg')
+                    child: Image.network(currentProduct.picture)
                 ),
                 SizedBox(width: mediaSize.width * 0.02,),
                 Column(
