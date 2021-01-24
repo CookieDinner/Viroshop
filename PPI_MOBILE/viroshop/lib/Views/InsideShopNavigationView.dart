@@ -40,6 +40,7 @@ class _StoreNavigationViewState extends State<InsideShopNavigationView> {
       setState(() {
         navigationViews.removeAt(1);
         navigationViews.insert(1, Categories(widget, changeCategoriesScreen));
+        navigationViews[1].update();
       });
     }
   }

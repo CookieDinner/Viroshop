@@ -13,11 +13,10 @@ import 'package:viroshop/World/Product.dart';
 
 class CartPopup{
   final Product _currentProduct;
-  final Widget _image;
   final int _preAmount;
   final _cartId;
   final Function _extraFunction;
-  CartPopup(this._currentProduct, this._image, {preAmount, cartId, extraFunction}) : _preAmount = preAmount, _cartId = cartId, _extraFunction = extraFunction;
+  CartPopup(this._currentProduct, {preAmount, cartId, extraFunction}) : _preAmount = preAmount, _cartId = cartId, _extraFunction = extraFunction;
 
   bool _isCurrentlyProcessing = false;
   void addToCart(BuildContext context, int quantity) async{
@@ -56,7 +55,7 @@ class CartPopup{
                           Container(
                             height: mediaSize.height * 0.08,
                             width: mediaSize.height * 0.08,
-                            child: _image,
+                            child: Image.network(_currentProduct.picture),
                           ),
                           SizedBox(width: mediaSize.width * 0.03,),
                           Container(
@@ -143,7 +142,7 @@ class CartPopup{
                                       )
                                   )
                               ),
-                              Text("szt",
+                              Text(_currentProduct.unit,
                                 style: TextStyle(
                                     fontSize: mediaSize.height * 0.035,
                                     color: CustomTheme().standardText

@@ -3,6 +3,9 @@ import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ZbikPayment/ZbikButton.dart';
 
 class ZbikFinalView extends StatefulWidget {
+  final Function function;
+  ZbikFinalView(this.function);
+
   @override
   _ZbikFinalViewState createState() => _ZbikFinalViewState();
 }
@@ -10,12 +13,18 @@ class ZbikFinalView extends StatefulWidget {
 class _ZbikFinalViewState extends State<ZbikFinalView> {
 
   void simulateCorrectPayment() {
-    // TODO: Here handle correct payment
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    widget.function(true, false);
     print('Payment result: CORRECT');
   }
 
   void simulateErrorPayment() {
-    // TODO: Here handle error payment
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    widget.function(false, false);
     print('Payment result: ERROR');
   }
 

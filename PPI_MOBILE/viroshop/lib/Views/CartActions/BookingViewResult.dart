@@ -21,8 +21,9 @@ class BookingViewResult extends StatefulWidget {
   final int _quarterIndex;
   final Function clearCart;
   final List<CartItem> cartItems;
+  final int pops;
 
-  BookingViewResult(this._chosenDate, this._quarterIndex, this.clearCart, this.cartItems);
+  BookingViewResult(this._chosenDate, this._quarterIndex, this.clearCart, this.cartItems, {this.pops = 3});
 
   @override
   _BookingViewResultState createState() => _BookingViewResultState();
@@ -36,6 +37,7 @@ class _BookingViewResultState extends State<BookingViewResult> {
   Future<void> sendReservation() async {
     String response = await Requests.PostReservation(Data().currentShop.id, widget._chosenDate, widget._quarterIndex, widget.cartItems);
     print(response);
+    widget.clearCart(true, true);
   }
 
   ScrollController _scrollController = ScrollController();
@@ -147,11 +149,8 @@ class _BookingViewResultState extends State<BookingViewResult> {
                               child: Button("Zatwierdź rezerwację",
                                 () async{
                                   await sendReservation();
-                                  //await widget.clearCart();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
+                                  for (int i = 0; i < widget.pops; i++)
+                                    Navigator.of(context).pop();
                                 }
                               )
                             ),

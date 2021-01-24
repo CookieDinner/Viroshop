@@ -82,7 +82,7 @@ class ProductTemplate extends StatelessWidget {
                           ),
                           Container(
                             width: mediaSize.width * 0.22,
-                            child: Text(currentProduct.price.toStringAsFixed(2) + " zł / szt",
+                            child: Text(currentProduct.price.toStringAsFixed(2) + " zł / ${currentProduct.unit}",
                               style: TextStyle(
                                 color: CustomTheme().cardColor.withOpacity(1),
                                 fontSize: mediaSize.width * Constants.labelFontSize,
@@ -129,6 +129,7 @@ class ProductTemplate extends StatelessWidget {
                     ),
                   ],
                 ),
+                Spacer(),
                 Container(
                   width: mediaSize.width * 0.1,
                   child: Text(

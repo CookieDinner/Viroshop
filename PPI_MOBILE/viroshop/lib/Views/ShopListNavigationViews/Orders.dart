@@ -39,12 +39,22 @@ class Orders extends StatefulWidget implements ShopListNavigationViewTemplate{
   }
 }
 
+int getMillis(DateTime time, int quarter){
+  int millis = (((7 + quarter ~/4 ) * 60) +  (quarter % 4 * 15)) * 60 * 1000;
+  int totalMillis;
+  if (time != null)
+    totalMillis = time.millisecondsSinceEpoch + millis;
+  else
+    totalMillis = DateTime.now().millisecondsSinceEpoch + millis;
+  return totalMillis;
+}
 class _OrdersState extends State<Orders> {
 
   StreamController<bool> streamController = StreamController<bool>();
   ScrollController scrollController = ScrollController();
 
   List<Order> orders = [];
+  List<Order> filteredOrders = [];
   void stateSet(){
     setState(() {
     });
@@ -73,6 +83,7 @@ class _OrdersState extends State<Orders> {
               1,
               0,
               tempProduct["picture"],
+              tempProduct["unit"] == "PACKAGE" ? "szt" : "kg",
           amount: singleProduct["count"]),);
         }
         orders.add(
@@ -81,11 +92,14 @@ class _OrdersState extends State<Orders> {
                 tempProducts,
                 singleOrderTemp["date"] != null ? DateTime.parse(singleOrderTemp["date"]) : null,
                 Shop(tempShop["id"], tempShop["city"], tempShop["street"],
-                    tempShop["number"], tempShop["name"]),
+                    tempShop["number"], tempShop["name"], tempShop['maxReservationsPerQuarterOfHour']),
                 singleOrderTemp["quarterOfDay"]
             )
         );
       }
+      orders.sort((a, b) => a.compareTo(b));
+      filteredOrders = List.from(orders);
+      filteredOrders.retainWhere((element) => getMillis(element.orderDate, element.quarterOfDay) > DateTime.now().millisecondsSinceEpoch);
       streamController.add(true);
       setState(() {
         isUpdatingReservations = false;
@@ -134,18 +148,18 @@ class _OrdersState extends State<Orders> {
                             return DraggableScrollbar.rrect(
                               alwaysVisibleScrollThumb: true,
                               backgroundColor: CustomTheme().accent,
-                              heightScrollThumb: orders.length > 5 ?
-                              max(mediaSize.height * 2 / orders.length,
+                              heightScrollThumb: filteredOrders.length > 5 ?
+                              max(mediaSize.height * 2 / filteredOrders.length,
                                   mediaSize.height * 0.05) : 0,
                               padding: EdgeInsets.all(1),
                               controller: scrollController,
                               child: ListView.builder(
                                   controller: scrollController,
-                                  itemCount: orders.length,
+                                  itemCount: filteredOrders.length,
                                   physics: AlwaysScrollableScrollPhysics(),
                                   itemBuilder: (BuildContext context,
                                       int index) {
-                                    return OrderTemplate(orders[index],
+                                    return OrderTemplate(filteredOrders[index],
                                             (Order currentOrder) {
                                           Navigator.of(context).push(
                                               CustomPageTransition(

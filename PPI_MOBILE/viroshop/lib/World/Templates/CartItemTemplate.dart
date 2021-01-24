@@ -58,7 +58,7 @@ class CartItemTemplate extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text( "W koszyku: ${currentCartItem.quantity.toInt()} szt",
+                        Text( "W koszyku: ${currentCartItem.quantity.toInt()} ${currentCartItem.cartProduct.unit}",
                           style: TextStyle(
                             color: CustomTheme().cardColor.withOpacity(1),
                             fontSize: mediaSize.width * Constants.labelFontSize * 0.9,

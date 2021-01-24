@@ -19,7 +19,7 @@ class _ZbikPaymentViewState extends State<ZbikPaymentView> {
   void goToPaymentResult() {
     Navigator.of(context).push(
         CustomPageTransition(
-          ZbikFinalView(),
+          ZbikFinalView(widget.clearCart),
           x: 0.0,
           y: 0.5,
         )
