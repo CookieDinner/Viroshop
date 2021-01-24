@@ -19,7 +19,9 @@ import 'package:viroshop/World/Product.dart';
 // ignore: must_be_immutable
 class Products extends StatefulWidget implements InsideShopNavigationViewTemplate{
   final InsideShopNavigationView parent;
-  Products(this.parent);
+  final String filteredBy;
+  final Function function;
+  Products(this.parent, {this.filteredBy = "", this.function});
 
   _ProductsState state = _ProductsState();
   @override
@@ -33,6 +35,8 @@ class Products extends StatefulWidget implements InsideShopNavigationViewTemplat
 
   Future<void> getProducts() async{
     state.products = await DbHandler.getProducts();
+    if (filteredBy != "")
+      state.products.retainWhere((element) => element.category == filteredBy);
     state.filteredProducts = List.from(state.products);
     state.filteredProducts.sort((a, b) => a.name.compareTo(b.name));
     state.stateSet();
@@ -41,10 +45,10 @@ class Products extends StatefulWidget implements InsideShopNavigationViewTemplat
 }
 
 class _ProductsState extends State<Products> {
-  final ScrollController scrollController = ScrollController();
 
   List<Product> products = [];
   List<Product> filteredProducts = [];
+  ScrollController scrollController = ScrollController();
   TextEditingController searchController = TextEditingController();
   StreamController<bool> streamController = StreamController<bool>();
   bool isCurrentlyProcessing = false;
@@ -163,14 +167,10 @@ class _ProductsState extends State<Products> {
               ],
             ),
           ),
-          CustomAppBar("Lista produktów", withOptionButton: true,
-            optionButtonWidget: Icon(
-              Icons.sort_sharp,
-              size: mediaSize.width * 0.07,
-              color: CustomTheme().accentPlus,
-            ),
-            //TODO Opcje sortowania
-            optionButtonAction: ()=>print("tutaj będą opcje sortu"),
+          CustomAppBar(widget.filteredBy != "" ?
+          widget.filteredBy[0] + widget.filteredBy.substring(1).toLowerCase() :
+          "Lista produktów",
+            customPopFunction: (widget.filteredBy != "") ? widget.function : null,
           )
         ],
       ),

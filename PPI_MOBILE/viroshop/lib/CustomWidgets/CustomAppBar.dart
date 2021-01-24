@@ -15,6 +15,7 @@ class CustomAppBar extends StatelessWidget{
   final bool withOptionButton2;
   final Widget optionButtonWidget2;
   final Function optionButtonAction2;
+  final Function customPopFunction;
 
   CustomAppBar(
     this.title,
@@ -28,6 +29,7 @@ class CustomAppBar extends StatelessWidget{
       this.withOptionButton2 = false,
       this.optionButtonAction2,
       this.optionButtonWidget2,
+      this.customPopFunction
     }
   );
 
@@ -47,7 +49,7 @@ class CustomAppBar extends StatelessWidget{
             width: buttonSize,
             child: FlatButton(
               padding: EdgeInsets.all(0),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => (customPopFunction != null) ? customPopFunction(false, "") : Navigator.pop(context),
               child: Icon(
                 Icons.arrow_back_sharp,
                 size: buttonSize * 0.6,

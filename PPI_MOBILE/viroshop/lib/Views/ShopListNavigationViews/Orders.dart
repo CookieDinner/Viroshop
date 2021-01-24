@@ -33,7 +33,8 @@ class Orders extends StatefulWidget implements ShopListNavigationViewTemplate{
 
   @override
   Future<void> update() {
-    ordersState.stateSet();
+    ordersState.updateReservations();
+    //ordersState.stateSet();
     return null;
   }
 }
@@ -51,6 +52,7 @@ class _OrdersState extends State<Orders> {
   bool isUpdatingReservations = false;
   Future<void> updateReservations() async {
     if(!isUpdatingReservations) {
+      streamController.add(false);
       setState(() {
         orders.clear();
         isUpdatingReservations = true;
@@ -70,13 +72,14 @@ class _OrdersState extends State<Orders> {
               tempProduct["category"],
               1,
               0,
+              tempProduct["picture"],
           amount: singleProduct["count"]),);
         }
         orders.add(
             Order(
                 singleOrderTemp["id"],
                 tempProducts,
-                DateTime.parse(singleOrderTemp["date"]),
+                singleOrderTemp["date"] != null ? DateTime.parse(singleOrderTemp["date"]) : null,
                 Shop(tempShop["id"], tempShop["city"], tempShop["street"],
                     tempShop["number"], tempShop["name"]),
                 singleOrderTemp["quarterOfDay"]
@@ -126,38 +129,49 @@ class _OrdersState extends State<Orders> {
                   child: StreamBuilder<Object>(
                       stream: streamController.stream,
                       builder: (context, snapshot) {
-                        if (snapshot.hasData)
-                          return DraggableScrollbar.rrect(
-                            alwaysVisibleScrollThumb: true,
-                            backgroundColor: CustomTheme().accent,
-                            heightScrollThumb: orders.length > 5 ?
-                            max(mediaSize.height * 2 / orders.length,
-                                mediaSize.height * 0.05) : 0,
-                            padding: EdgeInsets.all(1),
-                            controller: scrollController,
-                            child: ListView.builder(
-                                controller: scrollController,
-                                itemCount: orders.length,
-                                physics: AlwaysScrollableScrollPhysics(),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return OrderTemplate(orders[index],
-                                  (Order currentOrder){
-                                    Navigator.of(context).push(
-                                        CustomPageTransition(
-                                          OrderView(currentOrder),
-                                          x: 0.0,
-                                          y: 0.1,
-                                        )
-                                    );
-                                  });
-                                }
-                            ),
-                          );
-                        else
+                        if (snapshot.hasData) {
+                          if(snapshot.data) {
+                            return DraggableScrollbar.rrect(
+                              alwaysVisibleScrollThumb: true,
+                              backgroundColor: CustomTheme().accent,
+                              heightScrollThumb: orders.length > 5 ?
+                              max(mediaSize.height * 2 / orders.length,
+                                  mediaSize.height * 0.05) : 0,
+                              padding: EdgeInsets.all(1),
+                              controller: scrollController,
+                              child: ListView.builder(
+                                  controller: scrollController,
+                                  itemCount: orders.length,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  itemBuilder: (BuildContext context,
+                                      int index) {
+                                    return OrderTemplate(orders[index],
+                                            (Order currentOrder) {
+                                          Navigator.of(context).push(
+                                              CustomPageTransition(
+                                                OrderView(currentOrder),
+                                                x: 0.0,
+                                                y: 0.1,
+                                              )
+                                          );
+                                        });
+                                  }
+                              ),
+                            );
+                          }
+                          else{
+                            return SpinKitFadingCube(
+                              color: CustomTheme().buttonColor,
+                              size: MediaQuery.of(context).size.width * 0.1,
+                            );
+                          }
+                        }
+                        else {
                           return SpinKitFadingCube(
                             color: CustomTheme().buttonColor,
                             size: MediaQuery.of(context).size.width * 0.1,
                           );
+                        }
                       }
                   ),
                 ),

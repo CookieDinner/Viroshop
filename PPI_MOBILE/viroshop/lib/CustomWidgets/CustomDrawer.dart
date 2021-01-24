@@ -7,6 +7,9 @@ import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
+import 'package:viroshop/Views/ChangePassword.dart';
+
+import 'CustomPageTransition.dart';
 
 class CustomDrawer{
   Function stateSet;
@@ -79,6 +82,37 @@ class CustomDrawer{
                   ),
                   value: theme,
                   onChanged: (bool value) => changeTheme(theme),
+                ),
+              ),
+            ),
+            Container(
+              height: mediaSize.height * 0.1,
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: CustomTheme().standardText, width: 0.6)
+                  )
+              ),
+              child: Center(
+                child: InkWell(
+                  onTap: () => Navigator.of(context).push(
+                      CustomPageTransition(
+                        ChangePassword(),
+                        x: 0.0,
+                        y: 0.1,
+                      )
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: mediaSize.width * 0.06,),
+                      Text("Zmień hasło",
+                          style: TextStyle(
+                              color: CustomTheme().standardText,
+                              fontWeight: FontWeight.w400
+                          )
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

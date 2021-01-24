@@ -32,7 +32,7 @@ class Alley {
     List<Product> alleyProducts = [];
     String alleysJson = await Requests.GetAlleys(1);
     for(Map<String, dynamic> product in jsonDecode(alleysJson)[14]["products"])
-      alleyProducts.add(Product(product["id"], product["name"], product["category"], 1, 0));
+      alleyProducts.add(Product(product["id"], product["name"], product["category"], 1, 0, ""));
     return alleyProducts;
   }
 }

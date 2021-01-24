@@ -16,17 +16,35 @@ class InsideShopNavigationView extends StatefulWidget {
 class _StoreNavigationViewState extends State<InsideShopNavigationView> {
   int currentTab;
   bool updating = false;
+  InsideShopNavigationViewTemplate currentCategory;
   List<InsideShopNavigationViewTemplate> navigationViews = [];
 
   @override
   void initState() {
+    currentCategory = Categories(widget, changeCategoriesScreen);
     currentTab = widget.chosenTab;
     navigationViews.add(Products(widget));
-    navigationViews.add(Categories(widget));
+    navigationViews.add(currentCategory);
     navigationViews.add(Cart(widget));
     navigationViews[currentTab].update();
     super.initState();
   }
+
+  void changeCategoriesScreen(bool shouldChangeToProducts, String name){
+    if (shouldChangeToProducts) {
+      setState(() {
+        navigationViews.removeAt(1);
+        navigationViews.insert(1, Products(widget, function: changeCategoriesScreen, filteredBy: name));
+      });
+    }else{
+      setState(() {
+        navigationViews.removeAt(1);
+        navigationViews.insert(1, Categories(widget, changeCategoriesScreen));
+      });
+    }
+  }
+
+
   @override
   void dispose() {
     navigationViews.clear();
