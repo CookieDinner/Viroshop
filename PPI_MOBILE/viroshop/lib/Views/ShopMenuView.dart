@@ -33,6 +33,12 @@ class _ShopMenuViewState extends State<ShopMenuView> {
   }
 
   @override
+  void initState() {
+    print(currentShop.maxReservationsPerQuarterOfHour);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final mediaSize = Util.getDimensions(context);
     return SafeArea(

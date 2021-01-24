@@ -8,7 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomAlerts{
 
-  static void showAlertDialog(BuildContext context, String title, String body, {bool dismissible = true, int customTime = 2}) async {
+  static void showAlertDialog(BuildContext context, String title, String body, {bool dismissible = true, int customTime = 2, Function customFunction}) async {
     final mediaSize = Util.getDimensions(context);
     AlertDialog alert = AlertDialog(
       backgroundColor: CustomTheme().popupBackground,
@@ -39,7 +39,10 @@ class CustomAlerts{
       context: context,
       builder: (BuildContext context) {
         timer = Timer(Duration(seconds: customTime), () {
+          if(customFunction == null)
             Navigator.pop(context);
+          else
+            customFunction();
         });
         return alert;
       },

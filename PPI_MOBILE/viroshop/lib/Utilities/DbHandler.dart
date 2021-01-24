@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:viroshop/Utilities/Data.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/World/CartItem.dart';
 import 'package:viroshop/World/Product.dart';
 import 'package:viroshop/World/Shop.dart';
@@ -13,7 +14,7 @@ class DbHandler {
   static Future<void> buildDatabase() async{
     Database db;
     try{
-      //await deleteDatabase(Data().dbPath);
+      await deleteDatabase(Data().dbPath);
       db = await openDatabase(Data().dbPath, version: 1,
           onCreate: (Database db, int version) async{
             await createLocalDatabase(db);
@@ -34,7 +35,8 @@ class DbHandler {
           city TEXT NOT NULL,
           street TEXT NOT NULL,
           number INTEGER NOT NULL,
-          name TEXT NOT NULL
+          name TEXT NOT NULL,
+          maxReservationsPerQuarterOfHour INTEGER NOT NULL
         );
       """);
       await txn.execute("""
@@ -53,7 +55,8 @@ class DbHandler {
           category TEXT NOT NULL,
           available INTEGER NOT NULL,
           price REAL NOT NULL,
-          picture TEXT NOT NULL
+          picture TEXT NOT NULL,
+          unit TEXT NOT NULL
         );
       """);
       await txn.execute("""
@@ -83,7 +86,8 @@ class DbHandler {
             'city' : currentShop.city,
             'street' : currentShop.street,
             'number' : currentShop.number,
-            'name' : currentShop.name
+            'name' : currentShop.name,
+            'maxReservationsPerQuarterOfHour' : currentShop.maxReservationsPerQuarterOfHour
           });
         });
         await batch.commit(noResult: true);
@@ -145,7 +149,8 @@ class DbHandler {
             singleShop['city'],
             singleShop['street'],
             singleShop['number'],
-            singleShop['name'])
+            singleShop['name'],
+            singleShop['maxReservationsPerQuarterOfHour'])
         );
       }
     } on Exception catch(e){
@@ -157,46 +162,46 @@ class DbHandler {
     return shops;
   }
 
-  static Future<List<Shop>> getFavoriteShops() async{
-    Database db;
-    List<Shop> favoriteShops = [];
-    try{
-      db = await openDatabase(Data().dbPath);
-      var queryShops = await db.query('favorite_shops');
-      for(Map<String, dynamic> singleShop in queryShops){
-        favoriteShops.add(
-          Shop(
-            singleShop['id'],
-            singleShop['city'],
-            singleShop['street'],
-            singleShop['number'],
-            singleShop['name'])
-        );
-      }
-    } on Exception catch(e){
-      debugPrint("Error reading favorite shops:\n${e.toString()}");
-    } finally{
-      if(db != null)
-        await db.close();
-    }
-    return favoriteShops;
-  }
+  // static Future<List<Shop>> getFavoriteShops() async{
+  //   Database db;
+  //   List<Shop> favoriteShops = [];
+  //   try{
+  //     db = await openDatabase(Data().dbPath);
+  //     var queryShops = await db.query('favorite_shops');
+  //     for(Map<String, dynamic> singleShop in queryShops){
+  //       favoriteShops.add(
+  //         Shop(
+  //           singleShop['id'],
+  //           singleShop['city'],
+  //           singleShop['street'],
+  //           singleShop['number'],
+  //           singleShop['name'],)
+  //       );
+  //     }
+  //   } on Exception catch(e){
+  //     debugPrint("Error reading favorite shops:\n${e.toString()}");
+  //   } finally{
+  //     if(db != null)
+  //       await db.close();
+  //   }
+  //   return favoriteShops;
+  // }
 
-  static Future<bool> isFavoriteShop(Shop shop) async{
-    Database db;
-    bool isFavorite;
-    try{
-      db = await openDatabase(Data().dbPath);
-      var queryShops = await db.query('favorite_shops', where: "id = ?", whereArgs: [shop.id]);
-      isFavorite = queryShops.isNotEmpty;
-    } on Exception catch(e){
-      debugPrint("Error checking if shop is favorite:\n${e.toString()}");
-    } finally{
-      if(db != null)
-        await db.close();
-    }
-    return isFavorite;
-  }
+  // static Future<bool> isFavoriteShop(Shop shop) async{
+  //   Database db;
+  //   bool isFavorite;
+  //   try{
+  //     db = await openDatabase(Data().dbPath);
+  //     var queryShops = await db.query('favorite_shops', where: "id = ?", whereArgs: [shop.id]);
+  //     isFavorite = queryShops.isNotEmpty;
+  //   } on Exception catch(e){
+  //     debugPrint("Error checking if shop is favorite:\n${e.toString()}");
+  //   } finally{
+  //     if(db != null)
+  //       await db.close();
+  //   }
+  //   return isFavorite;
+  // }
 
   static Future<void> insertToProducts(String productsJson) async{
     Database db;
@@ -214,7 +219,8 @@ class DbHandler {
             'category' : currentProduct.category,
             'available' : currentProduct.available,
             'price' : currentProduct.price,
-            'picture' : currentProduct.picture
+            'picture' : currentProduct.picture,
+            'unit' : currentProduct.unit
           });
         });
         await batch.commit(noResult: true);
@@ -241,7 +247,8 @@ class DbHandler {
                 singleProduct['category'],
                 singleProduct['available'],
                 singleProduct['price'],
-                singleProduct['picture'])
+                singleProduct['picture'],
+                singleProduct['unit'])
         );
       }
     } on Exception catch(e){
@@ -344,12 +351,23 @@ class DbHandler {
     return false;
   }
 
-  static Future<bool> clearCart() async{
+  static Future<bool> clearCart(bool mode, List<CartItem> cartItems) async{
     Database db;
     try {
       db = await openDatabase(Data().dbPath);
       await db.transaction((txn) async {
-        await txn.delete("cart", where: 'username = ? and shop_id = ?', whereArgs: [Data().currentUsername, Data().currentShop.id]);
+        if (!mode) {
+          Batch batch = txn.batch();
+          for (CartItem cartItem in cartItems) {
+            String test = await Requests.getProductById(
+                cartItem.cartProduct.id);
+            Map<String, dynamic> map = jsonDecode(test);
+            if (map['canBePurchaseToParcelLocker'])
+              batch.delete("cart", where: 'username = ? and shop_id = ? and id = ?', whereArgs: [Data().currentUsername, Data().currentShop.id, cartItem.id]);
+          }
+          await batch.commit(noResult: true);
+        }else
+          txn.delete("cart", where: 'username = ? and shop_id = ?', whereArgs: [Data().currentUsername, Data().currentShop.id]);
       });
     } on Exception catch(e){
       debugPrint("Error deleting from cart:\n${e.toString()}");
@@ -373,6 +391,7 @@ class DbHandler {
                products.available as productAvailable, 
                products.price     as productPrice, 
                products.picture   as productPicture,
+               products.unit      as productUnit,
                cart.quantity      as cartQuantity
         from cart inner join products on (cart.product_id == products.id)
         where cart.shop_id == ${shop.id} and cart.username == '${Data().currentUsername}' order by cart.id;  
@@ -386,7 +405,8 @@ class DbHandler {
               singleCartItem['productCategory'],
               singleCartItem['productAvailable'],
               singleCartItem['productPrice'],
-              singleCartItem['productPicture']
+              singleCartItem['productPicture'],
+              singleCartItem['productUnit']
             ),
             singleCartItem['cartQuantity']
           )

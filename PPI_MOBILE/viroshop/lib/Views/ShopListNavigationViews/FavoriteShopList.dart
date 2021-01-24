@@ -31,7 +31,8 @@ class FavoriteShopList extends ShopList{
               singleShop['city'],
               singleShop['street'],
               singleShop['number'],
-              singleShop['name'])
+              singleShop['name'],
+              singleShop['maxReservationsPerQuarterOfHour'])
       );
     shopListState.shops = List.from(tempShops);
     favoriteShops = shopListState.shops;

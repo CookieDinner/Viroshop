@@ -57,7 +57,8 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
               singleShop['city'],
               singleShop['street'],
               singleShop['number'],
-              singleShop['name'])
+              singleShop['name'],
+              singleShop['maxReservationsPerQuarterOfHour'])
       );
     favoriteShops = List.from(tempShops);
     shopListState.shops = await DbHandler.getShops();

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
+import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/CartActions/BookingViewDate.dart';
 import 'package:viroshop/Views/CartActions/BookingViewResult.dart';
 import 'package:viroshop/Views/ZbikPayment/ZbikPaymentView.dart';
 import 'package:viroshop/World/CartItem.dart';
+import 'dart:convert';
 
 class BookOrOrder extends StatefulWidget {
   final Function clearCart;
@@ -18,6 +21,23 @@ class BookOrOrder extends StatefulWidget {
 
   @override
   _BookOrOrderState createState() => _BookOrOrderState();
+}
+
+int getFutureReservationsCount(String body){
+  List<bool> counts = [];
+  List<dynamic> tests = jsonDecode(body);
+  for (Map<String, dynamic> test in tests){
+    int quarter = test['quarterOfDay'];
+    if (test['date'] != null) {
+      DateTime time = DateTime.parse(test['date']);
+      time.add(Duration(hours: 7 + quarter ~/ 4, minutes: quarter * 15));
+      int millis = (((7 + quarter ~/4 ) * 60) +  (quarter % 4 * 15)) * 60 * 1000;
+      int totalMillis = time.millisecondsSinceEpoch + millis;
+      if(DateTime.now().millisecondsSinceEpoch < totalMillis)
+        counts.add(true);
+    }
+  }
+  return counts.length;
 }
 
 class _BookOrOrderState extends State<BookOrOrder> {
@@ -31,20 +51,26 @@ class _BookOrOrderState extends State<BookOrOrder> {
         )
     );
   }
-  void openBookingView(){
-    Navigator.of(context).push(
+  void openBookingView() async{
+    int count = getFutureReservationsCount(await Requests.getShopReservations());
+    print(count);
+    if (count < 3) {
+      Navigator.of(context).push(
         CustomPageTransition(
           BookingViewDate(widget.clearCart, widget.cartItems),
           x: 0.0,
           y: 0.1,
         )
-    );
+      );
+    }else{
+      CustomAlerts.showAlertDialog(context, "Błąd", "Nie można złożyć więcej niż 3. przyszłych rezerwacji w jednym sklepie.");
+    }
   }
 
   void openResultsView(){
     Navigator.of(context).push(
         CustomPageTransition(
-          BookingViewResult(null, 0, widget.clearCart, widget.cartItems),
+          BookingViewResult(null, 0, widget.clearCart, widget.cartItems, pops: 4,),
           x: 0.0,
           y: 0.1,
         )

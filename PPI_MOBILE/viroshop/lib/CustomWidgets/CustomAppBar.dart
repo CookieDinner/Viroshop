@@ -60,7 +60,7 @@ class CustomAppBar extends StatelessWidget{
             SizedBox(),
           Container(
             height: mediaSize.height * 0.033,
-            width: mediaSize.width * 0.59,
+            width: mediaSize.width * 0.58,
             child: AutoSizeText(
                 title,
                 style: TextStyle(

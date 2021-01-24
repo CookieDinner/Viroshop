@@ -21,8 +21,39 @@ class _ChangePasswordState extends State<ChangePassword> with TickerProviderStat
   var oldFocusNode = FocusNode();
   var newFocusNode = FocusNode();
   var repeatFocusNode = FocusNode();
+  bool oldVisibility = false;
+  bool passwordAlertVisibility = false;
 
   bool passButton = false;
+
+  @override
+  void initState() {
+    newController.addListener(passwordCheck);
+    repeatController.addListener(passwordCheck);
+    oldController.addListener(oldPassCheck);
+    super.initState();
+  }
+
+  void passwordCheck(){
+    if(newController.text != repeatController.text ||
+        newController.text.isEmpty ||
+        repeatController.text.isEmpty) {
+      //flag = true;
+      passwordAlertVisibility = true;
+    }
+    else
+      passwordAlertVisibility = false;
+    setState(() {});
+  }
+
+  void oldPassCheck(){
+    if(oldController.text.isEmpty){
+      oldVisibility = true;
+    }else{
+      oldVisibility = false;
+    }
+    setState((){});
+  }
 
   void updateButton(){
     FocusScope.of(context).unfocus();
@@ -30,17 +61,59 @@ class _ChangePasswordState extends State<ChangePassword> with TickerProviderStat
       passButton = !passButton;
     });
   }
+
   Future<void> sendRequest() async{
-    await Requests.PostForgotPassword(repeatController.text).then((String message) async{
-      switch(Constants.requestErrors.containsKey(message)){
-        case true:
-          CustomAlerts.showAlertDialog(context, "Błąd", Constants.requestErrors[message]);
-          break;
-        case false:
-          CustomAlerts.showAlertDialog(context, "Informacja", "Hasło zostało zmienione", customTime: 6);
-          break;
-      }
-    });
+    bool flag = false;
+    if(oldController.text.isEmpty) {
+      flag = true;
+      oldVisibility = true;
+    }
+    else
+      oldVisibility = false;
+
+    if(newController.text != repeatController.text ||
+        newController.text.isEmpty ||
+        repeatController.text.isEmpty) {
+      flag = true;
+      passwordAlertVisibility = true;
+    }
+    else
+      passwordAlertVisibility = false;
+
+    if(!flag) {
+      await Requests.PostChangePassword(oldController.text, repeatController.text).then(
+              (String message) {
+            switch (message) {
+              case "unknown":
+                CustomAlerts.showAlertDialog(
+                    context, "Błąd", "Wystąpił nieoczekiwany błąd");
+                break;
+              case "connfailed":
+                CustomAlerts.showAlertDialog(
+                    context, "Błąd", "Połączenie nieudane");
+                break;
+              case "conntimeout":
+                CustomAlerts.showAlertDialog(
+                    context, "Błąd", "Przekroczono limit czasu połączenia");
+                break;
+              case "httpexception":
+                CustomAlerts.showAlertDialog(
+                    context, "Błąd", "Wystąpił błąd kontaktu z serwerem");
+                break;
+              case "Error while changing password":
+                CustomAlerts.showAlertDialog(
+                    context, "Błąd", "Podano błędne stare hasło");
+                break;
+              case "Password was changed":
+                CustomAlerts.showAlertDialog(
+                    context, "Informacja", "Hasło zostało zmienione", dismissible: false, customFunction: (){Navigator.popUntil(context, ModalRoute.withName('/loginView'));});
+                break;
+              default:
+                break;
+            }
+          });
+    }
+    setState(() {});
     updateButton();
   }
 
@@ -84,25 +157,56 @@ class _ChangePasswordState extends State<ChangePassword> with TickerProviderStat
                                     'Stare hasło',
                                     TextInputAction.next,
                                         (_) => newFocusNode.requestFocus(),
-                                    oldFocusNode
+                                    oldFocusNode,
+                                  shouldObfuscate: true,
                                 ),
-                                SizedBox(height: mediaSize.height * 0.03,),
+                                SizedBox(height: mediaSize.height * 0.01,),
+                                Visibility(
+                                  maintainSize: true,
+                                  maintainAnimation: true,
+                                  maintainState: true,
+                                  visible: oldVisibility,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text("Stare hasło nie może być puste",
+                                        style: TextStyle(color: Colors.redAccent, fontSize: mediaSize.width * Constants.alertLabelFontSize),),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: mediaSize.height * 0.01,),
                                 CustomTextFormField(
                                     newController,
                                     'Nowe hasło',
                                     TextInputAction.next,
                                         (_) => repeatFocusNode.requestFocus(),
-                                    newFocusNode
+                                    newFocusNode,
+                                  shouldObfuscate: true,
                                 ),
-                                SizedBox(height: mediaSize.height * 0.03,),
+                                SizedBox(height: mediaSize.height * 0.035,),
                                 CustomTextFormField(
                                     repeatController,
                                     'Powtórz hasło',
                                     TextInputAction.done,
                                         (_) => repeatFocusNode.unfocus(),
-                                    repeatFocusNode
+                                    repeatFocusNode,
+                                  shouldObfuscate: true,
                                 ),
-                                SizedBox(height: mediaSize.height * 0.035,),
+                                SizedBox(height: mediaSize.height * 0.01,),
+                                Visibility(
+                                  maintainSize: true,
+                                  maintainAnimation: true,
+                                  maintainState: true,
+                                  visible: passwordAlertVisibility,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text("Hasła muszą być identyczne",
+                                        style: TextStyle(color: Colors.redAccent, fontSize: mediaSize.width * Constants.alertLabelFontSize),),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: mediaSize.height * 0.01,),
                                 passButton ? Spinner(mediaSize.height, this, sendRequest) : Button("Zmień hasło", updateButton),
                                 SizedBox(height: mediaSize.height * 0.02,),
                               ],

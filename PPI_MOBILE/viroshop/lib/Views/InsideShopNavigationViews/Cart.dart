@@ -1,18 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CartPopup.dart';
+import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/CartActions/BookOrOrder.dart';
 import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
@@ -55,12 +60,24 @@ class _CartState extends State<Cart> {
   double fullPrice = 0.0;
   bool isCurrentlyProcessing = false;
 
-  Future<void> clearCart() async{
-    await DbHandler.clearCart();
-    await widget.update();
+  Future<void> clearCart(bool successful, bool mode) async{
+    if(successful) {
+      await DbHandler.clearCart(mode, cartItems);
+      await widget.update();
+      if(mode)
+        CustomAlerts.showAlertDialog(context, "Informacja", "Zarezerwowano pomyślnie.");
+      else
+        CustomAlerts.showAlertDialog(context, "Informacja", "Zamówiono do sklepomatu. \nProdukty, które nie mogą zostać w nim umieszczone zostały pozostawione w koszyku.", customTime: 5);
+    }else{
+      if(mode)
+        CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd z rezerwacją.");
+      else
+        CustomAlerts.showAlertDialog(context, "Błąd", "Wystąpił błąd z płatnością.");
+    }
   }
 
-  void openCartActionsScreen(){
+  void openCartActionsScreen() async{
+
     if (cartItems.isNotEmpty) {
       Navigator.of(context).push(
           CustomPageTransition(
@@ -90,7 +107,7 @@ class _CartState extends State<Cart> {
 
 
   Future<void> onCartItemTapped(Product productToEdit, int quantity) async{
-    CartPopup(productToEdit, Icon(Icons.image_not_supported_sharp, color: Colors.white, size: 65,), preAmount: quantity, extraFunction: widget.update).showPopup(context, false);
+    CartPopup(productToEdit, preAmount: quantity, extraFunction: widget.update).showPopup(context, false);
     return false;
   }
 

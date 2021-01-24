@@ -96,10 +96,10 @@ public class ReservationManager {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public Iterable<ReservationEntity> getAllUserReservationsForShop(Long userId, Long shopId) {
+    public Iterable<ReservationEntity> getAllUserReservationsForShop(String login, Long shopId) {
         Iterable<ReservationEntity> allReservations = reservationRepo.findAll();
         return StreamSupport.stream(allReservations.spliterator(), false)
-                .filter(reservation -> reservation.getUser().getId() == userId)
+                .filter(reservation -> reservation.getUser().getLogin().equals(login))
                 .filter(reservation -> reservation.getShop().getId() == shopId)
                 .collect(Collectors.toCollection(ArrayList::new));
     }

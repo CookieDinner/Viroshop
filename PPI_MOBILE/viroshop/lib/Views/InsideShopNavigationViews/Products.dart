@@ -8,6 +8,7 @@ import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CartPopup.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
+import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/World/Templates/ProductTemplate.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
@@ -75,7 +76,7 @@ class _ProductsState extends State<Products> {
   }
 
   Future<void> onTappedProduct(Product productToAdd, int quantity) async{
-    CartPopup(productToAdd, Icon(Icons.image_not_supported_sharp, color: Colors.white, size: 65,)).showPopup(context, false);
+    CartPopup(productToAdd).showPopup(context, false);
     return false;
   }
   void updateSearch(String text){

@@ -41,6 +41,10 @@ class _OrderViewState extends State<OrderView> {
   // List<BlockTypes> alleys;
   List<Alley> alleysList = [];
   List<Offset> path = [];
+  Timer timer;
+  String timeToEnter = "99:99";
+  String timeName = "";
+
 
   int columnsCount;
   double blocSize;
@@ -56,14 +60,15 @@ class _OrderViewState extends State<OrderView> {
   List<Product> makeProductsList(List<dynamic> products) {
     List<Product> productsList = [];
     for(Map<String, dynamic> product in products)
-      productsList.add(Product(product["id"], product["name"], product["category"], 1, 0, ""));
+      productsList.add(Product(product["id"], product["name"], product["category"], 1, 0, "", ""));
     widget.currentOrder.products.sort((a, b) => a.name.compareTo(b.name));
     return productsList;
   }
   @override
   void dispose() {
-    streamControllerMap.close();
-    streamControllerPath.close();
+    timer?.cancel();
+    streamControllerMap?.close();
+    streamControllerPath?.close();
     super.dispose();
   }
 
@@ -75,15 +80,52 @@ class _OrderViewState extends State<OrderView> {
   }
 
   Future<void> getShortestPath() async{
-    List<dynamic> requestPath = jsonDecode(await Requests.getShortestPath(widget.currentOrder.products));
-    for (Map<String, dynamic> pathElement in requestPath) {
-      path.add(Offset(
-          (pathElement["x"] - 0.5) * blocSize,
-          (pathElement["y"] - 0.5) * blocSize));
+    String pathRequestString = await Requests.getShortestPath(widget.currentOrder.products);
+    if(!pathRequestString.startsWith("{\"timestamp\"")) {
+      List<dynamic> requestPath = jsonDecode(pathRequestString);
+      for (Map<String, dynamic> pathElement in requestPath) {
+        path.add(Offset(
+            (pathElement["x"] - 0.5) * blocSize,
+            (pathElement["y"] - 0.5) * blocSize));
+      }
+    }else{
+      CustomAlerts.showAlertDialog(context, "Błąd", "Serwer napotkał błąd przy tworzeniu najkrótszej ścieżki.");
+    }
+  }
+
+  void updateTimers(){
+    setState(() {
+
+      int secondsToEnter = (widget.currentOrder.orderDate.add(
+          Duration(minutes: (widget.currentOrder.quarterOfDay * 15) + (7*60)))
+          .difference(DateTime.now())).inSeconds;
+      timeName = secondsToEnter >= 0 ? "Czas do wejścia" : "Czas do końca wizyty";
+      timeToEnter = formatSecondsToCustomTimer(secondsToEnter, false);
+    });
+  }
+  String formatSecondsToCustomTimer(int seconds, bool type){
+    if (seconds < -(900)){
+      return "Czas wizyty minął";
+    }else if (seconds < 0){
+      int secondsLeft = 900 + seconds;
+      return "${((secondsLeft ~/ 60) > 9 ? "" : "0") + (secondsLeft ~/ 60).toString()}:"
+          "${((secondsLeft % 60) > 9 ? "" : "0") + (secondsLeft % 60).toString()}";
+    }else if (seconds > 3600){
+      return "${((seconds ~/ 3600) > 9 ? "" : "0") + (seconds ~/ 3600).toString()}:"
+          "${(((seconds - (seconds ~/ 3600) * 3600) ~/ 60) > 9 ? "" : "0") + ((seconds - (seconds ~/ 3600) * 3600) ~/ 60).toString()}:"
+          "${((seconds % 60) > 9 ? "" : "0") + (seconds % 60).toString()}";
+    } else{
+      return "${((seconds ~/ 60) > 9 ? "" : "0") + (seconds ~/ 60).toString()}:"
+          "${((seconds % 60) > 9 ? "" : "0") + (seconds % 60).toString()}";
     }
   }
   @override
   void initState() {
+    if (widget.currentOrder.orderDate != null)
+      timer = Timer.periodic(Duration(seconds: 1), (Timer t){
+        updateTimers();
+      });
+
     WidgetsBinding.instance.addPostFrameCallback((_) async{
          String alleysJson = await Requests.GetAlleys(widget.currentOrder.shop.id);
         for(Map<String, dynamic> alley in jsonDecode(alleysJson))
@@ -251,7 +293,7 @@ class _OrderViewState extends State<OrderView> {
                               SizedBox(width: mediaSize.width * 0.04,),
                               Container(
                                   height: mediaSize.height * 0.4,
-                                  width: mediaSize.width * 0.45,
+                                  width: widget.currentOrder.orderDate != null ? mediaSize.width * 0.45 : mediaSize.width * 0.9,
                                   child: DraggableScrollbar.rrect(
                                     alwaysVisibleScrollThumb: true,
                                     backgroundColor: CustomTheme().accent,
@@ -273,12 +315,13 @@ class _OrderViewState extends State<OrderView> {
                                   )
                               ),
                               SizedBox(width: mediaSize.width * 0.06,),
-                              Column(
+                              widget.currentOrder.orderDate != null ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  SizedBox(height: mediaSize.height * 0.01,),
                                   Container(
-                                      child: Text("Pozostały czas:",
+                                    width : mediaSize.width * 0.4,
+                                      child: Text(timeName,
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: CustomTheme().accentText,
                                             fontSize: mediaSize.width * Constants.appBarFontSize
@@ -288,7 +331,7 @@ class _OrderViewState extends State<OrderView> {
                                   SizedBox(height: mediaSize.height * 0.01,),
                                   Container(
                                       width: mediaSize.width * 0.4,
-                                      child: Text("15:00",
+                                      child: Text(timeToEnter,
                                         softWrap: true,
                                         style: TextStyle(
                                             color: CustomTheme().standardText,
@@ -297,7 +340,7 @@ class _OrderViewState extends State<OrderView> {
                                         textAlign: TextAlign.center,
                                       )
                                   ),
-                                  SizedBox(height: mediaSize.height * 0.04,),
+                                  SizedBox(height: mediaSize.height * 0.09,),
                                   Container(
                                       width: mediaSize.width * 0.4,
                                       height: mediaSize.height * 0.1,
@@ -311,14 +354,14 @@ class _OrderViewState extends State<OrderView> {
                                         );
                                       })
                                   ),
-                                  SizedBox(height: mediaSize.height * 0.075,),
+                                  SizedBox(height: mediaSize.height * 0.04,),
                                   Container(
                                       width: mediaSize.width * 0.4,
                                       height: mediaSize.height * 0.1,
-                                      child: Button("Wycofaj rezerwację", (){})
+                                      child: Button("Wycofaj/Usuń", (){})
                                   ),
                                 ],
-                              ),
+                              ) : Container(),
                             ],
                           ),
                         ],

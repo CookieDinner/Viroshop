@@ -52,7 +52,6 @@ class _QRCodeState extends State<QRCode> {
                         child: QrImage(
                           data: "order:${widget.order.id},"+
                                 "username:${Data().currentUsername},"+
-                                "password:${Data().loginKey},"+
                                 "qrEnterStore",
                           version: QrVersions.auto,
                           gapless: true,

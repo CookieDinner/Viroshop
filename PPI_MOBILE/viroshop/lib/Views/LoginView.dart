@@ -108,7 +108,7 @@ class LoginState extends State<LoginView> with TickerProviderStateMixin{
     return SafeArea(
         child: Scaffold(
           key: drawerKey,
-          endDrawer: CustomDrawer(stateSet).loginDrawer(context, isOnLoginScreen: true),
+          endDrawer: CustomDrawer(stateSet, withPassword: false).loginDrawer(context, isOnLoginScreen: true),
           backgroundColor: CustomTheme().background,
           body: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

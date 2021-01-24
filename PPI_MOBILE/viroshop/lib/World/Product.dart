@@ -8,7 +8,8 @@ class Product {
   final double price;
   final int amount;
   final String picture;
-  Product(this.id, this.name, this.category, this.available, this.price, this.picture, {this.amount = 0});
+  final String unit;
+  Product(this.id, this.name, this.category, this.available, this.price, this.picture, this.unit, {this.amount = 0});
 
   Product.fromJson(Map<String, dynamic> json) :
         id = json["id"],
@@ -17,7 +18,8 @@ class Product {
         available = json["available"] ? 1 : 0,
         price = json["price"],
         amount = 0,
-        picture = json["picture"];
+        picture = json["picture"],
+        unit = json["unit"] == "PACKAGE" ? "szt" : "kg";
 
   Product.fromAlleysJson(Map<String, dynamic> json) :
         id = json["id"],
@@ -26,5 +28,6 @@ class Product {
         available = 1,
         price = 0.0,
         amount = 0,
-        picture = "";
+        picture = "",
+        unit = "";
 }

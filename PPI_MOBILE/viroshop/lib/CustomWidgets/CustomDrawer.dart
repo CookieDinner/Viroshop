@@ -14,7 +14,8 @@ import 'CustomPageTransition.dart';
 class CustomDrawer{
   Function stateSet;
   bool withCities;
-  CustomDrawer(this.stateSet, {this.withCities = true});
+  bool withPassword;
+  CustomDrawer(this.stateSet, {this.withCities = true, this.withPassword = true});
 
   Widget loginDrawer(BuildContext context, {bool isOnLoginScreen = false}) {
     var mediaSize = Util.getDimensions(context);
@@ -85,7 +86,7 @@ class CustomDrawer{
                 ),
               ),
             ),
-            Container(
+            withPassword ? Container(
               height: mediaSize.height * 0.1,
               decoration: BoxDecoration(
                   border: Border(
@@ -101,21 +102,24 @@ class CustomDrawer{
                         y: 0.1,
                       )
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: mediaSize.width * 0.06,),
-                      Text("Zmień hasło",
-                          style: TextStyle(
-                              color: CustomTheme().standardText,
-                              fontWeight: FontWeight.w400
-                          )
-                      ),
-                    ],
+                  child: Container(
+                    height: mediaSize.height * 0.1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: mediaSize.width * 0.06,),
+                        Text("Zmień hasło",
+                            style: TextStyle(
+                                color: CustomTheme().standardText,
+                                fontWeight: FontWeight.w400
+                            )
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            ) : Container(),
             withCities ? Container(
               height: mediaSize.height * 0.1,
               decoration: BoxDecoration(
