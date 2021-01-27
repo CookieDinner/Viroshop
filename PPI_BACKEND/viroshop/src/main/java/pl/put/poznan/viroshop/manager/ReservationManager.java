@@ -62,10 +62,7 @@ public class ReservationManager {
         for (ReservationEntity reservation : filteredReservations) {
             LocalDate date = reservation.getDate();
             long count = this.getReservationsDayCount(date, shopEntity);
-            if (mapCounts.keySet().contains(date)) {
-                Long oldValue = mapCounts.get(date);
-                mapCounts.put(date, oldValue + count);
-            } else {
+            if (!mapCounts.keySet().contains(date)) {
                 mapCounts.put(date, count);
             }
         }
@@ -191,7 +188,7 @@ public class ReservationManager {
                     if (isSenior || isWeekend) {
                         reservation.setQuarterOfDay(quarter);
                     }
-                }else {
+                } else {
                     reservation.setQuarterOfDay(quarter);
                 }
             }
@@ -240,7 +237,7 @@ public class ReservationManager {
     }
 
     private long getReservationsCountForQuarter(LocalDate date, int quarter, ShopEntity shopEntity) {
-         return StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
+        return StreamSupport.stream(reservationRepo.findAll().spliterator(), false)
                 .filter(res -> res.getShop().getId() == shopEntity.getId())
                 .filter(res -> res.getDate() != null ? res.getDate().equals(date) : false)
                 .filter(res -> res.getQuarterOfDay() == quarter)
