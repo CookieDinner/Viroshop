@@ -12,11 +12,12 @@ public class BasicProductModel {
     private Float price;
     private Unit unit;
     private String picture;
+    private Boolean canBePurchaseToParcelLocker;
 
     public BasicProductModel() {
     }
 
-    public BasicProductModel(Long id, String name, boolean isAvailable, Category category, Float price, Unit unit, String picture) {
+    public BasicProductModel(Long id, String name, boolean isAvailable, Category category, Float price, Unit unit, String picture, Boolean canBePurchaseToParcelLocker) {
         this.id = id;
         this.name = name;
         this.isAvailable = isAvailable;
@@ -24,6 +25,7 @@ public class BasicProductModel {
         this.price = price;
         this.unit = unit;
         this.picture = picture;
+        this.canBePurchaseToParcelLocker = canBePurchaseToParcelLocker;
     }
 
     public Long getId() {
@@ -76,5 +78,13 @@ public class BasicProductModel {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public Boolean getCanBePurchaseToParcelLocker() {
+        return canBePurchaseToParcelLocker;
+    }
+
+    public void setCanBePurchaseToParcelLocker(Boolean canBePurchaseToParcelLocker) {
+        this.canBePurchaseToParcelLocker = canBePurchaseToParcelLocker;
     }
 }

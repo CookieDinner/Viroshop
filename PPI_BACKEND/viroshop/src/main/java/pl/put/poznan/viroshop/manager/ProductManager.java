@@ -45,7 +45,7 @@ public class ProductManager {
                     StreamSupport.stream(stores.spliterator(), false)
                             .filter(store -> store.getShopEntity().getId() == shopId)
                             .filter(store -> store.getProductEntity().getId() == product.getId())
-                            .map(store -> new BasicProductModel(product.getId(), product.getName(), store.isAvailable(), product.getCategory(), store.getPrice(), product.getUnit(), product.getPicture()))
+                            .map(store -> new BasicProductModel(product.getId(), product.getName(), store.isAvailable(), product.getCategory(), store.getPrice(), product.getUnit(), product.getPicture(), product.getCanBePurchaseToParcelLocker()))
                             .forEach(basicProduct -> basicProducts.add(basicProduct));
                 });
         return basicProducts;
