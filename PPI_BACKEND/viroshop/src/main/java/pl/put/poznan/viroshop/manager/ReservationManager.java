@@ -122,7 +122,7 @@ public class ReservationManager {
                 boolean isSenior =
                         date.getYear() - userEntity.getBirthDate().getYear() > SENIOR_AGE
                                 || (date.getYear() - userEntity.getBirthDate().getYear() == SENIOR_AGE
-                                || date.getDayOfYear() >= userEntity.getBirthDate().getDayOfYear());
+                                && date.getDayOfYear() >= userEntity.getBirthDate().getDayOfYear());
                 boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
                 if (!isSenior && !isWeekend) {
                     return null;
