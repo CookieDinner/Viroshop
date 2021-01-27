@@ -15,6 +15,7 @@ import pl.put.poznan.viroshop.manager.ReservationManager;
 
 import java.time.LocalDate;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class ReservationApi {
 
