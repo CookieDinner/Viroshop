@@ -8,7 +8,6 @@ import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CartPopup.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
-import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/World/Templates/ProductTemplate.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';

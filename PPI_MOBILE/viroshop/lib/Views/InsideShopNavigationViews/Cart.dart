@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CartPopup.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
@@ -17,7 +14,6 @@ import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
-import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/CartActions/BookOrOrder.dart';
 import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
@@ -25,8 +21,6 @@ import 'package:viroshop/Views/InsideShopNavigationView.dart';
 import 'package:viroshop/World/CartItem.dart';
 import 'package:viroshop/World/Product.dart';
 import 'package:viroshop/World/Templates/CartItemTemplate.dart';
-
-import '../ZbikPayment/ZbikPaymentView.dart';
 
 // ignore: must_be_immutable
 class Cart extends StatefulWidget implements InsideShopNavigationViewTemplate {

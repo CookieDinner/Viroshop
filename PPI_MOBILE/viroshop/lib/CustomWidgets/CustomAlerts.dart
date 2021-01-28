@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
-import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import '../Utilities/Constants.dart';
 import 'dart:async';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -49,57 +47,8 @@ class CustomAlerts{
     );
     timer?.cancel();
   }
-  static showChoiceDialog(BuildContext context, String title, String body, String confirmString, Function function, {List<dynamic> functionArgs}) async{
-    AlertDialog alert = AlertDialog(
-      backgroundColor: CustomTheme().background,
-      title: Center(
-          child: Text(title, style: TextStyle(color: CustomTheme().accent),)),
-      content: Container(
-          height: MediaQuery.of(context).size.height * 0.15,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Center(child: Text(body, textAlign: TextAlign.center,)),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    FlatButton(
-                      child: Text("Anuluj", style: TextStyle(color: Colors.blueAccent),),
-                      onPressed: () => Navigator.of(context).pop(),
-                      padding: EdgeInsets.all(0),
-                    ),
-                    FlatButton(
-                      child: Text(confirmString, style: TextStyle(color: Colors.deepOrangeAccent),),
-                      onPressed: () async{
-                        if (functionArgs == null)
-                          await function();
-                        else
-                          await function(functionArgs);
-                        Navigator.of(context).pop();
-                      },
-                      padding: EdgeInsets.all(0),
-                    )
-                  ],
-                ),
-              )
-            ],
-          )
-      ),
-      elevation: 25,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    );
-
-    await showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) => alert
-    );
-  }
 
   static showLoading(BuildContext context, Function fun) async{
-
     await showGeneralDialog(
       barrierColor: !CustomTheme().isDark ? Colors.black.withOpacity(0.1) : Colors.white.withOpacity(0.2),
       barrierDismissible: false,

@@ -1,7 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Views/ShopListNavigationViews/ShopList.dart';
 import 'package:viroshop/World/Shop.dart';
@@ -36,7 +33,6 @@ class FavoriteShopList extends ShopList{
       );
     shopListState.shops = List.from(tempShops);
     favoriteShops = shopListState.shops;
-    //shopListState.filteredShops = List.from(shopListState.shops);
     shopListState.updateSearch(shopListState.searchController.text);
   }
 

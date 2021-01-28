@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class Constants{
-  //static const String api = "http://10.0.2.2:8080/api";
   static const String api = "http://192.168.0.94:8080/api";
   static const String apiUser = "$api/user";
   static const String apiShopList = "$api/shops";

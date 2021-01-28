@@ -1,4 +1,3 @@
-
 import 'package:viroshop/World/Shop.dart';
 
 class Data{

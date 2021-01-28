@@ -15,7 +15,6 @@ class ZbikButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaSize = Util.getDimensions(context);
     return Container(
         width: 140,
         margin: EdgeInsets.fromLTRB(5, 5, 5, 5),

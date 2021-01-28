@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
-import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
-import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/InsideShopNavigationViewTemplate.dart';
 import 'package:viroshop/Views/InsideShopNavigationView.dart';
-import 'package:viroshop/Views/InsideShopNavigationViews/Products.dart';
 import 'package:viroshop/World/Templates/CategoryTemplate.dart';
 
 // ignore: must_be_immutable

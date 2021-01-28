@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:viroshop/World/Shop.dart';
-
 import 'Product.dart';
 
 class Order implements Comparable{
@@ -29,11 +27,4 @@ class Order implements Comparable{
         return 1;
     }
   }
-
-  // Order.fromJson(Map<String, dynamic> json) :
-  //       id = json["id"],
-  //       name = json["name"],
-  //       category = json["category"],
-  //       available = json["available"] ? 1 : 0,
-  //       price = json["price"];
 }
