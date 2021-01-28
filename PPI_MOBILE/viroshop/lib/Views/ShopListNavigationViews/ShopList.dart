@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
-import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/CustomTextFormField.dart';
-import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
 import 'package:viroshop/World/Templates/ShopTemplate.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
@@ -24,7 +20,6 @@ import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ShopListNavigationView.dart';
 import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
 import 'package:viroshop/Views/ShopMenuView.dart';
-import 'package:viroshop/Views/InsideShopNavigationView.dart';
 import 'package:viroshop/World/Shop.dart';
 
 class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
@@ -62,9 +57,7 @@ class ShopList extends StatefulWidget implements ShopListNavigationViewTemplate{
       );
     favoriteShops = List.from(tempShops);
     shopListState.shops = await DbHandler.getShops();
-    //shopListState.filteredShops = List.from(shopListState.shops);
     shopListState.updateSearch(shopListState.searchController.text);
-    //shopListState.stateSet();
   }
 
 }

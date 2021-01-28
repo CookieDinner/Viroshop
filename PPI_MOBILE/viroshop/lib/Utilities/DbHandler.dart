@@ -14,7 +14,6 @@ class DbHandler {
   static Future<void> buildDatabase() async{
     Database db;
     try{
-      await deleteDatabase(Data().dbPath);
       db = await openDatabase(Data().dbPath, version: 1,
           onCreate: (Database db, int version) async{
             await createLocalDatabase(db);
@@ -37,15 +36,6 @@ class DbHandler {
           number INTEGER NOT NULL,
           name TEXT NOT NULL,
           maxReservationsPerQuarterOfHour INTEGER NOT NULL
-        );
-      """);
-      await txn.execute("""
-        CREATE TABLE favorite_shops(
-          id INTEGER PRIMARY KEY NOT NULL,
-          city TEXT NOT NULL,
-          street TEXT NOT NULL,
-          number INTEGER NOT NULL,
-          name TEXT NOT NULL
         );
       """);
       await txn.execute("""
@@ -100,41 +90,6 @@ class DbHandler {
     }
   }
 
-  static Future<void> insertToFavoriteShops(Shop currentShop) async{
-    Database db;
-    try {
-      db = await openDatabase(Data().dbPath);
-      await db.transaction((txn) async{
-        await txn.insert("favorite_shops", {
-            'id' : currentShop.id,
-            'city' : currentShop.city,
-            'street' : currentShop.street,
-            'number' : currentShop.number,
-            'name' : currentShop.name
-          });
-      });
-    } on Exception catch(e){
-      debugPrint("Error adding to favorite shops:\n${e.toString()}");
-    } finally{
-      if(db != null)
-        await db.close();
-    }
-  }
-
-  static Future<void> deleteFavoriteShop(Shop currentShop) async{
-    Database db;
-    try {
-      db = await openDatabase(Data().dbPath);
-      await db.transaction((txn) async{
-        await txn.delete("favorite_shops", where: 'id = ?', whereArgs: [currentShop.id]);
-      });
-    } on Exception catch(e){
-      debugPrint("Error deleting from favorite shops:\n${e.toString()}");
-    } finally{
-      if(db != null)
-        await db.close();
-    }
-  }
 
   static Future<List<Shop>> getShops() async{
     Database db;
@@ -161,47 +116,6 @@ class DbHandler {
     }
     return shops;
   }
-
-  // static Future<List<Shop>> getFavoriteShops() async{
-  //   Database db;
-  //   List<Shop> favoriteShops = [];
-  //   try{
-  //     db = await openDatabase(Data().dbPath);
-  //     var queryShops = await db.query('favorite_shops');
-  //     for(Map<String, dynamic> singleShop in queryShops){
-  //       favoriteShops.add(
-  //         Shop(
-  //           singleShop['id'],
-  //           singleShop['city'],
-  //           singleShop['street'],
-  //           singleShop['number'],
-  //           singleShop['name'],)
-  //       );
-  //     }
-  //   } on Exception catch(e){
-  //     debugPrint("Error reading favorite shops:\n${e.toString()}");
-  //   } finally{
-  //     if(db != null)
-  //       await db.close();
-  //   }
-  //   return favoriteShops;
-  // }
-
-  // static Future<bool> isFavoriteShop(Shop shop) async{
-  //   Database db;
-  //   bool isFavorite;
-  //   try{
-  //     db = await openDatabase(Data().dbPath);
-  //     var queryShops = await db.query('favorite_shops', where: "id = ?", whereArgs: [shop.id]);
-  //     isFavorite = queryShops.isNotEmpty;
-  //   } on Exception catch(e){
-  //     debugPrint("Error checking if shop is favorite:\n${e.toString()}");
-  //   } finally{
-  //     if(db != null)
-  //       await db.close();
-  //   }
-  //   return isFavorite;
-  // }
 
   static Future<void> insertToProducts(String productsJson) async{
     Database db;

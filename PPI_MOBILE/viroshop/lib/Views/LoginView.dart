@@ -17,7 +17,6 @@ import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viroshop/Views/ShopListNavigationView.dart';
-import 'package:viroshop/World/Alley.dart';
 
 class LoginView extends StatefulWidget {
   @override

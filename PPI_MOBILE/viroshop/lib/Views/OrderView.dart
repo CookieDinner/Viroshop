@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui' as ui;
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +12,6 @@ import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/CustomWidgets/SpinnerButton.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
-import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/World/Alley.dart';

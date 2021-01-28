@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
-import 'package:viroshop/Utilities/DbHandler.dart';
 import 'package:viroshop/Utilities/Util.dart';
 import 'package:viroshop/Views/ShopListNavigationViewTemplate.dart';
 import 'package:viroshop/World/Shop.dart';

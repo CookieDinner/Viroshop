@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Shop {
   final int id;
   final String city;

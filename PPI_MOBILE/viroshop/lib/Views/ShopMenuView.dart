@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
-import 'package:viroshop/CustomWidgets/CustomDrawer.dart';
 import 'package:viroshop/CustomWidgets/CustomPageTransition.dart';
 import 'package:viroshop/World/Templates/StoreFront.dart';
 import 'package:viroshop/CustomWidgets/ShopMenuItem.dart';
-import 'package:viroshop/Utilities/Constants.dart';
 import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Util.dart';
@@ -58,8 +56,6 @@ class _ShopMenuViewState extends State<ShopMenuView> {
                       ShopMenuItem("Lista produktów", () => pushChosenTab(0)),
                       ShopMenuItem("Kategorie", () => pushChosenTab(1)),
                       ShopMenuItem("Koszyk", () => pushChosenTab(2)),
-                      // StoreMenuItem("Wejdź do\nsklepu / Pozostały czas", () => pushChosenTab(3)),
-                      // StoreMenuItem("Mapa sklepu / alejek", () => pushChosenTab(4)),
                     ],
                   ),
                 ),

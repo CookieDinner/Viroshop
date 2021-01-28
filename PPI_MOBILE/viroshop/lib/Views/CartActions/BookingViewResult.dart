@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +10,6 @@ import 'package:viroshop/Utilities/CustomTheme.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/Utilities/Requests.dart';
 import 'package:viroshop/Utilities/Util.dart';
-import 'package:viroshop/Views/InsideShopNavigationViews/Cart.dart';
 import 'package:viroshop/World/CartItem.dart';
 import 'package:viroshop/World/Templates/CartItemTemplate.dart';
 
@@ -35,8 +32,7 @@ class _BookingViewResultState extends State<BookingViewResult> {
   }
 
   Future<void> sendReservation() async {
-    String response = await Requests.PostReservation(Data().currentShop.id, widget._chosenDate, widget._quarterIndex, widget.cartItems);
-    print(response);
+    await Requests.PostReservation(Data().currentShop.id, widget._chosenDate, widget._quarterIndex, widget.cartItems);
     widget.clearCart(true, true);
   }
 

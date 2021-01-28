@@ -3,15 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:viroshop/Utilities/Constants.dart';
 import 'package:flutter/material.dart';
 import 'package:viroshop/Utilities/Data.dart';
 import 'package:viroshop/World/CartItem.dart';
-import 'package:viroshop/World/Order.dart';
 import 'package:viroshop/World/Product.dart';
-import 'package:viroshop/World/Shop.dart';
 
 class Requests{
   Requests();
@@ -321,7 +318,6 @@ class Requests{
 
   static Future<String> getReservations() async{
     try{
-      List<Order> orders = [];
       http.Response response = await http.get(
           "${Constants.apiReservations}/all?login=${Data().currentUsername}",headers: <String, String>{
         'Content-Type': 'application/json; charset=utf-8',
@@ -394,7 +390,7 @@ class Requests{
     print(productIdString.substring(0, productIdString.length - 1));
     String queryString = Uri(queryParameters: {
       "shopId" : '1',
-      "productIds" : productIdString//"1,3,6,14,16"
+      "productIds" : productIdString
     }).query;
     try{
       http.Response response = await http.get(

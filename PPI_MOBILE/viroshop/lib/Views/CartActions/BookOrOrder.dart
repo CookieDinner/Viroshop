@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAlerts.dart';
@@ -11,7 +12,6 @@ import 'package:viroshop/Views/CartActions/BookingViewDate.dart';
 import 'package:viroshop/Views/CartActions/BookingViewResult.dart';
 import 'package:viroshop/Views/ZbikPayment/ZbikPaymentView.dart';
 import 'package:viroshop/World/CartItem.dart';
-import 'dart:convert';
 
 class BookOrOrder extends StatefulWidget {
   final Function clearCart;
@@ -53,8 +53,7 @@ class _BookOrOrderState extends State<BookOrOrder> {
   }
   void openBookingView() async{
     int count = getFutureReservationsCount(await Requests.getShopReservations());
-    print(count);
-    if (count < 3) {
+    if (count < 2) {
       Navigator.of(context).push(
         CustomPageTransition(
           BookingViewDate(widget.clearCart, widget.cartItems),
@@ -63,7 +62,7 @@ class _BookOrOrderState extends State<BookOrOrder> {
         )
       );
     }else{
-      CustomAlerts.showAlertDialog(context, "Błąd", "Nie można złożyć więcej niż 3. przyszłych rezerwacji w jednym sklepie.");
+      CustomAlerts.showAlertDialog(context, "Błąd", "Nie można złożyć więcej niż 2. przyszłych rezerwacji w jednym sklepie.");
     }
   }
 

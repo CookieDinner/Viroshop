@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
-import 'package:viroshop/Utilities/Constants.dart';
 import 'dart:math';
-
 import 'package:viroshop/Utilities/CustomTheme.dart';
 
 class BackgroundAnimation extends StatelessWidget {

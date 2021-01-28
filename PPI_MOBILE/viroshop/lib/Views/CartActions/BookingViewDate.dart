@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
-import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:viroshop/CustomWidgets/BackgroundAnimation.dart';
 import 'package:viroshop/CustomWidgets/CustomAppBar.dart';
@@ -129,7 +128,7 @@ class _BookingViewDateState extends State<BookingViewDate> {
                               if(compareDates(day, DateTime.now())) {
                                 if (!isPrevMonthDay && !isNextMonthDay) {
                                     Iterable<MonthCount> currentCounts = monthCounts.where((element) => element.date.day == day.day);
-                                    if (currentCounts.isEmpty) {
+                                    if (currentCounts.isEmpty || currentCounts.first.count < 10) {
                                       return Container(
                                         height: 300,
                                         width: 300,
@@ -141,7 +140,7 @@ class _BookingViewDateState extends State<BookingViewDate> {
                                       );
                                     }else {
                                       int count = currentCounts.first.count;
-                                      if (count < 10) {
+                                      if (count < 20) {
                                         return Container(
                                           height: 300,
                                           width: 300,
@@ -151,7 +150,7 @@ class _BookingViewDateState extends State<BookingViewDate> {
                                             day.day.toString(),
                                             style: TextStyle(),)),
                                         );
-                                      } else if (count >= 10 && count < 20){
+                                      } else if (count >= 20 && count < 30){
                                         return Container(
                                           height: 300,
                                           width: 300,
