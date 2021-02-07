@@ -1,0 +1,47 @@
+.filters mat-form-field {
+    padding: 5px;
+    width: 190px;
+}
+
+table,
+mat-paginator {
+    width: 700px;
+}
+
+mat-icon {
+    transform: scale(1.5);
+}
+
+.mat-column {
+    &-shop {
+        min-width: 200px;
+        max-width: 200px;
+    }
+    &-products {
+        min-width: 200px;
+        max-width: 200px;
+        &.mat-cell span{
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+    }
+    &-cart {
+        min-width: 200px;
+        max-width: 200px;
+        &.mat-cell span{
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+    }
+    &-favourite {
+        min-width: 50px;
+        max-width: 50px;
+        &.mat-cell span{
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+    }
+}

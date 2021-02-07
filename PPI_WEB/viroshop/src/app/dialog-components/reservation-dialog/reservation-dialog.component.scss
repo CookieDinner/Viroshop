@@ -1,0 +1,49 @@
+:host ::ng-deep {
+    .below_unknown {
+        background-color: #befcac;
+    }
+    .below_25 {
+        background-color: #3cff00;
+        border: #1e8000 solid 1px;
+    }
+    .below_50 {
+        background-color: #fbff00;
+        border: #a2a500 solid 1px;
+    }
+    .below_75 {
+        background-color: #ff9100;
+        border: #bd6b00 solid 1px;
+    }
+    .below_100 {
+        background-color: #ff0000;
+        border: #9c0000 solid 1px;
+    }
+
+    .mat-calendar-body-label {
+        visibility: hidden;
+    }
+
+    .mat-step-header {
+        padding: 10px 24px;
+    }
+
+    .mat-vertical-stepper-content {
+        max-height: 360px;
+        overflow: auto;
+    }
+    
+    .mat-list-item-disabled {
+        border: black solid 1px;
+    }
+}
+
+.mat-raised-button {
+    &:first-of-type {
+        margin-bottom: 5px;
+    }
+    &:last-of-type {
+        margin-top: 5px;
+    }
+    width: 100%;
+    line-height: 30px;
+}

@@ -1,0 +1,54 @@
+table {
+    width: 100%;
+}
+
+.shop-name {
+    font-size: 24px;
+    background-color: #0047ff5c;
+    margin: 15px 0px 5px 0px;
+}
+
+input {
+    width: 30px;
+}
+mat-icon, button {
+    transform: scale(0.9);
+}
+
+.buttons {
+    display: flex;
+}
+
+.mat-cell.mat-column-actions {
+    display: flex;
+    height: 50px;
+}
+
+input {
+    align-self: center;
+    padding: 0px 10px;
+    font-size: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+th.mat-header-cell {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+button.mat-raised-button {
+    width: 100%;
+}

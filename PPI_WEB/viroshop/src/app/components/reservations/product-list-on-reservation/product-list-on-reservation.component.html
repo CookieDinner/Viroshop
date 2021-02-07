@@ -1,0 +1,26 @@
+<table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="photo">
+      <th mat-header-cell *matHeaderCellDef> Zdjęcie </th>
+      <td mat-cell *matCellDef="let element">
+        <img [src]="element.picture" class="picture" (click)="openPictureDialog(element.picture)">
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Typ </th>
+      <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef> Cena </th>
+      <td mat-cell *matCellDef="let element"> {{element.count}}*{{element.price}}zł ({{(element.price * element.count).toFixed(2)}}zł) </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
