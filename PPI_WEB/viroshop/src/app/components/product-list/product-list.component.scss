@@ -1,0 +1,55 @@
+.filters mat-form-field {
+    padding: 5px;
+}
+
+.cart-button {
+    top: -10px;
+    padding: 5px;
+    height: 65px;
+    width: 200px;
+}
+
+input[type=number] {
+    width: 30px;
+}
+
+mat-icon, button {
+    transform: scale(0.9);
+}
+
+// .mat-cell.mat-column-actions {
+//     display: flex;
+//     height: inherit;
+// }
+
+input[type=number] {
+    align-self: center;
+    padding: 0px 10px;
+    font-size: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+
+th.mat-header-cell {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.picture {
+    cursor: pointer;
+    height: 45px;
+    padding: 2px 0px;
+}

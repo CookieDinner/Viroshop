@@ -1,0 +1,75 @@
+<ng-container  *ngIf="cart && cart.length > 0; else empty">
+    <div *ngFor="let subcart of cart">
+        <div class="shop-name">
+            {{subcart.shop.name}}, {{subcart.shop.street}} {{subcart.shop.number}}, {{subcart.shop.city}}
+        </div>
+        Wartość produktów w koszyku: {{totalPrice(subcart).toFixed(2)}}zł
+        <table mat-table [dataSource]="subcart.products">
+
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-button-toggle-group [(ngModel)]="element.way" [disabled]="!element.canBePurchaseToParcelLocker">
+                        <mat-button-toggle value="shopMachine">Sklepomat</mat-button-toggle>
+                        <mat-button-toggle value="reservation">Rezerwacja</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef> Typ </th>
+                <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Akcje </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-mini-fab color="basic" (click)="decrease(subcart.shop.id, element)">
+                        <mat-icon>remove_circle</mat-icon>
+                    </button>
+                        <input matInput [(ngModel)]="element.count" type="number" disabled/>
+                    <button mat-mini-fab color="basic" (click)="increase(subcart.shop.id, element)">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+
+                    <button mat-mini-fab color="primary" (click)="removeFromCart(subcart.shop.id, element)">
+                        <mat-icon>remove_shopping_cart</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="onePrice">
+                <th mat-header-cell *matHeaderCellDef> Cena jednostkowa </th>
+                <td mat-cell *matCellDef="let element"> {{element.price.toFixed(2)}}zł/{{element.unit | translate}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef> Cena </th>
+                <td mat-cell *matCellDef="let element"> {{(element.price * element.count).toFixed(2)}}zł </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div class="buttons">
+            <button mat-raised-button color="primary" (click)="order(subcart)" [disabled]="!canOrder(subcart)">
+                Zamów do sklepomatu
+            </button>
+            <button mat-raised-button color="primary" (click)="book(subcart)" [disabled]="!canReserve(subcart)">
+                Zarezerwuj wizytę
+            </button>
+        </div>
+    </div>
+</ng-container>
+
+<app-spinner-dialog *ngIf="!cart"></app-spinner-dialog>
+
+<ng-template #empty>
+    <app-empty-content message="Brak produktów w koszyku"></app-empty-content>
+</ng-template>

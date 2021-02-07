@@ -1,0 +1,4 @@
+<p>Ostatnio dodane do koszyka</p>
+<div *ngFor="let product of data">
+    {{product.count}} {{product.unit | translate}} x {{product.name}}
+</div>

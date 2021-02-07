@@ -1,0 +1,20 @@
+{
+    "PACKAGE": "szt",
+    "KILOGRAMS": "kg",
+    "Unknown Error": "Wystąpił nieoczekiwany błąd",
+    "LOGIN": {
+        "User not found": "Nie znaleziono użytkownika",
+        "Cannot login": "Nie udało się zalogować"
+    },
+    "REGISTER": {
+        "User exists": "Nazwa użytkownika jest już zajęta",
+        "Registered": "Zarejestrowano pomyślnie"
+    },
+    "FORGOT": {
+        "Error while generating new password": "Wystąpił błąd podczas generowania nowego hasła",
+        "Check your email, we send you temporary password": "Sprawdź e-mail, wysłaliśmy Tobie tymczasowe hasło"
+    },
+    "CHANGE_PASSWORD": {
+        "Error while changing password": "Wystąpił błąd podczas zmiany hasła"
+    }
+}
