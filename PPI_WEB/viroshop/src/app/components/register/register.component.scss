@@ -1,0 +1,25 @@
+div.main-container {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+:host ::ng-deep .ng-invalid {
+    .mat-form-field-label {
+        color: #f44336;
+    }
+
+    .mat-form-field-underline {
+        background-color: #f44336;
+    }
+}
+
+.alert {
+    border: 2px red solid;
+    background-color: #ffabab;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}

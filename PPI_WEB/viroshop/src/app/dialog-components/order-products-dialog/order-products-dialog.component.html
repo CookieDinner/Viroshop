@@ -1,0 +1,41 @@
+<span class="img-wrapper">
+    <img src="assets/zbiklogo.png">
+</span>
+<h1>
+    System płatności<br/>
+    ŻBIK
+</h1>
+<h3 *ngIf="step==0">
+    Wybierz sposób płatności
+</h3>
+
+<ng-container [ngSwitch]="step">
+    <ng-container *ngSwitchCase="0">
+        <span class="button-wrapper">
+            <button class='square-button' (click)="nextStep()">BLIK</button>
+            <button class='square-button' (click)="nextStep()">Portfel ŻBIK</button>
+        </span>
+        <span class="button-wrapper">
+            <button class='square-button' (click)="nextStep()">Karta platnicza</button>
+            <button class='square-button' (click)="nextStep()">Szybki przelew</button>
+        </span>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="1">
+        <span class="button-wrapper">
+            <button class='square-button' (click)="succeed()">Zasymuluj poprawną płatność</button>
+        </span>
+        <span class="button-wrapper">
+            <button class='square-button' (click)="nextStep()">Zasymuluj błąd płatności</button>
+        </span>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="2">
+        <h4>
+            Płatność się nie powiodła
+        </h4>
+        <span class="button-wrapper">
+            <button class='square-button' (click)="failed()">Zamknij</button>
+        </span>
+    </ng-container>
+</ng-container>

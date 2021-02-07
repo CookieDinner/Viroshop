@@ -1,0 +1,21 @@
+<div>
+  <mat-toolbar color="primary" class="example-toolbar">
+    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+    <h1 class="example-app-name">VIROSHOP</h1>
+  </mat-toolbar>
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" fixedTopGap="56">
+      <mat-nav-list *ngIf="currentUser">
+        <a mat-list-item routerLink="/shops">Sklepy</a>
+        <a mat-list-item routerLink="/cart">Koszyk</a>
+        <a mat-list-item routerLink="/reservations">Rezerwacje</a>
+        <a mat-list-item (click)="openChangePasswordDialog()">Zmień hasło</a>
+        <a mat-list-item (click)="sidenav.close(); logoutUser()">Wyloguj</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet #routerOutlet="outlet"></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

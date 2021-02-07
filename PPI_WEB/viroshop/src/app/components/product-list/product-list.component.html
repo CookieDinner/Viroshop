@@ -1,0 +1,78 @@
+<div>
+  <div class='filters'>
+    <mat-form-field appearance="fill">
+      <mat-label>Nazwa</mat-label>
+      <input matInput [(ngModel)]="filterName" (keyup)="filterProducts()"/>
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill">
+      <mat-label>Typ</mat-label>
+      <mat-select [(value)]="filterType" (selectionChange)="filterProducts()">
+        <mat-option></mat-option>
+        <mat-option [value]="type" *ngFor="let type of types">{{ type }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <button mat-raised-button color="primary" class="cart-button" (click)="goToCart()">
+      Koszyk
+    </button>
+  </div>
+
+  <table mat-table *ngIf="filteredProducts.data.length > 0; else noData" [dataSource]="filteredProducts">
+
+    <ng-container matColumnDef="photo">
+      <th mat-header-cell *matHeaderCellDef> Zdjęcie (kliknij by powiększyć) </th>
+      <td mat-cell *matCellDef="let element">
+        <img [src]="element.picture" class="picture" (click)="openPictureDialog(element.picture)">
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Typ </th>
+      <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Akcje </th>
+      <td mat-cell *matCellDef="let element">
+          <button mat-mini-fab color="basic" (click)="decrease(element.id)"  [disabled]="!element.available">
+              <mat-icon>remove_circle</mat-icon>
+          </button>
+              <input matInput [(ngModel)]="element.count" type="number" min="1" max="5" [disabled]="!element.available"
+              (keyup)="preventCountUnder0(element)"/>
+          <button mat-mini-fab color="basic" (click)="increase(element.id)"  [disabled]="!element.available">
+              <mat-icon>add_circle</mat-icon>
+          </button>
+          <button mat-mini-fab color="primary" (click)="addToCart(element)" [disabled]="!element.available || !element.count">
+              <mat-icon>add_shopping_cart</mat-icon>
+          </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="onePrice">
+      <th mat-header-cell *matHeaderCellDef> Cena jednostkowa </th>
+      <td mat-cell *matCellDef="let element"> {{element.price.toFixed(2)}}zł/{{element.unit | translate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef> Cena </th>
+      <td mat-cell *matCellDef="let element"> {{(element.price * element.count).toFixed(2)}}zł </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<app-spinner-dialog *ngIf="loading"></app-spinner-dialog>
+
+<ng-template #noData>
+  <app-empty-content message="Brak produktów"></app-empty-content>
+</ng-template>

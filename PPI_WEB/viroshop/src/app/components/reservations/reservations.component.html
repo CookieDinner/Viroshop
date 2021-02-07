@@ -1,0 +1,79 @@
+<mat-tab-group>
+    <mat-tab label="Przyszłe rezerwacje">
+        <mat-accordion>
+            <ng-container *ngIf="futureReservations && futureReservations.length > 0; else empty">
+                <mat-expansion-panel *ngFor="let reservation of futureReservations">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{getTime(reservation.date, reservation.quarterOfDay)}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    {{reservation.shop.name}} ({{reservation.shop.street}} {{reservation.shop.number}}, {{reservation.shop.city}})
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                Wartość produktów na liście: {{reservation.totalPrice.toFixed(2)}}zł
+
+                <app-product-list-on-reservation
+                    [dataSource]="reservation.productReservations"
+                >
+                </app-product-list-on-reservation>
+                
+                </mat-expansion-panel>
+            </ng-container>
+        </mat-accordion>       
+    </mat-tab>
+
+    <mat-tab label="Rezerwacje bez terminu">
+        <mat-accordion>
+            <ng-container  *ngIf="noDateReservations && noDateReservations.length > 0; else empty">
+                <mat-expansion-panel *ngFor="let reservation of noDateReservations">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{reservation.shop.name}} ({{reservation.shop.street}} {{reservation.shop.number}}, {{reservation.shop.city}})
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                Wartość produktów na liście: {{reservation.totalPrice.toFixed(2)}}zł
+
+                <app-product-list-on-reservation
+                    [dataSource]="reservation.productReservations"
+                >
+                </app-product-list-on-reservation>
+                </mat-expansion-panel>
+            </ng-container>
+        </mat-accordion>       
+    </mat-tab>
+
+    <mat-tab label="Archiwalne">
+        <mat-accordion>
+            <ng-container  *ngIf="archivedReservations && archivedReservations.length > 0; else empty">
+                <mat-expansion-panel *ngFor="let reservation of archivedReservations">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{getTime(reservation.date, reservation.quarterOfDay)}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    {{reservation.shop.name}} ({{reservation.shop.street}} {{reservation.shop.number}}, {{reservation.shop.city}})
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                Wartość produktów na liście: {{reservation.totalPrice.toFixed(2)}}zł
+
+                <app-product-list-on-reservation
+                    [dataSource]="reservation.productReservations"
+                >
+                </app-product-list-on-reservation>
+                </mat-expansion-panel>
+            </ng-container>
+        </mat-accordion>       
+    </mat-tab>
+</mat-tab-group>
+
+<ng-template #empty>
+    <app-empty-content message="Brak rezerwacji"></app-empty-content>
+</ng-template>
+
+<app-spinner-dialog *ngIf="loading"></app-spinner-dialog>

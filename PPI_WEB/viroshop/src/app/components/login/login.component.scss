@@ -1,0 +1,19 @@
+div.main-container {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    margin-bottom: 5px;
+}
+
+:host ::ng-deep .ng-invalid {
+    .mat-form-field-label {
+        color: #f44336;
+    }
+
+    .mat-form-field-underline {
+        background-color: #f44336;
+    }
+}

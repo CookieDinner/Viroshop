@@ -1,0 +1,31 @@
+<button mat-raised-button color="primary" (click)="reserveNoTime()">
+    Zaplanuj wizytę bez terminu
+</button>
+<mat-vertical-stepper [linear]="true" #stepper>
+    <mat-step>
+        <ng-template matStepLabel>Wybierz dzień</ng-template>
+        <mat-calendar 
+            [selected]="selectedDate" 
+            [startAt]="startAt"
+            [minDate]="minDate" 
+            (selectedChange)="dateSelected($event)"
+            (monthSelected)="monthViewChanged($event)">
+        </mat-calendar>          
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Wybierz godzinę</ng-template>
+        <mat-selection-list [multiple]="false" [ngModel]="selectedTime" (selectionChange)="timeSelected($event)">
+            <mat-list-option *ngFor="let time of times" [value]="time.quarter" [disabled]="time.disabled">
+                {{ time.time }}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-step>
+</mat-vertical-stepper>
+<button mat-raised-button color="primary" (click)="reserveTime()">
+    Zarezerwuj wizytę w wybranym terminie <br/>
+    {{selectedMomentDate ? selectedMomentDate.format("YYYY-MM-DD") : selectedMomentDate}}
+    {{selectedMomentTime ? selectedMomentTime.format("HH:mm") : selectedMomentTime}}
+    
+</button>
+
+<app-spinner-dialog *ngIf="loading"></app-spinner-dialog>

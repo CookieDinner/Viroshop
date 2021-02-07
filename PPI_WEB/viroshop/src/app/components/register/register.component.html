@@ -1,0 +1,45 @@
+<div class="main-container">
+    <h2>Zarejestruj się</h2>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Nazwa użytkownika</mat-label>
+        <input matInput type="text" [formControl]="username" required [errorStateMatcher]="invalidErrorMatcher"/>
+        <mat-error *ngIf="username.errors && username.errors.required">{{"Nazwa użytkownika nie może być pusta"}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [formControl]="email" required [errorStateMatcher]="invalidErrorMatcher"/>
+        <mat-error *ngIf="email.errors && (email.errors.pattern || email.errors.required)">{{"Podaj właściwy adres email"}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Hasło</mat-label>
+        <input matInput type="password" [formControl]="password" (keydown)="validateForm([password, password2])" (keyup)="validateForm([password, password2])" required/>
+        <mat-error *ngIf="password.errors && password.errors.required">{{"Hasło nie może być puste"}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Powtórz hasło</mat-label>
+        <input matInput type="password" [formControl]="password2" [errorStateMatcher]="pass2ErrorMatcher" required/>
+        <mat-error *ngIf="password2.invalid && password2.hasError('equals')">{{password2.getError("equals")}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Data urodzenia</mat-label>
+        <input matInput [matDatepicker]="picker" [max]="maxDate" [formControl]="birthDate" readonly required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="birthDate.errors && birthDate.errors.required">{{"Wprowadź datę urodzenia"}}</mat-error>
+    </mat-form-field>
+    
+
+    <div *ngIf="error" class="alert">{{error}}</div>
+    
+    <button mat-raised-button color="primary" routerLink="/register" (click)="register()" [disabled]="!(username.value && password.value && birthDate.value && email.valid && password2.valid)">
+        Zarejestruj
+    </button>
+
+</div>
+
+<app-spinner-dialog *ngIf="loading"></app-spinner-dialog>
